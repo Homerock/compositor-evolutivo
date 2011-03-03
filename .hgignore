@@ -1,0 +1,11 @@
+syntax: glob
+bin/*
+lib/*
+.classpath
+.directory
+.project
+.setting*
+*.bak
+*.mid
+*.mma
+
