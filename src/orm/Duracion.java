@@ -10,7 +10,7 @@ public interface Duracion extends Entity  {
 	public int getCantidad();
 	public void setCantidad(int cantidad);
 	
-	public int getIdEstilo();
-	public void setIdEstilo(int idEstilo);
+	public Estilos getEstilos();
+	public void setEstilos(Estilos estilo);
 	
 }

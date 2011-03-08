@@ -1,6 +1,10 @@
 package orm;
 
+import java.sql.SQLException;
 import java.util.List;
+
+import net.java.ao.EntityManager;
+import net.java.ao.Query;
 
 public class DuracionDTO {
 
@@ -40,18 +44,22 @@ public class DuracionDTO {
 		return result;
 	}
 	
-	public static Duracion buscar(String nombre)
+	public static Duracion buscar(EntityManager manager, int duracion,Estilos estilo) throws SQLException
 	{
-		
-		return null;
+		Duracion[] d = manager.find(Duracion.class,Query.select().where(" duracion = '"+duracion+"' and estilosid = '"+estilo.getID()+"'  "));
+		return d[0];
 		
 	}
 	
-	public static boolean existe(String nombre)
+	public static boolean existe(EntityManager manager, int duracion,Estilos estilo) throws SQLException
 	{
+		boolean existe = false;
+		Duracion[] d = manager.find(Duracion.class,Query.select().where(" duracion = '"+duracion+"' and estilosid = '"+estilo.getID()+"'  "));
 		
-		return true;
-		
+		if(d.length >0){
+			existe = true;
+		}
+		return existe;
 	}
 	
 }

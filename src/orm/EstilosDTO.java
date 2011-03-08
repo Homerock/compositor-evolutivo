@@ -1,6 +1,10 @@
 package orm;
 
+import java.sql.SQLException;
 import java.util.List;
+
+import net.java.ao.EntityManager;
+import net.java.ao.Query;
 
 public class EstilosDTO {
 
@@ -40,18 +44,24 @@ public class EstilosDTO {
 		return result;
 	}
 	
-	public static Estilos buscar(String nombre)
+	public static Estilos buscar(EntityManager manager,String NombreEstilo) throws SQLException
 	{
+		Estilos[] e1 = manager.find(Estilos.class,Query.select().where("nombre like '"+NombreEstilo+"' "));
 		
-		return null;
+		return e1[0];
 		
 	}
 	
-	public static boolean existe(String nombre)
+	public static boolean existe(EntityManager manager,String NombreEstilo) throws SQLException
 	{
+		boolean existe = false;
 		
-		return true;
+		Estilos[] e1 = manager.find(Estilos.class,Query.select(" nombre like '"+NombreEstilo+"' "));
+		if (e1.length > 0){
+			existe=true;
+		}
 		
+		return existe;
 	}
 	
 }

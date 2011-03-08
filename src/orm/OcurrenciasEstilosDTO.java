@@ -1,6 +1,10 @@
 package orm;
 
+import java.sql.SQLException;
 import java.util.List;
+
+import net.java.ao.EntityManager;
+import net.java.ao.Query;
 
 public class OcurrenciasEstilosDTO {
 
@@ -40,17 +44,23 @@ public class OcurrenciasEstilosDTO {
 		return result;
 	}
 	
-	public static OcurrenciasEstilos buscar(String nombre)
+	public static OcurrenciasEstilos buscar(EntityManager manager, Estilos estiloPpal, Estilos estiloSec) throws SQLException
 	{
-		
-		return null;
+		OcurrenciasEstilos[] oe = manager.find(OcurrenciasEstilos.class,Query.select().where(" estiloprincipalid = '"+estiloPpal.getID()+"' and estilosecundarioid = '"+estiloSec.getID()+"' "));
+		return oe[0];
 		
 	}
 	
-	public static boolean existe(String nombre)
-	{
+	public static boolean existe(EntityManager manager, Estilos estiloPpal, Estilos estiloSec) throws SQLException
+	{	
 		
-		return true;
+		boolean existe = false;
+		OcurrenciasEstilos[] oe = manager.find(OcurrenciasEstilos.class,Query.select().where(" estiloprincipalid = '"+estiloPpal.getID()+"' and estilosecundarioid = '"+estiloSec.getID()+"' "));
+		if(oe.length>0){
+			existe = true;
+		}
+		
+		return existe;
 		
 	}
 	

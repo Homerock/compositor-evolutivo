@@ -56,10 +56,12 @@ public class OcurrenciasAcordesDTO {
 		return result;
 	}
 	
-	public static OcurrenciasAcordes buscar(String nombre)
+	public static OcurrenciasAcordes buscar(EntityManager manager, Acordes Ppal, Acordes Sec) throws SQLException
 	{
 		
-		return null;
+		OcurrenciasAcordes[] oa = manager.find(OcurrenciasAcordes.class, Query.select().where("acordePrincipalID = '" + Ppal.getID() + "' and acordeSecundarioID = '" + Sec.getID() + "'"));
+		
+		return oa[0];
 		
 	}
 	

@@ -4,11 +4,11 @@ import net.java.ao.Entity;
 
 public interface OcurrenciasEstilos extends Entity {
 
-	public int getIdEstiloPrincipal();
-	public void setIdEstiloPrincipal(int idEstiloPrincipal);
+	public Estilos getEstiloPrincipal();
+	public void setEstiloPrincipal(Estilos estiloPrincipal);
 	
-	public int getIdEstiloSecundario();
-	public void setIdEstiloSecundario(int idEstiloSecundario);
+	public Estilos getEstiloSecundario();
+	public void setEstiloSecundario(Estilos estiloSecundario);
 	
 	public int getCantidad();
 	public void setCantidad(int cantidad);
