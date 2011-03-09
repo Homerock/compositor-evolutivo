@@ -2,7 +2,9 @@ package orm;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.java.ao.*;
 
@@ -11,11 +13,11 @@ public class AcordesDTO {
 	public static void Insertar(EntityManager manager, String nombre, int contador) throws SQLException {
 	
 	
-			Acordes ac = manager.create(Acordes.class);
-			ac.setNombre(nombre);
-			ac.setCantApariciones(contador);
-			ac.save();
-			
+		Map <String,Object> parametros = new HashMap<String, Object>();
+		parametros.put("nombre", nombre);
+		parametros.put("cantapariciones", contador);
+		
+		Acordes ac = manager.create(Acordes.class, parametros);
 		
 	}
 	

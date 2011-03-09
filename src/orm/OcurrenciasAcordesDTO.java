@@ -1,7 +1,9 @@
 package orm;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.java.ao.EntityManager;
 import net.java.ao.Query;
@@ -10,11 +12,14 @@ public class OcurrenciasAcordesDTO {
 
 	public static void Insertar (EntityManager manager, Acordes Ppal, Acordes Sec, int cant) throws SQLException   
 	{
-		OcurrenciasAcordes oa = manager.create(OcurrenciasAcordes.class);
-		oa.setAcordePrincipal(Ppal);
-		oa.setAcordeSecundario(Sec);
-		oa.setCantidad(cant);
-		oa.save();
+		
+		Map <String,Object> parametros = new HashMap<String, Object>();
+		parametros.put("acordeprincipalid", Ppal.getID());
+		parametros.put("acordesecundarioid", Sec.getID());
+		parametros.put("cantidad", cant);
+		
+		OcurrenciasAcordes oa = manager.create(OcurrenciasAcordes.class, parametros);
+		
 	}
 	
 	public static void Eliminar (OcurrenciasAcordes c)
