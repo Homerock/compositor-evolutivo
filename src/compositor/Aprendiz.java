@@ -1,5 +1,6 @@
 package compositor;
 
+import estructura.ListaTonicas;
 import estructura.MatrizAcordes;
 import estructura.AcordesFila;
 import estructura.ValorAcordes;
@@ -27,8 +28,9 @@ public class Aprendiz {
 	
 	final static String DIRECTORIO="Directorio";
 	final static String ARCHIVO = "Archivo genérico";
-	MatrizAcordes miMatrizAcordes= new MatrizAcordes();
-	int contConsultas;
+	private MatrizAcordes miMatrizAcordes= new MatrizAcordes();
+	private ListaTonicas miListaDeTonicas = new ListaTonicas();
+	private int contConsultas;
 	private Pantalla pantalla;
 	private EntityManager manager;
 	
@@ -78,16 +80,21 @@ public class Aprendiz {
 	 * Acordes y ocurrencias
 	  * @param miMatrizAcordes
 	  *---------------------------------------------------------------------------*/
-	public void actualizarBD( MatrizAcordes miMatrizAcordes) {
+	public void actualizarBD( MatrizAcordes miMatrizAcordes, ListaTonicas miListaTonicas) {
 		
 		String nombreAPpal, nombreASec;
 		int apariciones;
+		
+		Map<String, Integer> mapTonicas = miListaTonicas.getMisTonicas();
+		
 		Map<String, AcordesFila> mapAcordesMatriz = miMatrizAcordes.getMisAcordes();//toda la matriz de Acordes
 		Map<String, ValorAcordes> mapAcordes;//para cada Acorde
+		
 		AcordesFila mapAcordePpal;
 		Iterator it = mapAcordesMatriz.entrySet().iterator();
 		Iterator it2;
 		long t1, t0 = System.currentTimeMillis();
+		
 		
 		while (it.hasNext()) {
 			Map.Entry e = (Map.Entry)it.next();
@@ -124,6 +131,30 @@ public class Aprendiz {
 			t1=System.currentTimeMillis();
 			escribir("tiempo : "+ (t1-t0)/1000 + " segundos ");
 		}	
+		
+		Iterator itTonicas = mapTonicas.entrySet().iterator();
+		while (itTonicas.hasNext()) {
+			Map.Entry e = (Map.Entry)itTonicas.next();
+			String nombreTonica = (String) e.getKey();
+			
+			Acordes acorde;
+			try {
+				acorde = AcordesDTO.buscar(this.manager, nombreTonica);
+			
+				
+				if (TonicasDTO.existe(this.manager, acorde)) {
+				//	TonicasDTO.Actualizar(this.manager, acorde, (Integer) e.getValue());
+				} else {
+				//	TonicasDTO.Insertar(this.manager, nombreTonica, (Integer) e.getValue());
+				}
+				
+				System.out.println("tonica: " + e.getKey() + " cantidad de apariciones: " + e.getValue());
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 		
 	}
 	
@@ -167,20 +198,25 @@ public class Aprendiz {
 	public void levantarBase(EntityManager m) {
 
 		this.manager = m;
-		Acordes[] listaAcordes;
+		 
 		try {
-			listaAcordes = AcordesDTO.seleccionarTodos(this.manager);
-		
+			
+			Acordes[] listaAcordes = AcordesDTO.seleccionarTodos(this.manager);
 			for (Acordes a : listaAcordes){
 				this.miMatrizAcordes.agregarAcordePrincipal(a.getNombre(),a.getCantApariciones());
 			}
 		
-			
 			OcurrenciasAcordes[] listaOcurrencias =  OcurrenciasAcordesDTO.seleccionarTodos(this.manager);
-			
 			for (OcurrenciasAcordes oa : listaOcurrencias){
 				this.miMatrizAcordes.agregaOcurrenciaAcordeSecundario(oa.getAcordePrincipal().getNombre(), oa.getAcordeSecundario().getNombre(), oa.getCantidad());
 			}
+			
+			Tonicas[] listaTonicas = TonicasDTO.seleccionarTodos(manager);
+			for (Tonicas ton : listaTonicas) {
+				this.miListaDeTonicas.agregarTonicas(ton.getAcorde().getNombre(), ton.getCantidad());
+			}
+			
+			
 		} catch (SQLException e) {
 			System.out.println("Error en levantar base");
 			e.printStackTrace();
@@ -230,6 +266,7 @@ public class Aprendiz {
 		  						cancion = miArchivo.getCancionAnalizada();
 		  						escribir("LISTA DE ACORDES: "+cancion.toString());
 			  					Aprendiz.cargarCancion(cancion, this.miMatrizAcordes);
+			  					this.miListaDeTonicas.agregarTonica(miArchivo.getTonica());
 			  					cancion.clear();	
 		  					}
 		  				}
@@ -250,6 +287,7 @@ public class Aprendiz {
 		    		escribir("LISTA DE ACORDES: "+cancion.toString());
 					long t1 = System.currentTimeMillis();
 					Aprendiz.cargarCancion(cancion, this.miMatrizAcordes);
+					this.miListaDeTonicas.agregarTonica(miArchivo.getTonica());
 					cancion.clear();
 					long t2 = System.currentTimeMillis();
 					escribir("tiempo en mls " + (t2 - t1));
@@ -290,7 +328,7 @@ public class Aprendiz {
 	public void guardar() {
 		
 		//this.guardarCancion(this.miMatrizAcordes);
-		this.actualizarBD(this.miMatrizAcordes);
+		this.actualizarBD(this.miMatrizAcordes, this.miListaDeTonicas);
 		
 	}
 	

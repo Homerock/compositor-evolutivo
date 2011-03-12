@@ -29,7 +29,8 @@ public class Archivos {
 	private ArrayList<String> cancionEstilos=new ArrayList<String>();
 	
 	private String estiloPpal;
-	
+	private String tonica;
+	private String tempo;
 	
 
 	private final String COMENTARIO = "//";
@@ -73,6 +74,7 @@ public class Archivos {
 			//return this.getCancionAnalizada();
 			
 			reader.close();
+			this.tonica = this.getCancionAnalizada().get(0);
 			
 			return true;//todo ok loco
 			
@@ -370,6 +372,7 @@ public class Archivos {
 					this.getCancionEstilos().add(linea);
 				}
 				
+				
 			}
 
 			/**
@@ -410,8 +413,13 @@ public class Archivos {
 		this.getCancionAnalizada().clear();
 	}
 	
+	public String getTonica() {
+		return this.tonica;
+	}
+	
+	
 	public String getEstiloPpal() {
-		return estiloPpal;
+		return this.estiloPpal;
 	}
 
 	public void setEstiloPpal(String estiloPpal) {
