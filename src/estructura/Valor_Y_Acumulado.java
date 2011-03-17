@@ -1,39 +1,44 @@
 package estructura;
 
 /**---------------------------------------------------------------------------
-  * esta clase guarda los valores de las ocurrencias de las Estilos y el valor acumulado
+  * Esta clase guarda los valores y el valor acumulado
+  * 
   * @author Yamil Gomez -  Sebastian Pazos
   *
   *---------------------------------------------------------------------------*/
-public class ValorEstilos {
+public class Valor_Y_Acumulado {
 	
 	private int valor;
 	private int valorAcumulado;
 	
 	
 	/**---------------------------------------------------------------------------
-	  * 
+	  * Constructor  
 	  *---------------------------------------------------------------------------*/
-	public ValorEstilos(){
+	public Valor_Y_Acumulado(){
 		this.valor=0;
 		this.valorAcumulado=0;
 		return;
 	}
 	
 	/**---------------------------------------------------------------------------
+	  * Constructor 
+	  * 
 	  * @param val
 	  *---------------------------------------------------------------------------*/
-	public ValorEstilos(int val){
+	public Valor_Y_Acumulado(int val){
 		this.valor=val;
 		this.valorAcumulado=0;
 		return;
 	}
 	
 	/**---------------------------------------------------------------------------
+	  * Constructor 
+	  * 
 	  * @param val
 	  * @param valAc
 	  *---------------------------------------------------------------------------*/
-	public ValorEstilos(int val , int valAc){
+	public Valor_Y_Acumulado(int val , int valAc){
 		this.valor= val;
 		this.valorAcumulado=valAc;
 		return;

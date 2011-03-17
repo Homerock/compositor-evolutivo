@@ -3,90 +3,105 @@ package estructura;
 import java.util.*;
 
 /**
- * @author Admin
+ * @author Yamil Gomez ,Sebastian Pazos
  *
  */
 public class EstilosFila {
 	
 	private String nombreEstilo;
-	private Map <String,ValorEstilos> mapEstilos;
-	//es una "lista" donde guardamos los pares Estilo y la cantidad de veces que aparece 
-	// (clave, valor) : la clave es el nombre de la Estilo y el valor es la cantidad de ocurrencias
+	private Map <String,Valor_Y_Acumulado> mapEstilos;
 	private int contador ; 
-	private int cantPromedio;//numero promedio de cuantas veces cambia de estilo una cancion =D
-
+	
+	private int cantUnCompas;
+	private int cantDosCompases;
+	private int cantTresCompases;
+	private int cantCuatroCompases;
+	private int cantSeisCompases;
+	private int cantOchoCompases;
+	
 
 
 	/**---------------------------------------------------------------------------
+	  * Constructor de Estilos Fila 
+	  * con el contador en cero
 	  * @param nombre
 	  *---------------------------------------------------------------------------*/
 	public EstilosFila(String nombre){
 		this.setNombreEstilo(nombre);
-		this.mapEstilos=new HashMap<String, ValorEstilos> ();
-		this.setContador(0);
-	
+		this.mapEstilos=new HashMap<String, Valor_Y_Acumulado> ();
+		this.setContador(1);
+		this.setCantUnCompas(0);
+	 	this.setCantDosCompases(0);
+	 	this.setCantTresCompases(0);
+	 	this.setCantCuatroCompases(0);
+	 	this.setCantSeisCompases(0);
+	 	this.setCantOchoCompases(0);
 	}
-	
+	/**------------------------------------------------------------------------
+	 * Constructor de Estilos Fila
+	 * 
+	 * @param nombre
+	 * @param cantidad
+	 ------------------------------------------------------------------------*/
 	public EstilosFila(String nombre, int cantidad){
 		this.setNombreEstilo(nombre);
-		this.mapEstilos=new HashMap<String, ValorEstilos> ();
+		this.mapEstilos=new HashMap<String, Valor_Y_Acumulado> ();
 		this.setContador(cantidad);
-	
+		this.setCantUnCompas(0);
+	 	this.setCantDosCompases(0);
+	 	this.setCantTresCompases(0);
+	 	this.setCantCuatroCompases(0);
+	 	this.setCantSeisCompases(0);
+	 	this.setCantOchoCompases(0);
 	}
 	
-	public EstilosFila(String nombre, int cantidad,int cantPromedio){
-		this.setNombreEstilo(nombre);
-		this.mapEstilos=new HashMap<String, ValorEstilos> ();
-		this.setContador(cantidad);
-		this.cantPromedio=cantPromedio;
-	
-	}
-	
-	
-	/**---------------------------------------------------------------------------
-	  * @param Estilo
-	  *---------------------------------------------------------------------------*/
+
+	/**
+	 *  Agrega en estilo al map con valor 1
+	 *  
+	 * @param Estilo
+	 */
 	public void agregarEstilo(String Estilo){
 		
-		Map<String, ValorEstilos> mapEstilos = this.getMapEstilos();
+		Map<String, Valor_Y_Acumulado> mapEstilos = this.getMapEstilos();
 		Integer cant=0;
-		ValorEstilos miValEstilo;
+		Valor_Y_Acumulado miValEstilo;
 		
 		if (mapEstilos.containsKey(Estilo)){
 			cant= new Integer(mapEstilos.get(Estilo).getValor());
 			cant=cant+1;
 			mapEstilos.get(Estilo).setValor(cant);
 		}else{
-			miValEstilo = new ValorEstilos(1);
+			miValEstilo = new Valor_Y_Acumulado(1);
 			mapEstilos.put(Estilo, miValEstilo);//se sobreescribe con el valor nuevo
 		}
 		return;
 	}
 	
 	/**---------------------------------------------------------------------------
-	  * Agrego la Estilo secundaria y el valor de cantidad de ocurrencias
-	  * @param Estilo
+	  * Agrego un Estilo secundario y la cantidad de ocurrencias
+	  * @param Estilo y cantidad
 	  *---------------------------------------------------------------------------*/
-	public void agregarEstilo(String Estilo, int valor){
+	public void agregarEstilo(String Estilo, int cantidad){
 		
-		Map<String, ValorEstilos> mapEstilos = this.getMapEstilos();
-		ValorEstilos miValEstilo;
+		Map<String, Valor_Y_Acumulado> mapEstilos = this.getMapEstilos();
+		Valor_Y_Acumulado miValEstilo;
 		
 		if (mapEstilos.containsKey(Estilo)){
-			mapEstilos.get(Estilo).setValor(valor);
+			mapEstilos.get(Estilo).setValor(cantidad);
 		}else{
-			miValEstilo = new ValorEstilos(valor);
+			miValEstilo = new Valor_Y_Acumulado(cantidad);
 			mapEstilos.put(Estilo, miValEstilo);//se sobreescribe con el valor nuevo
 		}
 		return;
 	}
 	
 	/**---------------------------------------------------------------------------
-	  * 
+	  * Lista todos los estilos existentes
 	  *---------------------------------------------------------------------------*/
 	public void listarEstilos(){
 		
-		Map<String, ValorEstilos> mapEstilos = this.getMapEstilos();
+		Map<String, Valor_Y_Acumulado> mapEstilos = this.getMapEstilos();
 		Iterator it = mapEstilos.entrySet().iterator();
 
 		while (it.hasNext()) {
@@ -104,14 +119,14 @@ public class EstilosFila {
 	  *---------------------------------------------------------------------------*/
 	public String buscarEstilo(int valor){
 		
-		Map<String, ValorEstilos> mapEstilos = this.getMapEstilos();
+		Map<String, Valor_Y_Acumulado> mapEstilos = this.getMapEstilos();
 		Iterator it = mapEstilos.entrySet().iterator();
-		ValorEstilos miValEstilo;
+		Valor_Y_Acumulado miValEstilo;
 		String Estilo="";
 
 		while (it.hasNext()) {
 			Map.Entry e = (Map.Entry)it.next();
-			miValEstilo = (ValorEstilos)e.getValue(); 
+			miValEstilo = (Valor_Y_Acumulado)e.getValue(); 
 			if (miValEstilo.getValorAcumulado()>=valor){
 				Estilo= (String)e.getKey();
 				break;
@@ -123,14 +138,14 @@ public class EstilosFila {
 	/**---------------------------------------------------------------------------
 	  * @return
 	  *---------------------------------------------------------------------------*/
-	public Map<String, ValorEstilos> getMapEstilos() {
+	public Map<String, Valor_Y_Acumulado> getMapEstilos() {
 		return mapEstilos;
 	}
 
 	/**---------------------------------------------------------------------------
 	  * @param mapEstilos
 	  *---------------------------------------------------------------------------*/
-	public void setMapEstilos(Map<String, ValorEstilos> mapEstilos) {
+	public void setMapEstilos(Map<String, Valor_Y_Acumulado> mapEstilos) {
 		this.mapEstilos = mapEstilos;
 	}
 	
@@ -142,18 +157,19 @@ public class EstilosFila {
 	}
 	
 	/**---------------------------------------------------------------------------
+	 *	 
 	  * 
 	  *---------------------------------------------------------------------------*/
 	public void calcularAcumulados(){
 		
 		int acumulador=0;
-		ValorEstilos miValEstilos;
-		Map<String, ValorEstilos> mapEstilos = this.getMapEstilos();
+		Valor_Y_Acumulado miValEstilos;
+		Map<String, Valor_Y_Acumulado> mapEstilos = this.getMapEstilos();
 		Iterator it = mapEstilos.entrySet().iterator();
 
 		while (it.hasNext()) {
 			Map.Entry e = (Map.Entry)it.next();
-			miValEstilos=(ValorEstilos)e.getValue();
+			miValEstilos=(Valor_Y_Acumulado)e.getValue();
 			acumulador=acumulador+miValEstilos.getValor();
 			miValEstilos.setValorAcumulado(acumulador);	
 		}
@@ -161,33 +177,124 @@ public class EstilosFila {
 	}
 	
 	/**---------------------------------------------------------------------------
-	  * devuelve el acumulaodor total 
-	  * @return
+	  * Devuelve el contador total
+	  *  
+	  * @return contador
 	  *---------------------------------------------------------------------------*/
 	public int getContador() {
 		return contador;
 	}
 	
 	/**---------------------------------------------------------------------------
-	  * @return
+	  *	Devuelve el nombre de un estilo
+	  * 
+	  * @return nombreEstilo
 	  *---------------------------------------------------------------------------*/
 	public String getNombreEstilo() {
 		return nombreEstilo;
 	}
 	
 	/**---------------------------------------------------------------------------
+	  * Setea el nombre de un estilo
+	  * 
 	  * @param nombreEstilo
 	  *---------------------------------------------------------------------------*/
 	public void setNombreEstilo(String nombreEstilo) {
 		this.nombreEstilo = nombreEstilo;
 	}
+	public int getCantUnCompas() {
+		return cantUnCompas;
+	}
+	public void setCantUnCompas(int cantUnCompas) {
+		this.cantUnCompas = cantUnCompas;
+	}
+	public int getCantDosCompases() {
+		return cantDosCompases;
+	}
+	public void setCantDosCompases(int cantDosCompases) {
+		this.cantDosCompases = cantDosCompases;
+	}
+	public int getCantTresCompases() {
+		return cantTresCompases;
+	}
+	public void setCantTresCompases(int cantTresCompases) {
+		this.cantTresCompases = cantTresCompases;
+	}
+	public int getCantCuatroCompases() {
+		return cantCuatroCompases;
+	}
+	public void setCantCuatroCompases(int cantCuatroCompases) {
+		this.cantCuatroCompases = cantCuatroCompases;
+	}
+	public int getCantSeisCompases() {
+		return cantSeisCompases;
+	}
+	public void setCantSeisCompases(int cantSeisCompases) {
+		this.cantSeisCompases = cantSeisCompases;
+	}
+	public int getCantOchoCompases() {
+		return cantOchoCompases;
+	}
+	public void setCantOchoCompases(int cantOchoCompases) {
+		this.cantOchoCompases = cantOchoCompases;
+	}
 	
+	public void incCantUnCompas(){
+		int cant = this.getCantUnCompas();
+		cant++;
+		this.setCantUnCompas(cant);
+		return;
+	}
 	
-	public int getCantPromedio() {
-		return cantPromedio;
+	public void incCantDosCompases(){
+		int cant = this.getCantDosCompases();
+		cant++;
+		this.setCantDosCompases(cant);
+		return;
+	}
+	
+	public void incCantTresCompases(){
+		int cant = this.getCantTresCompases();
+		cant++;
+		this.setCantTresCompases(cant);
+		return;
+	}
+	
+	public void incCantCuatroCompases(){
+		int cant = this.getCantCuatroCompases();
+		cant++;
+		this.setCantCuatroCompases(cant);
+		return;
 	}
 
-	public void setCantPromedio(int cantPromedio) {
-		this.cantPromedio = cantPromedio;
+	public void incCantSeisCompases(){
+		int cant = this.getCantSeisCompases();
+		cant++;
+		this.setCantSeisCompases(cant);
+		return;
 	}
+	
+	public void incCantOchoCompases(){
+		int cant = this.getCantOchoCompases();
+		cant++;
+		this.setCantOchoCompases(cant);
+		return;
+	}
+	
+	public String toString(){
+		
+		
+		String salida =  " compas:cant =" +
+						"{ 1:"+this.getCantUnCompas() +
+						" | 2:"+this.getCantDosCompases()+
+						" | 3:"+this.getCantTresCompases()+
+						" | 4:"+this.getCantCuatroCompases()+
+						" | 6:"+this.getCantSeisCompases()+
+						" | 8:"+ this.getCantOchoCompases()+" }";
+				
+		return salida;
+		
+	}
+	
+
 }

@@ -1,23 +1,17 @@
 package compositor;
 
-import estructura.ListaTonicas;
-import estructura.MatrizAcordes;
-import estructura.AcordesFila;
-import estructura.ValorAcordes;
+import estructura.*;
 import grafica.Pantalla;
-import net.java.ao.EntityManager;
 import orm.*;
-
 import java.sql.SQLException;
-import java.util.List;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
-
 import javax.swing.JFileChooser;
-
 import archivos.Archivos;
+import archivos.Patrones;
+import net.java.ao.EntityManager;
 
 /**---------------------------------------------------------------------------
   * @author Sebastian Pazos , Yamil Gomez
@@ -26,19 +20,24 @@ import archivos.Archivos;
 
 public class Aprendiz {
 	
-	final static String DIRECTORIO="Directorio";
-	final static String ARCHIVO = "Archivo genérico";
-	private MatrizAcordes miMatrizAcordes= new MatrizAcordes();
-	private ListaTonicas miListaDeTonicas = new ListaTonicas();
+	private final static String DIRECTORIO="Directorio";
+	private final static String ARCHIVO = "Archivo genérico";
 	private int contConsultas;
 	private Pantalla pantalla;
 	private EntityManager manager;
+	private MatrizAcordes miMatrizAcordes;
+	private ListaTonicas miListaDeTonicas;
+	private MatrizEstilos miMatrizEstilos;
+	
 	
 	/**---------------------------------------------------------------------------
 	  * Constructor
 	  *---------------------------------------------------------------------------*/
 	
 	public Aprendiz(){	
+		this.setMiMatrizAcordes(new MatrizAcordes());
+		this.setMiListaDeTonicas(new ListaTonicas());
+		this.setMiMatrizEstilos(new MatrizEstilos());
 		
 	}
 	
@@ -47,10 +46,11 @@ public class Aprendiz {
 	  * Recibe por parametros una lista llamada cancion que contiene todas las Acordes
 	  * que componen la cancion, recorre esta lista cargando en la matriz las Acordes
 	  * principales y luego las ocurrencias de estas con las secundarias
+	  * 
 	  * @param cancion
 	  * @param miMatrizAcordes
 	  *---------------------------------------------------------------------------*/
-	public void cargarCancion(ArrayList<String> cancion, MatrizAcordes miMatrizAcordes) {
+	public void cargarCancion(ArrayList<String> cancion, MatrizAcordes miMatrizAcordes,String estiloPpal) {
 		
 		int pos = 0;
 		String principal;
@@ -68,11 +68,10 @@ public class Aprendiz {
 				miMatrizAcordes.agregarAcordePrincipal(principal);
 			} 
 			pos++;			
-			// en memoria!
+			
 			miMatrizAcordes.agregaOcurrenciaAcordeSecundario(principal, secundaria);	
 		}
 	}
-	
 	
 	/**---------------------------------------------------------------------------
 	 * actualiza la base de datos 
@@ -232,10 +231,11 @@ public class Aprendiz {
 	public void iniciar() {
 		
 		ArrayList<String> cancion=new ArrayList<String>();
-		ArrayList<String> cancionEstilos=new ArrayList<String>();
+		ArrayList<String> cancionConEstilos=new ArrayList<String>();
 		
-		Aprendiz Aprendiz=new Aprendiz();
+		Aprendiz yoElAprendiz=new Aprendiz();
 		Archivos miArchivo = new Archivos();
+		String estiloPpal ="";
 			
 		try {
 			JFileChooser chooser= new JFileChooser();
@@ -263,9 +263,16 @@ public class Aprendiz {
 		  					escribir(path+files);
 		  					
 		  					if (miArchivo.leerArchivo(path+files)){
-		  						cancion = miArchivo.getCancionAnalizada();
+		  						
+		  						cancion = miArchivo.getCancionAnalizada();//repeats y acordes
+		  						cancionConEstilos = miArchivo.getCancionAnalizadaConEstilos();//repeats , acordes  y estilos
 		  						escribir("LISTA DE ACORDES: "+cancion.toString());
-			  					Aprendiz.cargarCancion(cancion, this.miMatrizAcordes);
+		  						//guardo los acordes en la matriz (en memoria)
+			  					
+			  					Patrones.guardarEstilosEnMatriz(cancionConEstilos, this.getMiMatrizEstilos());
+			  					estiloPpal = Patrones.deteminarEstiloPrincipal(cancionConEstilos);
+			  					
+			  					yoElAprendiz.cargarCancion(cancion, this.miMatrizAcordes,estiloPpal);
 			  					this.miListaDeTonicas.agregarTonica(miArchivo.getTonica());
 			  					cancion.clear();	
 		  					}
@@ -283,10 +290,18 @@ public class Aprendiz {
 		    	
 		    	if (miArchivo.leerArchivo(chooser.getSelectedFile().toString())){
 		    		cancion = miArchivo.getCancionAnalizada();
-		    		cancionEstilos = miArchivo.getCancionEstilos();
+		    		
 		    		escribir("LISTA DE ACORDES: "+cancion.toString());
+		    		
 					long t1 = System.currentTimeMillis();
-					Aprendiz.cargarCancion(cancion, this.miMatrizAcordes);
+					
+					//estilos
+					cancionConEstilos = miArchivo.getCancionAnalizadaConEstilos();//repeats , acordes  y estilos
+					Patrones.guardarEstilosEnMatriz(cancionConEstilos, this.getMiMatrizEstilos());
+  					estiloPpal = Patrones.deteminarEstiloPrincipal(cancionConEstilos);
+					//guarda cada cancion en la matriz
+					yoElAprendiz.cargarCancion(cancion, this.miMatrizAcordes,estiloPpal);
+					
 					this.miListaDeTonicas.agregarTonica(miArchivo.getTonica());
 					cancion.clear();
 					long t2 = System.currentTimeMillis();
@@ -356,4 +371,55 @@ public class Aprendiz {
 	public void setInterfaz(Pantalla pantalla) {
 		this.pantalla = pantalla;
 	}
+
+
+	public MatrizAcordes getMiMatrizAcordes() {
+		return miMatrizAcordes;
+	}
+
+
+	public void setMiMatrizAcordes(MatrizAcordes miMatrizAcordes) {
+		this.miMatrizAcordes = miMatrizAcordes;
+	}
+
+
+	public ListaTonicas getMiListaDeTonicas() {
+		return miListaDeTonicas;
+	}
+
+
+	public void setMiListaDeTonicas(ListaTonicas miListaDeTonicas) {
+		this.miListaDeTonicas = miListaDeTonicas;
+	}
+
+
+	public int getContConsultas() {
+		return contConsultas;
+	}
+
+
+	public void setContConsultas(int contConsultas) {
+		this.contConsultas = contConsultas;
+	}
+
+
+	public EntityManager getManager() {
+		return manager;
+	}
+
+
+	public void setManager(EntityManager manager) {
+		this.manager = manager;
+	}
+
+
+	public void setMiMatrizEstilos(MatrizEstilos miMatrizEstilos) {
+		this.miMatrizEstilos = miMatrizEstilos;
+	}
+
+
+	public MatrizEstilos getMiMatrizEstilos() {
+		return miMatrizEstilos;
+	}
+	
 }

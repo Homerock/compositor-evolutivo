@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import excepciones.EstilosException;
+
 /**---------------------------------------------------------------------------
   * @author Sebastian Pazos , Yamil Gomez
   *
@@ -11,6 +13,13 @@ import java.util.Map;
 public class MatrizEstilos {
 	
 	private Map <String,EstilosFila> misEstilos;
+	
+	private static final int UN_COMPAS = 1;
+	private static final int DOS_COMPASES = 2;
+	private static final int TRES_COMPASES = 3;
+	private static final int CUATRO_COMPASES = 4;
+	private static final int SEIS_COMPASES = 6;
+	private static final int OCHO_COMPASES = 8;
 		
 	/**---------------------------------------------------------------------------
 	  * Constructor
@@ -27,10 +36,14 @@ public class MatrizEstilos {
 		EstilosFila mapEstiloPpal;
 		Iterator it = mapEstilos.entrySet().iterator();
 		
+		
+		
 		while (it.hasNext()) {
 			Map.Entry e = (Map.Entry)it.next();
 			mapEstiloPpal= (EstilosFila) e.getValue();
-			System.out.println(" ---- Estilo ppal :"+e.getKey()+" ---- Total :"+mapEstiloPpal.getContador());	
+			System.out.println(" - Estilo ppal :"+e.getKey()+"- Total :"+mapEstiloPpal.getContador()+" - "+mapEstiloPpal.toString());
+			
+				
 			mapEstiloPpal.listarEstilos();
 		}
 	}
@@ -49,6 +62,8 @@ public class MatrizEstilos {
 			mapEstiloPpal.calcularAcumulados();
 		}
 	}
+	
+	
 	
 	/**---------------------------------------------------------------------------
 	  * se agrega una Estilo ppal en la matriz
@@ -91,7 +106,7 @@ public class MatrizEstilos {
 	  * @param EstiloPpal
 	  * @param EstiloSec
 	  *---------------------------------------------------------------------------*/
-	public void agregaOcurrenciaEstiloSecundaria(String EstiloPpal, String EstiloSec){
+	public void agregaOcurrenciaEstiloSecundario(String EstiloPpal, String EstiloSec){
 		
 		EstilosFila mapEstiloPpal;
 		mapEstiloPpal= this.getMisEstilos().get(EstiloPpal);
@@ -99,13 +114,49 @@ public class MatrizEstilos {
 		return;
 	}
 	
-	public void agregaOcurrenciaEstiloSecundaria(String EstiloPpal, String EstiloSec, int valor){
+	public void agregaOcurrenciaEstiloSecundario(String EstiloPpal, String EstiloSec, int valor){
 		
 		EstilosFila mapEstiloPpal;
 		mapEstiloPpal= this.getMisEstilos().get(EstiloPpal);
 		mapEstiloPpal.agregarEstilo(EstiloSec, valor);
 		
 		return;
+	}
+	
+	/**---------------------------------------------------------------------------
+	 * Seteamos el compas de un estilo determinado
+	 * solo consideramos los de 1,2,3,4,6,8 compases
+	 * 
+	 * @param estilo
+	 * @param compas
+	 ---------------------------------------------------------------------------*/
+	public void setCompas(String estilo , int compas) throws EstilosException{
+		EstilosFila miEstiloFila = this.getMisEstilos().get(estilo);
+		
+		switch (compas){
+			case UN_COMPAS: 
+							miEstiloFila.incCantUnCompas();
+							break;
+			case DOS_COMPASES: 
+							miEstiloFila.incCantDosCompases();
+							break;
+
+			case TRES_COMPASES: 
+							miEstiloFila.incCantTresCompases();
+							break;				
+			case CUATRO_COMPASES:	
+							miEstiloFila.incCantCuatroCompases();
+							break;
+			case SEIS_COMPASES:	
+							miEstiloFila.incCantSeisCompases();
+							break;
+			case OCHO_COMPASES :
+							miEstiloFila.incCantOchoCompases();
+							break;
+			default :
+					throw new EstilosException("No esta implementado para "+compas+" compases - Estilo :"+estilo);
+		}
+
 	}
 	
 	/**---------------------------------------------------------------------------

@@ -8,7 +8,7 @@ public class Inicio {
 
 	public static void main(String args[]){
 
-		EntityManager manager = Conexion.getConexionMysql();
+		EntityManager manager = Conexion.getConexionPsql();
 		
 		Aprendiz aprendiz = new Aprendiz();
 		aprendiz.levantarBase(manager);

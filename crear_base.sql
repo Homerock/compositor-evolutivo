@@ -24,10 +24,12 @@ create table acordes (
 create table estilos(
 	id integer not null PRIMARY KEY DEFAULT nextval('estilos_id_seq'),
 	nombre text default null,
-	compasesDeDosTiempos integer default null,
-	compasesDeCuatroTiempos integer default null,
-	compasesDeSeisTiempos integer default null,
-	compasesDeOchoTiempos integer default null
+	cantuncompas integer default null,
+	cantdoscompases integer default null,
+	canttrescompases integer default null,
+	cantcuatrocompases integer default null,
+	cantseiscompases integer default null,
+	cantochocompases integer default null
 );
 
 create table ocurrenciasAcordes(

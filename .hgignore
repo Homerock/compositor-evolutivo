@@ -8,4 +8,6 @@ lib/*
 *.bak
 *.mid
 *.mma
-
+#archivos de prueba
+src/grafica/Prueba_no_commit.java
+src/archivos/Patrones.java
