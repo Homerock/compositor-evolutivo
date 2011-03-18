@@ -1,6 +1,7 @@
 package archivos;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
@@ -19,9 +20,10 @@ public class Utiles {
 	protected static final String REPEAT_ENDING = "RepeatEnding";
 	protected static final String REPEAT_END = "RepeatEnd";
 	
-	
-	
+	private static String[] notasPpales= {"A","B","C","D","E","F","G"};
+	private static ArrayList<String> notasPosibles=new ArrayList(Arrays.asList(notasPpales));
 
+	
 /*################################################################################################################
   ###################						 FUNCIONES 						###################################### 
  ################################################################################################################# */
@@ -41,10 +43,11 @@ public class Utiles {
 	  * 
 	  * 
 	  * @param	ArrayList con la cancion y sus repeats
+	  * @param soloAcordes: indica si solo guardaremos acordes (true), o todo 
 	  * @return ArrayList con la cancion sin los repeats o null en caso de error
 	  *  
 	  *---------------------------------------------------------------------------*/
-	public static ArrayList<String> quitarRepets(ArrayList<String> cancion){
+	public static ArrayList<String> quitarRepets(ArrayList<String> cancion, boolean soloAcordes){
 		
 		ArrayList<Integer> arrayRepeat=new ArrayList<Integer>();
 		ArrayList<Integer> arrayRepeatEnding=new ArrayList<Integer>();
@@ -62,7 +65,14 @@ public class Utiles {
 		while(pos< cancion.size()){
 			valor =cancion.get(pos);
 			if (!valor.startsWith(REPEAT)) {
-				listaDeNotas.add(valor);
+				
+				if (soloAcordes) {
+					if (esNotaValida(valor)) {
+						listaDeNotas.add(valor);
+					}
+				} else {
+					listaDeNotas.add(valor);
+				}
 			}
 						
 			//si es repeat ending
@@ -221,9 +231,44 @@ public class Utiles {
 	 * @return
 	 */
 	public static String obtenerDatos(String linea, String token){
+
+		try {
           StringTokenizer tokens = new StringTokenizer(linea, token);
           tokens.nextToken();
           return tokens.nextToken();
+		} catch (java.util.NoSuchElementException e) {
+			return "";
+		}
+	}
+	
+	/**---------------------------------------------------------------------------
+	  * @param nota
+	  * @return
+	  *---------------------------------------------------------------------------*/
+	public static boolean esNotaValida(String nota){
+		//dice si una nota esta contenida
+		String notaSimple  = nota.substring(0, 1);//obtengo solo la primera letra
+				
+		if( getNotasPosibles().contains(notaSimple)){
+			//System.out.println("nota : "+nota+"- notaSimple : "+notaSimple);
+			return true;
+		}
+		return false;
+		//falta ver q verifiq todo el resto de la nota	
+	}
+	
+	/**---------------------------------------------------------------------------
+	  * @return
+	  *---------------------------------------------------------------------------*/
+	public static ArrayList<String> getNotasPosibles() {
+		return notasPosibles;
+	}
+	
+	/**---------------------------------------------------------------------------
+	  * @param notasPosibles
+	  *---------------------------------------------------------------------------*/
+	public void setNotasPosibles(ArrayList<String> notasPosibles) {
+		this.notasPosibles = notasPosibles;
 	}
   
 

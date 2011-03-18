@@ -44,9 +44,9 @@ public class EstilosDTO {
 		return result;
 	}
 	
-	public static Estilos buscar(EntityManager manager,String NombreEstilo) throws SQLException
+	public static Estilos buscar(EntityManager manager,String nombreEstilo) throws SQLException
 	{
-		Estilos[] e1 = manager.find(Estilos.class,Query.select().where("nombre like '"+NombreEstilo+"' "));
+		Estilos[] e1 = manager.find(Estilos.class,Query.select().where("nombre like '"+nombreEstilo+"' "));
 		
 		return e1[0];
 		

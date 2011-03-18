@@ -23,11 +23,8 @@ import estructura.ValorAcordes;
   *---------------------------------------------------------------------------*/
 public class Archivos {
 	
-	private String[] notasPpales= {"A","B","C","D","E","F","G"};
-	
-	private ArrayList<String> notasPosibles=new ArrayList(Arrays.asList(notasPpales));
 	private ArrayList<String> cancionAnalizada=new ArrayList<String>();
-	private ArrayList<String> cancionAnalizadaConEstilos=new ArrayList<String>();
+	private ArrayList<String> cancionAnalizadaConEstilo=new ArrayList<String>();
 	
 	private String estiloPpal;
 	private String tonica;
@@ -50,24 +47,38 @@ public class Archivos {
 		File fichero = new File(NombreArch);
 		this.vaciarCancionAnalizada();
 		this.vaciaCancionAnalizadaConEstilos();
+		Filtro fil = new Filtro(".mma");
+		String lineaEstilos;
 		
 		try {
+			if (!fil.accept(fichero, fichero.getName())) {
+				System.out.println("El formato del fichero "+ fichero.getName()+ " es incorrecto");
+				return false;
+			}
 			BufferedReader reader = new BufferedReader(new FileReader(fichero));
 			String linea = reader.readLine();
+			
 			while(linea != null){
 				//quito los comentarios de la linea
 				linea=Utiles.quitarComentarios(linea);
 				
 				if (!linea.isEmpty()){
+					lineaEstilos = linea;
 					this.analizarLinea(linea);
+					this.analizarLineaEstilos(lineaEstilos);
 				}
 				linea = reader.readLine();
 			}
 
 			//quitamos las repeticinones de la lista de acordes 
-			ArrayList<String> cancionSinRepeats =Utiles.quitarRepets(this.getCancionAnalizada());
+			
+			ArrayList<String> cancionSinRepeats =Utiles.quitarRepets(this.getCancionAnalizada(), true);
 			this.setCancionAnalizada(cancionSinRepeats);
 			
+			System.out.println("CANCION CON REPEATS " + cancionAnalizadaConEstilo.toString());
+			ArrayList<String> cancionConEstilosSinRepeats =Utiles.quitarRepets(this.getCancionAnalizadaConEstilo(), false);
+			this.setCancionAnalizadaConEstilo(cancionConEstilosSinRepeats);
+			System.out.println("CANCION SIN REPEATS " + cancionAnalizadaConEstilo.toString());
 			
 			//this.limpiarCancionEstilos();
 			//return this.getCancionAnalizada();
@@ -129,28 +140,23 @@ public class Archivos {
 		try{
 			StringTokenizer tokens = new StringTokenizer(linea);
 			String primerToken =tokens.nextToken();
+						
 			if (Utiles.isNumeric(primerToken)){
 			
 				//agregamos los posibles  acordes y "/" en el arraylist
 				while(tokens.hasMoreTokens()){
 					String tok = tokens.nextToken();
+					
 					if (tok.equals(Utiles.COMENTARIO)) {
 						break;
 					}
 					this.getCancionAnalizada().add(tok);
-					this.getCancionAnalizadaConEstilos().add(tok);//utilizado para los estilos
-				}
+				}	
 			}else {
 				//me fijo si esta la palabra repeat en una cadena, ya que nos intersa, y la agrego en el arraylist
 				if(linea.indexOf(Utiles.REPEAT)!=-1){
-					this.getCancionAnalizada().add(linea);	
-					this.getCancionAnalizadaConEstilos().add(linea);//utilizado para los estilos
+					this.getCancionAnalizada().add(linea);		
 				}
-				if(linea.indexOf(Utiles.ESTILO)!=-1){
-					this.getCancionAnalizadaConEstilos().add(linea);//utilizado para los estilos
-				}
-				
-				
 			}
 
 		}catch (NoSuchElementException e){
@@ -158,21 +164,42 @@ public class Archivos {
 		}
 	}
 	
+	
 	/**---------------------------------------------------------------------------
-	  * @param nota
-	  * @return
+	  * analiza una linea y guarda :
+	  *  - los acordes y "repeat" en el arrayList cancionAnalizada
+	  *  - los acordes , "repeats" y estilos en el arraylist cancionAnalizadoConEstilos 
+	  * 
+	  * @param linea
 	  *---------------------------------------------------------------------------*/
-	public boolean esNotaVailda(String nota){
-		//dice si una nota esta contenida
-		String notaSimple  = nota.substring(0, 1);//obtengo solo la primera letra
-				
-		if( this.getNotasPosibles().contains(notaSimple)){
-			//System.out.println("nota : "+nota+"- notaSimple : "+notaSimple);
-			return true;
-		}
-		return false;
-		//falta ver q verifiq todo el resto de la nota	
+	public void analizarLineaEstilos(String linea){
+		
+		try{
+			StringTokenizer tokens = new StringTokenizer(linea);
+			String primerToken =tokens.nextToken();
+			String acordesAux="";
+			//si es un numero 
+			if (Utiles.isNumeric(primerToken)){
+				while (tokens.hasMoreTokens()){
+					String tok = tokens.nextToken();
+					acordesAux = acordesAux + " " + tok;
+				}
+			this.getCancionAnalizadaConEstilo().add(acordesAux);
+			}else {
+				//me fijo si esta la palabra repeat en una cadena, ya que nos intersa, y la agrego en el arraylist
+				if(linea.indexOf(Utiles.REPEAT)!=-1){
+					this.getCancionAnalizadaConEstilo().add(linea);
+				}
+				if(linea.startsWith(Utiles.ESTILO)){
+					this.getCancionAnalizadaConEstilo().add(linea);
+				}
+			}
+			}catch (NoSuchElementException e){
+				//util para las lineas vacias y con espacios en blanco
+			}
 	}
+	
+	
 	
 	/**---------------------------------------------------------------------------
 	  * 
@@ -182,7 +209,7 @@ public class Archivos {
 	}
 	
 	public void vaciaCancionAnalizadaConEstilos(){
-		this.getCancionAnalizadaConEstilos().clear();
+		this.getCancionAnalizadaConEstilo().clear();
 	}
 	
 	public String getTonica() {
@@ -212,27 +239,13 @@ public class Archivos {
 		this.cancionAnalizada = cancionAnalizada;
 	}
 	
-	/**---------------------------------------------------------------------------
-	  * @return
-	  *---------------------------------------------------------------------------*/
-	public ArrayList<String> getNotasPosibles() {
-		return notasPosibles;
-	}
-	
-	/**---------------------------------------------------------------------------
-	  * @param notasPosibles
-	  *---------------------------------------------------------------------------*/
-	public void setNotasPosibles(ArrayList<String> notasPosibles) {
-		this.notasPosibles = notasPosibles;
-	}
-	
 
-	public ArrayList<String> getCancionAnalizadaConEstilos() {
-		return this.cancionAnalizadaConEstilos;
+	public ArrayList<String> getCancionAnalizadaConEstilo() {
+		return this.cancionAnalizadaConEstilo;
 	}
 
-	public void setCancionAnalizadaConEstilos(ArrayList<String> cancionAnalizadaConEstilos) {
-		this.cancionAnalizadaConEstilos = cancionAnalizadaConEstilos;
+	public void setCancionAnalizadaConEstilo(ArrayList<String> cancionAnalizadaConEstilos) {
+		this.cancionAnalizadaConEstilo = cancionAnalizadaConEstilos;
 	}
 
 

@@ -1,30 +1,37 @@
 package estructura;
 
 /**---------------------------------------------------------------------------
-  * esta clase guarda los valores de las ocurrencias de las Acordes y el valor acumulado
-  * @author yamil sebastian
-  *
-  *---------------------------------------------------------------------------*/
+ * esta clase guarda los valores de las ocurrencias de las Acordes y el valor acumulado
+ * @author yamil sebastian
+ *
+ *---------------------------------------------------------------------------*/
 public class ValorAcordes {
 	
+	private String acordeSecundario;
+	private String estilo;
 	private int valor;
 	private int valorAcumulado;
 	
 	/**---------------------------------------------------------------------------
 	  * 
 	  *---------------------------------------------------------------------------*/
-	public ValorAcordes(){
+	public ValorAcordes(String acorde, String estilo){
 		this.valor=0;
 		this.valorAcumulado=0;
+		this.acordeSecundario = acorde;
+		this.estilo = estilo;
 		return;
 	}
 	
 	/**---------------------------------------------------------------------------
 	  * @param val
 	  *---------------------------------------------------------------------------*/
-	public ValorAcordes(int val){
+	public ValorAcordes(String acorde, int val, String estilo){
+		this.acordeSecundario = acorde;
+		this.estilo = estilo;
 		this.valor=val;
 		this.valorAcumulado=0;
+		
 		return;
 	}
 	
@@ -64,6 +71,22 @@ public class ValorAcordes {
 	  *---------------------------------------------------------------------------*/
 	public void setValorAcumulado(int valorAcumulado) {
 		this.valorAcumulado = valorAcumulado;
+	}
+	
+	public String getAcordeSecundario() {
+		return acordeSecundario;
+	}
+
+	public void setAcordeSecundario(String acordeSecundario) {
+		this.acordeSecundario = acordeSecundario;
+	}
+
+	public String getEstilo() {
+		return estilo;
+	}
+
+	public void setEstilo(String estilo) {
+		this.estilo = estilo;
 	}
 	
 	/* ---------------------------------------------------------------------------

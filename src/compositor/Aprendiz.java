@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.Map;
 import javax.swing.JFileChooser;
 import archivos.Archivos;
-import archivos.Patrones;
+import archivos.Estilos;
 import net.java.ao.EntityManager;
 
 /**---------------------------------------------------------------------------
@@ -28,6 +28,7 @@ public class Aprendiz {
 	private MatrizAcordes miMatrizAcordes;
 	private ListaTonicas miListaDeTonicas;
 	private MatrizEstilos miMatrizEstilos;
+	private String estiloPpal ="";
 	
 	
 	/**---------------------------------------------------------------------------
@@ -50,7 +51,7 @@ public class Aprendiz {
 	  * @param cancion
 	  * @param miMatrizAcordes
 	  *---------------------------------------------------------------------------*/
-	public void cargarCancion(ArrayList<String> cancion, MatrizAcordes miMatrizAcordes,String estiloPpal) {
+	public void cargarCancion(ArrayList<String> cancion, MatrizAcordes miMatrizAcordes, String estiloPpal) {
 		
 		int pos = 0;
 		String principal;
@@ -69,7 +70,7 @@ public class Aprendiz {
 			} 
 			pos++;			
 			
-			miMatrizAcordes.agregaOcurrenciaAcordeSecundario(principal, secundaria);	
+			miMatrizAcordes.agregaOcurrenciaAcordeSecundario(principal, secundaria, estiloPpal);	
 		}
 	}
 	
@@ -79,49 +80,44 @@ public class Aprendiz {
 	 * Acordes y ocurrencias
 	  * @param miMatrizAcordes
 	  *---------------------------------------------------------------------------*/
-	public void actualizarBD( MatrizAcordes miMatrizAcordes, ListaTonicas miListaTonicas) {
+	public void actualizarBD( MatrizAcordes miMatrizAcordes, ListaTonicas miListaTonicas, String estiloPpal) {
 		
 		String nombreAPpal, nombreASec;
-		int apariciones;
 		
 		Map<String, Integer> mapTonicas = miListaTonicas.getMisTonicas();
-		
 		Map<String, AcordesFila> mapAcordesMatriz = miMatrizAcordes.getMisAcordes();//toda la matriz de Acordes
-		Map<String, ValorAcordes> mapAcordes;//para cada Acorde
+		ArrayList<ValorAcordes> listaOc;
 		
-		AcordesFila mapAcordePpal;
+		AcordesFila acordePpal;
 		Iterator it = mapAcordesMatriz.entrySet().iterator();
-		Iterator it2;
 		long t1, t0 = System.currentTimeMillis();
 		
 		
 		while (it.hasNext()) {
 			Map.Entry e = (Map.Entry)it.next();
-			mapAcordePpal= (AcordesFila) e.getValue();
+			acordePpal = (AcordesFila) e.getValue();
 			nombreAPpal = (String) e.getKey();
-			escribir(" ---- Acorde ppal :"+ nombreAPpal +" ---- Total :" + mapAcordePpal.getContador());
+			escribir(" ---- Acorde ppal :"+ nombreAPpal +" ---- Total :" + acordePpal.getContador());
 			
 			try {
 				if (AcordesDTO.existe(this.manager, nombreAPpal)) {
-					AcordesDTO.Actualizar(this.manager, nombreAPpal, mapAcordePpal.getContador());
+					AcordesDTO.Actualizar(this.manager, nombreAPpal, acordePpal.getContador());
 				} else {
-					AcordesDTO.Insertar(this.manager, nombreAPpal, mapAcordePpal.getContador());
+					AcordesDTO.Insertar(this.manager, nombreAPpal, acordePpal.getContador());
 				}
 			
 				//ahora vamos a cargar las ocurrencias 
-				mapAcordes = mapAcordePpal.getMapAcordes();
-				it2= mapAcordes.entrySet().iterator();
-		
-				while (it2.hasNext()) {
-					Map.Entry e2 = (Map.Entry)it2.next();
-					nombreASec = (String) e2.getKey();
-					escribir(nombreASec + " " + e2.getValue().toString());//metodo para el log de la interfaz
+				listaOc = acordePpal.getListaOcurrencias();
+				
+				for(ValorAcordes va : listaOc) {
+					
+					nombreASec = va.getAcordeSecundario();
+					escribir(nombreASec + " " + va.getValor());//metodo para el log de la interfaz
 					
 					if (!AcordesDTO.existe(this.manager, nombreASec)) {
 						AcordesDTO.Insertar(this.manager, nombreASec, 0);
 					}
-					ValorAcordes vn = (ValorAcordes) e2.getValue();
-					actualizarBDOcurrencias(nombreAPpal, nombreASec, vn.getValor());
+					actualizarBDOcurrencias(nombreAPpal, nombreASec, va.getValor(), estiloPpal);
 				}
 			} catch (SQLException e1) {
 				System.out.println("Error en actualizar base");
@@ -141,16 +137,17 @@ public class Aprendiz {
 				acorde = AcordesDTO.buscar(this.manager, nombreTonica);
 			
 				
-				if (TonicasDTO.existe(this.manager, acorde)) {
-				//	TonicasDTO.Actualizar(this.manager, acorde, (Integer) e.getValue());
+				// NO ANDA EL EXISTE!!!!!!!!!!--------------------------------------------------------
+				
+				/*if (TonicasDTO.existe(this.manager, acorde)) {
+					TonicasDTO.Actualizar(this.manager, acorde, (Integer) e.getValue());
 				} else {
-				//	TonicasDTO.Insertar(this.manager, nombreTonica, (Integer) e.getValue());
-				}
+					TonicasDTO.Insertar(this.manager, nombreTonica, (Integer) e.getValue());
+				}*/
 				
 				System.out.println("tonica: " + e.getKey() + " cantidad de apariciones: " + e.getValue());
 				
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
@@ -161,7 +158,7 @@ public class Aprendiz {
 	  * @param AcordePpal
 	  * @param AcordeSec
 	  *---------------------------------------------------------------------------*/
-	private void actualizarBDOcurrencias(String nombreAPpal, String nombreASec, int cantidad) {
+	private void actualizarBDOcurrencias(String nombreAPpal, String nombreASec, int cantidad, String estiloPpal) {
 		
 		int cant = 0;
 		int acum = 0;
@@ -177,7 +174,8 @@ public class Aprendiz {
 				OcurrenciasAcordesDTO.Actualizar(this.manager, acordePpal, acordeSec, cantidad);
 		
 			} else {
-				OcurrenciasAcordesDTO.Insertar(this.manager, acordePpal, acordeSec, cantidad);
+				orm.Estilos est = EstilosDTO.buscar(this.manager, estiloPpal);
+				OcurrenciasAcordesDTO.Insertar(this.manager, acordePpal, acordeSec, cantidad, est);
 			}	
 		
 		} catch (SQLException e) {
@@ -207,7 +205,7 @@ public class Aprendiz {
 		
 			OcurrenciasAcordes[] listaOcurrencias =  OcurrenciasAcordesDTO.seleccionarTodos(this.manager);
 			for (OcurrenciasAcordes oa : listaOcurrencias){
-				this.miMatrizAcordes.agregaOcurrenciaAcordeSecundario(oa.getAcordePrincipal().getNombre(), oa.getAcordeSecundario().getNombre(), oa.getCantidad());
+				this.miMatrizAcordes.agregaOcurrenciaAcordeSecundario(oa.getAcordePrincipal().getNombre(), oa.getAcordeSecundario().getNombre(), oa.getCantidad(), oa.getEstilos().getNombre());
 			}
 			
 			Tonicas[] listaTonicas = TonicasDTO.seleccionarTodos(manager);
@@ -235,7 +233,7 @@ public class Aprendiz {
 		
 		Aprendiz yoElAprendiz=new Aprendiz();
 		Archivos miArchivo = new Archivos();
-		String estiloPpal ="";
+		
 			
 		try {
 			JFileChooser chooser= new JFileChooser();
@@ -265,12 +263,12 @@ public class Aprendiz {
 		  					if (miArchivo.leerArchivo(path+files)){
 		  						
 		  						cancion = miArchivo.getCancionAnalizada();//repeats y acordes
-		  						cancionConEstilos = miArchivo.getCancionAnalizadaConEstilos();//repeats , acordes  y estilos
+		  						cancionConEstilos = miArchivo.getCancionAnalizadaConEstilo();//repeats , acordes  y estilos
 		  						escribir("LISTA DE ACORDES: "+cancion.toString());
 		  						//guardo los acordes en la matriz (en memoria)
-			  					
-			  					Patrones.guardarEstilosEnMatriz(cancionConEstilos, this.getMiMatrizEstilos());
-			  					estiloPpal = Patrones.deteminarEstiloPrincipal(cancionConEstilos);
+			  					System.out.println(path+files);
+			  					Estilos.guardarEstilosEnMatriz(cancionConEstilos, this.getMiMatrizEstilos());
+			  					estiloPpal = Estilos.deteminarEstiloPrincipal(cancionConEstilos);
 			  					
 			  					yoElAprendiz.cargarCancion(cancion, this.miMatrizAcordes,estiloPpal);
 			  					this.miListaDeTonicas.agregarTonica(miArchivo.getTonica());
@@ -296,11 +294,11 @@ public class Aprendiz {
 					long t1 = System.currentTimeMillis();
 					
 					//estilos
-					cancionConEstilos = miArchivo.getCancionAnalizadaConEstilos();//repeats , acordes  y estilos
-					Patrones.guardarEstilosEnMatriz(cancionConEstilos, this.getMiMatrizEstilos());
-  					estiloPpal = Patrones.deteminarEstiloPrincipal(cancionConEstilos);
+					cancionConEstilos = miArchivo.getCancionAnalizadaConEstilo();//repeats , acordes  y estilos
+					Estilos.guardarEstilosEnMatriz(cancionConEstilos, this.getMiMatrizEstilos());
+  					estiloPpal = Estilos.deteminarEstiloPrincipal(cancionConEstilos);
 					//guarda cada cancion en la matriz
-					yoElAprendiz.cargarCancion(cancion, this.miMatrizAcordes,estiloPpal);
+					yoElAprendiz.cargarCancion(cancion, this.miMatrizAcordes, estiloPpal);
 					
 					this.miListaDeTonicas.agregarTonica(miArchivo.getTonica());
 					cancion.clear();
@@ -310,7 +308,7 @@ public class Aprendiz {
 		    }
 		       
 		    this.miMatrizAcordes.calcularAcumulados();
-		   // this.miMatrizAcordes.listarAcordes();
+		    this.miMatrizAcordes.listarAcordes();
 		       
 		}catch(NullPointerException e1){
 			escribir("Error: Aprendiz.iniciar()");
@@ -342,8 +340,7 @@ public class Aprendiz {
 	 *---------------------------------------------------------------------------*/
 	public void guardar() {
 		
-		//this.guardarCancion(this.miMatrizAcordes);
-		this.actualizarBD(this.miMatrizAcordes, this.miListaDeTonicas);
+		//this.actualizarBD(this.miMatrizAcordes, this.miListaDeTonicas, this.estiloPpal);
 		
 	}
 	

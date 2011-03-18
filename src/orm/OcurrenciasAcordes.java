@@ -17,7 +17,7 @@ public interface OcurrenciasAcordes extends Entity {
 	public int getCantidad();
 	public void setCantidad(int cantidad);
 	
-	public int getEstilos();
+	public Estilos getEstilos();
 	public void setEstilos(Estilos estilo);
 	
 	

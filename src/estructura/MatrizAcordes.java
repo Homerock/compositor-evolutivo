@@ -52,7 +52,7 @@ public class MatrizAcordes {
 	
 	/**---------------------------------------------------------------------------
 	  * se agrega una Acorde ppal en la matriz
-	  * se deve verificar previamente si esta Acorde ya existe si se reescribe
+	  * se debe verificar previamente si esta Acorde ya existe si se reescribe
 	  * @param AcordePpal
 	  *---------------------------------------------------------------------------*/
 	public void agregarAcordePrincipal(String AcordePpal){
@@ -91,19 +91,20 @@ public class MatrizAcordes {
 	  * @param AcordePpal
 	  * @param AcordeSec
 	  *---------------------------------------------------------------------------*/
-	public void agregaOcurrenciaAcordeSecundario(String AcordePpal, String AcordeSec){
+	public void agregaOcurrenciaAcordeSecundario(String AcordePpal, String AcordeSec, String estilo){
 		
 		AcordesFila mapAcordePpal;
 		mapAcordePpal= this.getMisAcordes().get(AcordePpal);
-		mapAcordePpal.agregarAcorde(AcordeSec);
+		mapAcordePpal.agregarAcorde(AcordeSec, estilo);
 		return;
 	}
 	
-	public void agregaOcurrenciaAcordeSecundario(String AcordePpal, String AcordeSec, int valor){
+	/**---------------------------------------------------------------------------*/
+	public void agregaOcurrenciaAcordeSecundario(String AcordePpal, String AcordeSec, int valor, String estilo){
 		
 		AcordesFila mapAcordePpal;
 		mapAcordePpal= this.getMisAcordes().get(AcordePpal);
-		mapAcordePpal.agregarAcorde(AcordeSec, valor);
+		mapAcordePpal.agregarAcorde(AcordeSec, valor, estilo);
 		
 		return;
 	}
@@ -129,3 +130,4 @@ public class MatrizAcordes {
 		
 	}
 }
+

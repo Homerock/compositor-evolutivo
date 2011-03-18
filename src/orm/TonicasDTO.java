@@ -86,6 +86,7 @@ public class TonicasDTO {
 	{	
 		boolean existe = false;
 		
+		System.out.println("Tonica buscada: " + acorde.getID());
 		Tonicas[] t1 = manager.find(Tonicas.class,Query.select().where(" acordeid = '"+acorde.getID())+"' ");
 		if(t1.length > 0){
 			existe =true;

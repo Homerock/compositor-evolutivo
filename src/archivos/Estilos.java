@@ -22,7 +22,7 @@ public class Estilos {
  ################################################################################################################# */
 	private static Map<String,Integer>  misEstilos = new HashMap<String, Integer>();
 	private static ArrayList<String> misEstilosOrdenados = new ArrayList<String>();
-	private static boolean DEBUG = false;
+	private static boolean DEBUG = true;
 
 
 /*################################################################################################################
@@ -171,7 +171,6 @@ public class Estilos {
 						miLista.add(valor);
 						cont++;
 					}
-			
 						
 			}while(j<(cancionAnalizadaConEstilos.size()-1));
 		
@@ -234,28 +233,32 @@ public class Estilos {
 				
 						//si la linea es la que determina el estilo 
 						if (valor.startsWith(Utiles.ESTILO)){
-							miListaEstilos.add(Utiles.obtenerDatos(valor," "));//obtenemos el nombre del groove
-							if (!GrooveAnt.isEmpty()){
-								if (DEBUG)
-									System.out.println("Groove :" + GrooveAnt);
-								if (cont>0){//si tiene por lo menos un compas el estilo
-									//guardo el estilo
-									agregarEstilo(GrooveAnt);
-									
-									if (DEBUG)
-										System.out.println("cant : "+cont);
-								}
-								if(!miLista.isEmpty()){//si no es vacia la lista de compases del estilo
-									if (DEBUG)
-										System.out.println("Acordes : "+miLista.toString());
-								}
-								if (DEBUG)
-									System.out.println("---------------------------");
-							}
-							GrooveAnt=Utiles.obtenerDatos(valor, " ");//guardo el nombre del groove
-							miLista.clear();
-							cont=0;	
 							
+							String estilo = Utiles.obtenerDatos(valor," ");
+							if (estilo.length() != 0) {
+								miListaEstilos.add(estilo);//obtenemos el nombre del groove
+								if (!GrooveAnt.isEmpty()){
+									if (DEBUG)
+										System.out.println("Groove :" + GrooveAnt);
+									if (cont>0){//si tiene por lo menos un compas el estilo
+										//guardo el estilo
+										agregarEstilo(GrooveAnt);
+										
+										if (DEBUG)
+											System.out.println("cant : "+cont);
+									}
+									if(!miLista.isEmpty()){//si no es vacia la lista de compases del estilo
+										if (DEBUG)
+											System.out.println("Acordes : "+miLista.toString());
+									}
+									if (DEBUG)
+										System.out.println("---------------------------");
+								}
+								GrooveAnt=Utiles.obtenerDatos(valor, " ");//guardo el nombre del groove
+								miLista.clear();
+								cont=0;	
+							}
+																			
 						// si la linea NO es la que tiene el estilo 	
 						}else{//agrego notas (de algun grove, antes seteado) e incremento contador
 
@@ -276,12 +279,9 @@ public class Estilos {
 						System.out.println("Acordes : "+miLista.toString());
 					}
 				
-				}
-				
-				
+				}				
 				String estiloPpal = calcularEstiloPrincipal();//calcula cual es el estilo ppal
 				return estiloPpal;
-			
 		}
 			
 			

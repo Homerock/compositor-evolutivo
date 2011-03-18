@@ -10,13 +10,14 @@ import net.java.ao.Query;
 
 public class OcurrenciasAcordesDTO {
 
-	public static void Insertar (EntityManager manager, Acordes Ppal, Acordes Sec, int cant) throws SQLException   
+	public static void Insertar (EntityManager manager, Acordes Ppal, Acordes Sec, int cant, Estilos estiloPpal) throws SQLException   
 	{
 		
 		Map <String,Object> parametros = new HashMap<String, Object>();
 		parametros.put("acordeprincipalid", Ppal.getID());
 		parametros.put("acordesecundarioid", Sec.getID());
 		parametros.put("cantidad", cant);
+		parametros.put("estiloid", estiloPpal.getID());
 		
 		OcurrenciasAcordes oa = manager.create(OcurrenciasAcordes.class, parametros);
 		
