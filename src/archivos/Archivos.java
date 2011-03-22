@@ -103,9 +103,14 @@ public class Archivos {
 	}
 	
 	/**---------------------------------------------------------------------------
+	 * Escribe en un archivo con el nombre dado
+	 * el contenido especificado
+	 * la variable agregar indica si se debe agregar el contenido o crear uno nuevo 
+	 * 
+	 * 
 	 * @param nombre
 	 * @param contenido
-	 * @param agregar
+	 * @param agregar : true agrega una nueva linea , false crea uno nuevo o sobreescribe el que esta
 	 *---------------------------------------------------------------------------*/
 	public void escribirArchivo(String nombre, String contenido, boolean agregar) {
 		

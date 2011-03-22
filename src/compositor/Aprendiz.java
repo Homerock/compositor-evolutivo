@@ -1,6 +1,7 @@
 package compositor;
 
 import estructura.*;
+import excepciones.ArchivosException;
 import grafica.Pantalla;
 import orm.*;
 import java.sql.SQLException;
@@ -255,9 +256,15 @@ public class Aprendiz {
 		  				if (listOfFiles[i].isFile()) {
 		  					files = listOfFiles[i].getName();
 		  					escribir("Archivo a leer :"+path+files);
-		  					if (miArchivo.leerArchivo(path+files)){
-		  						this.procesarArchivo(miArchivo);
-		  					}
+		  					
+		  					try {
+								if (miArchivo.leerArchivo(path+files)){
+									this.procesarArchivo(miArchivo);
+								}
+							} catch (ArchivosException e) {
+								System.err.println(e.getMessage());
+								//e.printStackTrace();
+							}
 		  				}
 		  			}
 		  	    }catch(NullPointerException e){
@@ -267,9 +274,13 @@ public class Aprendiz {
 		    //si es un archivo
 		    if(tipo.compareTo(ARCHIVO)==0){
 		    	escribir("Archivo a leer :"+chooser.getSelectedFile());
-		    	if (miArchivo.leerArchivo(chooser.getSelectedFile().toString())){
-		    		this.procesarArchivo(miArchivo);
-		    	}
+		    	try {
+					if (miArchivo.leerArchivo(chooser.getSelectedFile().toString())){
+						this.procesarArchivo(miArchivo);
+					}
+				} catch (ArchivosException e) {
+					System.err.println(e.getMessage());
+				}
 		    }
 		       
 		    this.miMatrizAcordes.calcularAcumulados();

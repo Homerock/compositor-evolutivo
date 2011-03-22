@@ -15,11 +15,13 @@ public class Utiles {
 	protected static final String COMENTARIO = "//";
 	protected static final String CADENAVACIA="";
 	protected static final String ESTILO = "Groove";//para definir un estilo debe estar definido asi "Groove miEstilo"
+	protected static final String NUEVO_ESTILO ="DefGroove";
 	protected static final String SIN_ESTILO = "sinEstilo";
 	protected static final String REPEAT = "Repeat";
 	protected static final String REPEAT_ENDING = "RepeatEnding";
 	protected static final String REPEAT_END = "RepeatEnd";
 	protected static final String TEMPO = "Tempo";
+	
 	
 	private static String[] notasPpales= {"A","B","C","D","E","F","G"};
 	private static ArrayList<String> notasPosibles=new ArrayList(Arrays.asList(notasPpales));

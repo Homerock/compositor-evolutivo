@@ -140,7 +140,6 @@ public class MatrizEstilos {
 			case DOS_COMPASES: 
 							miEstiloFila.incCantDosCompases();
 							break;
-
 			case TRES_COMPASES: 
 							miEstiloFila.incCantTresCompases();
 							break;				
