@@ -29,7 +29,7 @@ public class Archivos {
 	private String estiloPpal;
 	private String tonica;
 	private String tempo;
-	private String duracion;
+	private int duracion;
 		
 
 	/**---------------------------------------------------------------------------
@@ -81,9 +81,6 @@ public class Archivos {
 			ArrayList<String> cancionConEstilosSinRepeats =Utiles.quitarRepets(this.getCancionAnalizadaConEstilo(), false);
 			this.setCancionAnalizadaConEstilo(cancionConEstilosSinRepeats);
 			
-			//this.limpiarCancionEstilos();
-			//return this.getCancionAnalizada();
-			
 			try {
 				this.setTonica(this.getCancionAnalizada().get(0));
 			} catch (IndexOutOfBoundsException e) {
@@ -105,11 +102,11 @@ public class Archivos {
 	
 	}
 	
-	/**
+	/**---------------------------------------------------------------------------
 	 * @param nombre
 	 * @param contenido
 	 * @param agregar
-	 */
+	 *---------------------------------------------------------------------------*/
 	public void escribirArchivo(String nombre, String contenido, boolean agregar) {
 		
 		FileOutputStream archivo = null;
@@ -194,7 +191,8 @@ public class Archivos {
 					String tok = tokens.nextToken();
 					acordesAux = acordesAux + " " + tok;
 				}
-			this.getCancionAnalizadaConEstilo().add(acordesAux);
+				this.incrementarCantidad();
+				this.getCancionAnalizadaConEstilo().add(acordesAux);
 			}else {
 				//me fijo si esta la palabra repeat en una cadena, ya que nos intersa, y la agrego en el arraylist
 				if(linea.indexOf(Utiles.REPEAT)!=-1){
@@ -209,7 +207,16 @@ public class Archivos {
 			}
 	}
 	
-	
+	/**---------------------------------------------------------------------------
+	 *
+	 *---------------------------------------------------------------------------*/
+	public void incrementarCantidad() {
+		
+		int cant;
+		
+		cant = this.getDuracion();
+		this.setDuracion(cant+1);
+	}
 	
 	/**---------------------------------------------------------------------------
 	  * 
@@ -217,40 +224,67 @@ public class Archivos {
 	public void vaciarCancionAnalizada(){
 		this.getCancionAnalizada().clear();
 	}
-	
+
+	/**---------------------------------------------------------------------------
+	  * 
+	  *---------------------------------------------------------------------------*/
 	public void vaciaCancionAnalizadaConEstilos(){
 		this.getCancionAnalizadaConEstilo().clear();
 	}
 	
+	/**---------------------------------------------------------------------------
+	  * 
+	  *---------------------------------------------------------------------------*/
 	public void setTonica(String tonica) {
 		this.tonica = tonica;
 	}
 	
+	/**---------------------------------------------------------------------------
+	  * 
+	  *---------------------------------------------------------------------------*/
 	public String getTonica() {
 		return this.tonica;
 	}
 	
+	/**---------------------------------------------------------------------------
+	  * 
+	  *---------------------------------------------------------------------------*/
 	public String getEstiloPpal() {
 		return this.estiloPpal;
 	}
 
+	/**---------------------------------------------------------------------------
+	  * 
+	  *---------------------------------------------------------------------------*/
 	public void setEstiloPpal(String estiloPpal) {
 		this.estiloPpal = estiloPpal;
 	}
 	
+	/**---------------------------------------------------------------------------
+	  * 
+	  *---------------------------------------------------------------------------*/
 	public String getTempo() {
 		return tempo;
 	}
 
+	/**---------------------------------------------------------------------------
+	  * 
+	  *---------------------------------------------------------------------------*/
 	public void setTempo(String tempo) {
 		this.tempo = tempo;
 	}
 	
-	public String getDuracion() {
+	/**---------------------------------------------------------------------------
+	  * 
+	  *---------------------------------------------------------------------------*/
+	public int getDuracion() {
 		return duracion;
 	}
 
-	public void setDuracion(String duracion) {
+	/**---------------------------------------------------------------------------
+	  * 
+	  *---------------------------------------------------------------------------*/
+	public void setDuracion(int duracion) {
 		this.duracion = duracion;
 	}
 	
@@ -268,10 +302,16 @@ public class Archivos {
 		this.cancionAnalizada = cancionAnalizada;
 	}
 
+	/**---------------------------------------------------------------------------
+	  * 
+	  *---------------------------------------------------------------------------*/
 	public ArrayList<String> getCancionAnalizadaConEstilo() {
 		return this.cancionAnalizadaConEstilo;
 	}
 
+	/**---------------------------------------------------------------------------
+	  * 
+	  *---------------------------------------------------------------------------*/
 	public void setCancionAnalizadaConEstilo(ArrayList<String> cancionAnalizadaConEstilos) {
 		this.cancionAnalizadaConEstilo = cancionAnalizadaConEstilos;
 	}

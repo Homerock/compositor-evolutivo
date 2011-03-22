@@ -28,6 +28,7 @@ public class Aprendiz {
 	private MatrizAcordes miMatrizAcordes;
 	private ListaValores miListaDeTonicas;
 	private ListaValores miListaDeTempos;
+	private ListaValores miListaDeDuraciones;
 	private MatrizEstilos miMatrizEstilos;
 	private String estiloPpal ="";
 	
@@ -38,11 +39,13 @@ public class Aprendiz {
 	
 	public Aprendiz(){	
 		this.setMiMatrizAcordes(new MatrizAcordes());
-		this.setMiListaDeTonicas(new ListaValores());
 		this.setMiMatrizEstilos(new MatrizEstilos());
+		this.setMiListaDeTonicas(new ListaValores());
 		this.setMiListaDeTempos(new ListaValores());
+		this.setMiListaDeDuraciones(new ListaValores());
 	}
 	
+
 	/**---------------------------------------------------------------------------
 	  * Recibe por parametros una lista llamada cancion que contiene todas las Acordes
 	  * que componen la cancion, recorre esta lista cargando en la matriz las Acordes
@@ -228,12 +231,7 @@ public class Aprendiz {
 	  *---------------------------------------------------------------------------*/
 	public void iniciar() {
 		
-		ArrayList<String> cancion=new ArrayList<String>();
-		ArrayList<String> cancionConEstilos=new ArrayList<String>();
-		
-		Aprendiz yoElAprendiz=new Aprendiz();
 		Archivos miArchivo = new Archivos();
-		
 			
 		try {
 			JFileChooser chooser= new JFileChooser();
@@ -252,33 +250,16 @@ public class Aprendiz {
 		  			String files;
 		  			File folder = new File(path);
 		  			escribir("Directorio a cargar :"+path);
-		  		    
 		  			File[] listOfFiles = folder.listFiles();
-		  			long t1 = System.currentTimeMillis();
 		  			for (int i = 0; i < listOfFiles.length; i++) {
 		  				if (listOfFiles[i].isFile()) {
 		  					files = listOfFiles[i].getName();
-		  					escribir(path+files);
-		  					
+		  					escribir("Archivo a leer :"+path+files);
 		  					if (miArchivo.leerArchivo(path+files)){
-		  						
-		  						cancion = miArchivo.getCancionAnalizada();//repeats y acordes
-		  						cancionConEstilos = miArchivo.getCancionAnalizadaConEstilo();//repeats , acordes  y estilos
-		  						escribir("LISTA DE ACORDES: "+cancion.toString());
-		  						//guardo los acordes en la matriz (en memoria)
-			  					System.out.println(path+files);
-			  					Estilos.guardarEstilosEnMatriz(cancionConEstilos, this.getMiMatrizEstilos());
-			  					estiloPpal = Estilos.deteminarEstiloPrincipal(cancionConEstilos);
-			  					
-			  					yoElAprendiz.cargarCancion(cancion, this.miMatrizAcordes,estiloPpal);
-			  					this.miListaDeTonicas.agregarValor(miArchivo.getTonica(), estiloPpal);
-			  					this.miListaDeTempos.agregarValor(miArchivo.getTempo(),estiloPpal);
-			  					cancion.clear();	
+		  						this.procesarArchivo(miArchivo);
 		  					}
 		  				}
 		  			}
-		  			long t2 = System.currentTimeMillis();
-		  			escribir("tiempo en mls " + (t2 - t1));
 		  	    }catch(NullPointerException e){
 		  	    	escribir("Error en lectura de directorio");
 		  	    }
@@ -286,43 +267,53 @@ public class Aprendiz {
 		    //si es un archivo
 		    if(tipo.compareTo(ARCHIVO)==0){
 		    	escribir("Archivo a leer :"+chooser.getSelectedFile());
-		    	
 		    	if (miArchivo.leerArchivo(chooser.getSelectedFile().toString())){
-		    		cancion = miArchivo.getCancionAnalizada();
-		    		
-		    		escribir("LISTA DE ACORDES: "+cancion.toString());
-		    		
-					long t1 = System.currentTimeMillis();
-					
-					//estilos
-					cancionConEstilos = miArchivo.getCancionAnalizadaConEstilo();//repeats , acordes  y estilos
-					Estilos.guardarEstilosEnMatriz(cancionConEstilos, this.getMiMatrizEstilos());
-  					estiloPpal = Estilos.deteminarEstiloPrincipal(cancionConEstilos);
-					//guarda cada cancion en la matriz
-					yoElAprendiz.cargarCancion(cancion, this.miMatrizAcordes, estiloPpal);
-					this.miListaDeTonicas.agregarValor(miArchivo.getTonica(), estiloPpal);
-					//this.miListaDeTempos.agregarTempo(miArchivo.getTempo(),estiloPpal);
-					cancion.clear();
-					long t2 = System.currentTimeMillis();
-					escribir("tiempo en mls " + (t2 - t1));
+		    		this.procesarArchivo(miArchivo);
 		    	}
 		    }
 		       
 		    this.miMatrizAcordes.calcularAcumulados();
 		    
 		    
-		    // MOSTRAR RESULTADOS
+		    System.out.println("-------------------listado de acordes----------------------");
 		 //   this.miMatrizAcordes.listarAcordes();
-		    System.out.println("-----------listado de tonicas------------");
+		    System.out.println("-------------------listado de tonicas----------------------");
 		    this.miListaDeTonicas.listarValor();
-		    System.out.println("-----------listado de tempos-------------");
+		    System.out.println("-------------------listado de tempos-----------------------");
 		    this.miListaDeTempos.listarValor();
+		    System.out.println("-------------------listado de duraciones-------------------");
+		    this.miListaDeDuraciones.listarValor();
+		    
 		       
 		}catch(NullPointerException e1){
 			escribir("Error: Aprendiz.iniciar()");
 		}	
 	}
+	
+	/**---------------------------------------------------------------------------
+	 * procesarArchivo
+	 * Se encarga de analizar una cancion extraida de un archivo
+	 * carga las matrices de acordes y de estilos, ademas obtiene tonica, tempo y duracion del tema
+	 * y los carga en sus listas correspondientes.
+	 * @param miArchivo
+	 *---------------------------------------------------------------------------*/
+	private void procesarArchivo(Archivos miArchivo) {
 		
+		ArrayList<String> cancion=new ArrayList<String>();
+		ArrayList<String> cancionConEstilos=new ArrayList<String>();
+		
+		cancion = miArchivo.getCancionAnalizada();
+		cancionConEstilos = miArchivo.getCancionAnalizadaConEstilo();//repeats , acordes  y estilos
+		escribir("LISTA DE ACORDES: "+cancion.toString());
+		Estilos.guardarEstilosEnMatriz(cancionConEstilos, this.getMiMatrizEstilos());
+		this.setEstiloPpal(Estilos.deteminarEstiloPrincipal(cancionConEstilos));
+		this.cargarCancion(cancion, this.miMatrizAcordes, this.getEstiloPpal());
+		this.miListaDeTonicas.agregarValor(miArchivo.getTonica(), this.getEstiloPpal());
+		this.miListaDeTempos.agregarValor(miArchivo.getTempo(), this.getEstiloPpal());
+		this.miListaDeDuraciones.agregarValor(String.valueOf(miArchivo.getDuracion()), this.getEstiloPpal());
+		cancion.clear();
+	}
+
 	/**---------------------------------------------------------------------------
 	 * componer
 	 *---------------------------------------------------------------------------*/
@@ -349,7 +340,6 @@ public class Aprendiz {
 	public void guardar() {
 		
 		//this.actualizarBD(this.miMatrizAcordes, this.miListaDeTonicas, this.estiloPpal);
-		
 	}
 	
 	/**---------------------------------------------------------------------------
@@ -358,7 +348,6 @@ public class Aprendiz {
 	public void salir() {
 		
 		System.exit(0);
-		
 	}
 	
 	/**---------------------------------------------------------------------------
@@ -367,7 +356,6 @@ public class Aprendiz {
 	public void escribir(String mensaje) {
 		
 		this.pantalla.actualizarLog(mensaje + "\n");
-		
 	}
 	
 	/**---------------------------------------------------------------------------
@@ -377,62 +365,115 @@ public class Aprendiz {
 		this.pantalla = pantalla;
 	}
 
-
+	/**---------------------------------------------------------------------------
+	 * getMiMatrizAcordes
+	 *---------------------------------------------------------------------------*/
 	public MatrizAcordes getMiMatrizAcordes() {
 		return miMatrizAcordes;
 	}
 
-
+	/**---------------------------------------------------------------------------
+	 * setMiMatrizAcordes
+	 *---------------------------------------------------------------------------*/
 	public void setMiMatrizAcordes(MatrizAcordes miMatrizAcordes) {
 		this.miMatrizAcordes = miMatrizAcordes;
 	}
 
-
+	/**---------------------------------------------------------------------------
+	 * getMiListaDeTonicas
+	 *---------------------------------------------------------------------------*/
 	public ListaValores getMiListaDeTonicas() {
 		return miListaDeTonicas;
 	}
 
-
+	/**---------------------------------------------------------------------------
+	 * setMiListaDeTonicas
+	 *---------------------------------------------------------------------------*/
 	public void setMiListaDeTonicas(ListaValores miListaDeTonicas) {
 		this.miListaDeTonicas = miListaDeTonicas;
 	}
 
-
+	/**---------------------------------------------------------------------------
+	 * getContConsultas
+	 *---------------------------------------------------------------------------*/
 	public int getContConsultas() {
 		return contConsultas;
 	}
 
-
+	/**---------------------------------------------------------------------------
+	 * setContConsultas
+	 *---------------------------------------------------------------------------*/
 	public void setContConsultas(int contConsultas) {
 		this.contConsultas = contConsultas;
 	}
 
-
+	/**---------------------------------------------------------------------------
+	 * getManager
+	 *---------------------------------------------------------------------------*/
 	public EntityManager getManager() {
 		return manager;
 	}
 
-
+	/**---------------------------------------------------------------------------
+	 * setManager
+	 *---------------------------------------------------------------------------*/
 	public void setManager(EntityManager manager) {
 		this.manager = manager;
 	}
 
-
+	/**---------------------------------------------------------------------------
+	 * setMiMatrizEstilos
+	 *---------------------------------------------------------------------------*/
 	public void setMiMatrizEstilos(MatrizEstilos miMatrizEstilos) {
 		this.miMatrizEstilos = miMatrizEstilos;
 	}
 
-
+	/**---------------------------------------------------------------------------
+	 * getMiMatrizEstilos
+	 *---------------------------------------------------------------------------*/
 	public MatrizEstilos getMiMatrizEstilos() {
 		return miMatrizEstilos;
 	}
 	
+	/**---------------------------------------------------------------------------
+	 * getMiListaDeTempos
+	 *---------------------------------------------------------------------------*/
 	public ListaValores getMiListaDeTempos() {
 		return miListaDeTempos;
 	}
 
+	/**---------------------------------------------------------------------------
+	 * setMiListaDeTempos
+	 *---------------------------------------------------------------------------*/
 	public void setMiListaDeTempos(ListaValores miListaDeTempos) {
 		this.miListaDeTempos = miListaDeTempos;
 	}
 	
+	/**---------------------------------------------------------------------------
+	 * getEstiloPpal
+	 *---------------------------------------------------------------------------*/
+	public String getEstiloPpal() {
+		return estiloPpal;
+	}
+
+	/**---------------------------------------------------------------------------
+	 * setEstiloPpal
+	 *---------------------------------------------------------------------------*/
+	public void setEstiloPpal(String estiloPpal) {
+		this.estiloPpal = estiloPpal;
+	}
+	
+	/**---------------------------------------------------------------------------
+	 * getMiListaDeDuraciones
+	 *---------------------------------------------------------------------------*/
+	public ListaValores getMiListaDeDuraciones() {
+		return miListaDeDuraciones;
+	}
+
+	/**---------------------------------------------------------------------------
+	 * setMiListaDeDuraciones
+	 *---------------------------------------------------------------------------*/
+	public void setMiListaDeDuraciones(ListaValores miListaDeDuraciones) {
+		this.miListaDeDuraciones = miListaDeDuraciones;
+	}
 }

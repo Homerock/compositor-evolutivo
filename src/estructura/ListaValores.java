@@ -37,8 +37,6 @@ public class ListaValores {
 	public void agregarValor(String valor, String estilo) {
 		
 		ArrayList<Valores> listaValores = (ArrayList<Valores>) this.getLista();
-		Valores val;
-		int cant;
 		
 		for (Valores va : listaValores) {
 			if (va.getValor().equalsIgnoreCase(valor) && va.getEstilo().equalsIgnoreCase(estilo)) {
