@@ -16,6 +16,7 @@ import java.util.StringTokenizer;
 
 import estructura.EstilosFila;
 import estructura.ValorAcordes;
+import excepciones.ArchivosException;
 
 /**---------------------------------------------------------------------------
   * @author Yamil Gomez - Sebastian Pazos
@@ -43,8 +44,11 @@ public class Archivos {
 	  * lee un archivo 
 	  * @param miMatrizNotas
 	  * @return
-	  *---------------------------------------------------------------------------*/
-	public boolean leerArchivo(String nombreArch){
+	  *
+	 * @throws ArchivosException : si el archivo no existe o define un nuevo estilo
+	 * 
+	 * ---------------------------------------------------------------------------*/
+	public boolean leerArchivo(String nombreArch) throws ArchivosException{
 		
 		File fichero = new File(nombreArch);
 		this.vaciarCancionAnalizada();
@@ -94,10 +98,11 @@ public class Archivos {
 			return true;//todo ok loco
 			
 			
-		} catch (Exception e) {
-			System.out.println("Error en lectura del archivo " + nombreArch);
-			e.printStackTrace();
-			return false;//todo mal
+		} catch (FileNotFoundException e) {
+			throw new ArchivosException("El Archivo '"+nombreArch+"' No existe.");
+		} catch (IOException e1) {
+			throw new ArchivosException("Error en la lectura de archivo :"+nombreArch);
+			
 		}
 	
 	}
@@ -183,8 +188,10 @@ public class Archivos {
 	  *  - los acordes , "repeats" y estilos en el arraylist cancionAnalizadoConEstilos 
 	  * 
 	  * @param linea
-	  *---------------------------------------------------------------------------*/
-	public void analizarLineaEstilos(String linea){
+	  *
+	 * @throws ArchivosException 
+	 * ---------------------------------------------------------------------------*/
+	public void analizarLineaEstilos(String linea) throws ArchivosException{
 		
 		try{
 			StringTokenizer tokens = new StringTokenizer(linea);
@@ -206,6 +213,10 @@ public class Archivos {
 				if(linea.startsWith(Utiles.ESTILO)){
 					this.getCancionAnalizadaConEstilo().add(linea);
 				}
+				if (linea.startsWith(Utiles.NUEVO_ESTILO)){
+					throw new ArchivosException("ArchivosException : No contemplamos definiciones de nuevos estilos");
+				}	
+				
 			}
 			}catch (NoSuchElementException e){
 				//util para las lineas vacias y con espacios en blanco
