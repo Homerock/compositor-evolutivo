@@ -81,6 +81,8 @@ public class Archivos {
 			ArrayList<String> cancionSinRepeats =Utiles.quitarRepets(this.getCancionAnalizada(), true);
 			this.setCancionAnalizada(cancionSinRepeats);
 
+			this.setDuracion(Utiles.obtenerDuracion(getCancionAnalizadaConEstilo()));
+			
 			//System.out.println("CANCION SIN REPEATS " + cancionAnalizadaConEstilo.toString());
 			ArrayList<String> cancionConEstilosSinRepeats =Utiles.quitarRepets(this.getCancionAnalizadaConEstilo(), false);
 			this.setCancionAnalizadaConEstilo(cancionConEstilosSinRepeats);
@@ -205,7 +207,6 @@ public class Archivos {
 					String tok = tokens.nextToken();
 					acordesAux = acordesAux + " " + tok;
 				}
-				this.incrementarCantidad();
 				this.getCancionAnalizadaConEstilo().add(acordesAux);
 			}else {
 				//me fijo si esta la palabra repeat en una cadena, ya que nos intersa, y la agrego en el arraylist
@@ -223,17 +224,6 @@ public class Archivos {
 		}catch (NoSuchElementException e){
 			//util para las lineas vacias y con espacios en blanco
 		}
-	}
-
-	/**---------------------------------------------------------------------------
-	 *
-	 *---------------------------------------------------------------------------*/
-	public void incrementarCantidad() {
-
-		int cant;
-
-		cant = this.getDuracion();
-		this.setDuracion(cant+1);
 	}
 
 	/**---------------------------------------------------------------------------

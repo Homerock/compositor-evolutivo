@@ -199,10 +199,11 @@ public class Estilos {
 				System.out.println("Groove :" + grooveUltimo);
 				System.out.println("cant : "+cont);
 				System.out.println("Acordes : "+miLista.toString());
+				System.out.println("Duracion del tema en compases: " + total);
 			}
 
 		}
-		//System.out.println("Duracion del tema en compases: " + total);
+		
 		return ;
 
 	}
