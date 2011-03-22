@@ -19,6 +19,7 @@ public class Utiles {
 	protected static final String REPEAT = "Repeat";
 	protected static final String REPEAT_ENDING = "RepeatEnding";
 	protected static final String REPEAT_END = "RepeatEnd";
+	protected static final String TEMPO = "Tempo";
 	
 	private static String[] notasPpales= {"A","B","C","D","E","F","G"};
 	private static ArrayList<String> notasPosibles=new ArrayList(Arrays.asList(notasPpales));

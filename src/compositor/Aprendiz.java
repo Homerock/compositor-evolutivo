@@ -26,7 +26,8 @@ public class Aprendiz {
 	private Pantalla pantalla;
 	private EntityManager manager;
 	private MatrizAcordes miMatrizAcordes;
-	private ListaTonicas miListaDeTonicas;
+	private ListaValores miListaDeTonicas;
+	private ListaValores miListaDeTempos;
 	private MatrizEstilos miMatrizEstilos;
 	private String estiloPpal ="";
 	
@@ -37,11 +38,10 @@ public class Aprendiz {
 	
 	public Aprendiz(){	
 		this.setMiMatrizAcordes(new MatrizAcordes());
-		this.setMiListaDeTonicas(new ListaTonicas());
+		this.setMiListaDeTonicas(new ListaValores());
 		this.setMiMatrizEstilos(new MatrizEstilos());
-		
+		this.setMiListaDeTempos(new ListaValores());
 	}
-	
 	
 	/**---------------------------------------------------------------------------
 	  * Recibe por parametros una lista llamada cancion que contiene todas las Acordes
@@ -80,11 +80,11 @@ public class Aprendiz {
 	 * Acordes y ocurrencias
 	  * @param miMatrizAcordes
 	  *---------------------------------------------------------------------------*/
-	public void actualizarBD( MatrizAcordes miMatrizAcordes, ListaTonicas miListaTonicas, String estiloPpal) {
+	public void actualizarBD( MatrizAcordes miMatrizAcordes, ListaValores miListaTonicas, String estiloPpal) {
 		
 		String nombreAPpal, nombreASec;
 		
-		Map<String, Integer> mapTonicas = miListaTonicas.getMisTonicas();
+		
 		Map<String, AcordesFila> mapAcordesMatriz = miMatrizAcordes.getMisAcordes();//toda la matriz de Acordes
 		ArrayList<ValorAcordes> listaOc;
 		
@@ -127,7 +127,7 @@ public class Aprendiz {
 			escribir("tiempo : "+ (t1-t0)/1000 + " segundos ");
 		}	
 		
-		Iterator itTonicas = mapTonicas.entrySet().iterator();
+		/*Iterator itTonicas = mapTonicas.entrySet().iterator();
 		while (itTonicas.hasNext()) {
 			Map.Entry e = (Map.Entry)itTonicas.next();
 			String nombreTonica = (String) e.getKey();
@@ -139,18 +139,18 @@ public class Aprendiz {
 				
 				// NO ANDA EL EXISTE!!!!!!!!!!--------------------------------------------------------
 				
-				/*if (TonicasDTO.existe(this.manager, acorde)) {
+				if (TonicasDTO.existe(this.manager, acorde)) {
 					TonicasDTO.Actualizar(this.manager, acorde, (Integer) e.getValue());
 				} else {
 					TonicasDTO.Insertar(this.manager, nombreTonica, (Integer) e.getValue());
-				}*/
+				}
 				
 				System.out.println("tonica: " + e.getKey() + " cantidad de apariciones: " + e.getValue());
 				
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-		}
+		}*/
 		
 	}
 	
@@ -210,7 +210,7 @@ public class Aprendiz {
 			
 			Tonicas[] listaTonicas = TonicasDTO.seleccionarTodos(manager);
 			for (Tonicas ton : listaTonicas) {
-				this.miListaDeTonicas.agregarTonicas(ton.getAcorde().getNombre(), ton.getCantidad());
+				this.miListaDeTonicas.agregarValor(ton.getAcorde().getNombre(), ton.getCantidad(), ton.getEstilos().getNombre());
 			}
 			
 			
@@ -271,7 +271,8 @@ public class Aprendiz {
 			  					estiloPpal = Estilos.deteminarEstiloPrincipal(cancionConEstilos);
 			  					
 			  					yoElAprendiz.cargarCancion(cancion, this.miMatrizAcordes,estiloPpal);
-			  					this.miListaDeTonicas.agregarTonica(miArchivo.getTonica());
+			  					this.miListaDeTonicas.agregarValor(miArchivo.getTonica(), estiloPpal);
+			  					this.miListaDeTempos.agregarValor(miArchivo.getTempo(),estiloPpal);
 			  					cancion.clear();	
 		  					}
 		  				}
@@ -299,8 +300,8 @@ public class Aprendiz {
   					estiloPpal = Estilos.deteminarEstiloPrincipal(cancionConEstilos);
 					//guarda cada cancion en la matriz
 					yoElAprendiz.cargarCancion(cancion, this.miMatrizAcordes, estiloPpal);
-					
-					this.miListaDeTonicas.agregarTonica(miArchivo.getTonica());
+					this.miListaDeTonicas.agregarValor(miArchivo.getTonica(), estiloPpal);
+					//this.miListaDeTempos.agregarTempo(miArchivo.getTempo(),estiloPpal);
 					cancion.clear();
 					long t2 = System.currentTimeMillis();
 					escribir("tiempo en mls " + (t2 - t1));
@@ -308,7 +309,14 @@ public class Aprendiz {
 		    }
 		       
 		    this.miMatrizAcordes.calcularAcumulados();
-		    this.miMatrizAcordes.listarAcordes();
+		    
+		    
+		    // MOSTRAR RESULTADOS
+		 //   this.miMatrizAcordes.listarAcordes();
+		    System.out.println("-----------listado de tonicas------------");
+		    this.miListaDeTonicas.listarValor();
+		    System.out.println("-----------listado de tempos-------------");
+		    this.miListaDeTempos.listarValor();
 		       
 		}catch(NullPointerException e1){
 			escribir("Error: Aprendiz.iniciar()");
@@ -380,12 +388,12 @@ public class Aprendiz {
 	}
 
 
-	public ListaTonicas getMiListaDeTonicas() {
+	public ListaValores getMiListaDeTonicas() {
 		return miListaDeTonicas;
 	}
 
 
-	public void setMiListaDeTonicas(ListaTonicas miListaDeTonicas) {
+	public void setMiListaDeTonicas(ListaValores miListaDeTonicas) {
 		this.miListaDeTonicas = miListaDeTonicas;
 	}
 
@@ -417,6 +425,14 @@ public class Aprendiz {
 
 	public MatrizEstilos getMiMatrizEstilos() {
 		return miMatrizEstilos;
+	}
+	
+	public ListaValores getMiListaDeTempos() {
+		return miListaDeTempos;
+	}
+
+	public void setMiListaDeTempos(ListaValores miListaDeTempos) {
+		this.miListaDeTempos = miListaDeTempos;
 	}
 	
 }

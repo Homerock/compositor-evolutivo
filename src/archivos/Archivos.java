@@ -29,7 +29,9 @@ public class Archivos {
 	private String estiloPpal;
 	private String tonica;
 	private String tempo;
+	private String duracion;
 		
+
 	/**---------------------------------------------------------------------------
 	  * 
 	  *---------------------------------------------------------------------------*/
@@ -42,9 +44,9 @@ public class Archivos {
 	  * @param miMatrizNotas
 	  * @return
 	  *---------------------------------------------------------------------------*/
-	public boolean leerArchivo(String NombreArch){
+	public boolean leerArchivo(String nombreArch){
 		
-		File fichero = new File(NombreArch);
+		File fichero = new File(nombreArch);
 		this.vaciarCancionAnalizada();
 		this.vaciaCancionAnalizadaConEstilos();
 		Filtro fil = new Filtro(".mma");
@@ -71,26 +73,32 @@ public class Archivos {
 			}
 
 			//quitamos las repeticinones de la lista de acordes 
-			
+			//System.out.println("ACORDES SIN REPEATS " + cancionAnalizada.toString());
 			ArrayList<String> cancionSinRepeats =Utiles.quitarRepets(this.getCancionAnalizada(), true);
 			this.setCancionAnalizada(cancionSinRepeats);
 			
-			System.out.println("CANCION CON REPEATS " + cancionAnalizadaConEstilo.toString());
+			//System.out.println("CANCION SIN REPEATS " + cancionAnalizadaConEstilo.toString());
 			ArrayList<String> cancionConEstilosSinRepeats =Utiles.quitarRepets(this.getCancionAnalizadaConEstilo(), false);
 			this.setCancionAnalizadaConEstilo(cancionConEstilosSinRepeats);
-			System.out.println("CANCION SIN REPEATS " + cancionAnalizadaConEstilo.toString());
 			
 			//this.limpiarCancionEstilos();
 			//return this.getCancionAnalizada();
 			
+			try {
+				this.setTonica(this.getCancionAnalizada().get(0));
+			} catch (IndexOutOfBoundsException e) {
+				System.out.println("El formato del archivo es incorrecto - " + nombreArch);
+				reader.close();
+				return false;
+			}
+			
 			reader.close();
-			this.tonica = this.getCancionAnalizada().get(0);
 			
 			return true;//todo ok loco
 			
 			
 		} catch (Exception e) {
-			System.out.println("Error en lectura del archivo " + NombreArch);
+			System.out.println("Error en lectura del archivo " + nombreArch);
 			e.printStackTrace();
 			return false;//todo mal
 		}
@@ -157,14 +165,16 @@ public class Archivos {
 				if(linea.indexOf(Utiles.REPEAT)!=-1){
 					this.getCancionAnalizada().add(linea);		
 				}
+				if(linea.indexOf(Utiles.TEMPO)!=-1){
+					this.setTempo(Utiles.obtenerDatos(linea, " "));	
+				}
 			}
 
 		}catch (NoSuchElementException e){
 			//util para las lineas vacias y con espacios en blanco
 		}
 	}
-	
-	
+
 	/**---------------------------------------------------------------------------
 	  * analiza una linea y guarda :
 	  *  - los acordes y "repeat" en el arrayList cancionAnalizada
@@ -212,10 +222,13 @@ public class Archivos {
 		this.getCancionAnalizadaConEstilo().clear();
 	}
 	
+	public void setTonica(String tonica) {
+		this.tonica = tonica;
+	}
+	
 	public String getTonica() {
 		return this.tonica;
 	}
-	
 	
 	public String getEstiloPpal() {
 		return this.estiloPpal;
@@ -223,6 +236,22 @@ public class Archivos {
 
 	public void setEstiloPpal(String estiloPpal) {
 		this.estiloPpal = estiloPpal;
+	}
+	
+	public String getTempo() {
+		return tempo;
+	}
+
+	public void setTempo(String tempo) {
+		this.tempo = tempo;
+	}
+	
+	public String getDuracion() {
+		return duracion;
+	}
+
+	public void setDuracion(String duracion) {
+		this.duracion = duracion;
 	}
 	
 	/**---------------------------------------------------------------------------
@@ -238,7 +267,6 @@ public class Archivos {
 	public void setCancionAnalizada(ArrayList<String> cancionAnalizada) {
 		this.cancionAnalizada = cancionAnalizada;
 	}
-	
 
 	public ArrayList<String> getCancionAnalizadaConEstilo() {
 		return this.cancionAnalizadaConEstilo;
