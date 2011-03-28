@@ -2,6 +2,7 @@ package compositor;
 
 import estructura.*;
 import excepciones.ArchivosException;
+import excepciones.EstilosException;
 import grafica.Pantalla;
 import orm.*;
 import java.sql.SQLException;
@@ -260,8 +261,11 @@ public class Aprendiz {
 								if (miArchivo.leerArchivo(path+files)){
 									this.procesarArchivo(miArchivo);
 								}
-							} catch (ArchivosException e) {
-								System.err.println(e.getMessage());
+								
+							} catch (EstilosException ee) {
+								System.err.println(ee.getMessage());
+							} catch (ArchivosException ae) {
+								System.err.println(ae.getMessage());
 							}
 						}
 					}
@@ -276,8 +280,10 @@ public class Aprendiz {
 					if (miArchivo.leerArchivo(chooser.getSelectedFile().toString())){
 						this.procesarArchivo(miArchivo);
 					}
-				} catch (ArchivosException e) {
-					System.err.println(e.getMessage());
+				} catch (EstilosException ee) {
+					System.err.println(ee.getMessage());
+				} catch (ArchivosException ae) {
+					System.err.println(ae.getMessage());
 				}
 			}
 			this.miMatrizAcordes.calcularAcumulados();
@@ -309,12 +315,13 @@ public class Aprendiz {
 	 * carga las matrices de acordes y de estilos, ademas obtiene tonica, tempo y duracion del tema
 	 * y los carga en sus listas correspondientes.
 	 * @param miArchivo
-	 *---------------------------------------------------------------------------*/
-	private void procesarArchivo(Archivos miArchivo) {
+	 * @throws EstilosException 
+	 * ---------------------------------------------------------------------------*/
+	private void procesarArchivo(Archivos miArchivo) throws EstilosException {
 
 		ArrayList<String> cancion=new ArrayList<String>();
 		ArrayList<String> cancionConEstilos=new ArrayList<String>();
-
+		
 		cancion = miArchivo.getCancionAnalizada();
 		cancionConEstilos = miArchivo.getCancionAnalizadaConEstilo();//repeats , acordes  y estilos
 		escribir("LISTA DE ACORDES: "+cancion.toString());
@@ -323,7 +330,7 @@ public class Aprendiz {
 		this.cargarCancion(cancion, this.miMatrizAcordes, this.getEstiloPpal());
 		this.miListaDeTonicas.agregarValor(miArchivo.getTonica(), this.getEstiloPpal());
 		this.miListaDeTempos.agregarValor(miArchivo.getTempo(), this.getEstiloPpal());
-		this.miListaDeDuraciones.agregarValor(String.valueOf(miArchivo.getDuracion()), this.getEstiloPpal());
+		this.miListaDeDuraciones.agregarValor(String.valueOf(miArchivo.getDuracion()), this.getEstiloPpal());	
 		cancion.clear();
 	}
 

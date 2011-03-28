@@ -16,17 +16,17 @@ import excepciones.EstilosException;
  */
 public class Estilos {
 
-
 /*################################################################################################################
  ###################						VARIABLES	y CONSTANTES					########################## 
  ################################################################################################################# */
+
 	private static Map<String,Integer>  misEstilos = new HashMap<String, Integer>();
 	private static ArrayList<String> misEstilosOrdenados = new ArrayList<String>();
 	private static boolean DEBUG = true;
 
 
-	/*################################################################################################################
-  ###################				METODOS ESTATICOS PRIVADOS						############################## 
+/*################################################################################################################
+ ###################				METODOS ESTATICOS PRIVADOS						############################## 
  ################################################################################################################# */
 
 	/**
@@ -80,8 +80,71 @@ public class Estilos {
 		return;
 	}
 
+
+	/**
+	 * Quita los $_LastGroove de una lista de notas con estilos 
+	 * la lista no debe tener repeats
+	 * 
+	 * @param cancionAnalizadaConEstilos
+	 * @return cancionAnalizadaConEstilos sin los $_LastGroove
+	 * @throws EstilosException : cuando no tiene un $_LastGroove para reemplazar, es decir esta mal hecho el archivo mma.
+	 */
+	private static ArrayList<String> quitarLastGroove(ArrayList<String> cancionAnalizadaConEstilos) throws EstilosException{		
+
+		int j=-1;
+		int ultimoIndiceLista =0;
+		String valor="";
+		
+		String grooveAnteUltimo="";
+		String grooveUltimo="";
+		ArrayList<String> miListaEstilos=new ArrayList<String>();//estilos que aparecen
+		ArrayList<String> miCancionAnalizadaSinLastGroove=new ArrayList<String>();//estilos que aparecen
+		
+		do{
+			j++;
+			valor = cancionAnalizadaConEstilos.get(j);//obtengo la linea
+			
+			//si la linea es la que determina el estilo 
+			if (valor.startsWith(Utiles.ESTILO)){
+				miListaEstilos.add(Utiles.obtenerDatos(valor," "));//obtenemos el nombre del groove
+				if (!grooveUltimo.isEmpty()){					
+					grooveAnteUltimo= grooveUltimo;
+				}
+
+				grooveUltimo=Utiles.obtenerDatos(valor, " ");//guardo el nombre del groove
+				
+				try {
+						if(grooveUltimo.indexOf(Utiles.VAR_ULTIMO_ESTILO)!=-1){
+							ultimoIndiceLista = miListaEstilos.size() - 1;
+							grooveUltimo =  miListaEstilos.get(ultimoIndiceLista-2);// el anteultimo groove
+							miListaEstilos.set(ultimoIndiceLista, grooveUltimo);
+							if(DEBUG)
+								System.out.println("reeemplazamos :"+valor +" por:Groove "+grooveUltimo);
+							
+							valor = Utiles.ESTILO+grooveUltimo;
+						}
+				} catch (ArrayIndexOutOfBoundsException e) {
+					
+					throw new EstilosException("EstilosException :  Error en el archivo.");
+				}
+			}
+			
+			miCancionAnalizadaSinLastGroove.add(valor);
+
+		}while(j<(cancionAnalizadaConEstilos.size()-1));
+
+		if(DEBUG){
+			System.out.println(cancionAnalizadaConEstilos.toString());
+			System.out.println(miCancionAnalizadaSinLastGroove.toString());
+		}
+		return miCancionAnalizadaSinLastGroove;
+
+	}
+
+
+
 /*################################################################################################################
- ###################				METODOS ESTATICOS PUBLICOS						############################## 
+ ###################				METODOS ESTATICOS PUBLICOS       				############################## 
  ################################################################################################################# */
 
 	public static void imprimirMap(){
@@ -97,7 +160,7 @@ public class Estilos {
 
 
 
-	public static void guardarEstilosEnMatriz(ArrayList<String> cancionAnalizadaConEstilos, MatrizEstilos miMatrizEstilos){		
+	public static void guardarEstilosEnMatriz(ArrayList<String> cancionAnalizadaConEstilos, MatrizEstilos miMatrizEstilos) throws EstilosException{		
 
 		//vaciamos las varibles esaticos
 		getMisEstilos().clear();
@@ -113,6 +176,9 @@ public class Estilos {
 
 		ArrayList miLista = new ArrayList<String>();
 		ArrayList miListaEstilos=new ArrayList<String>();//estilos que aparecen
+		
+		cancionAnalizadaConEstilos = quitarLastGroove(cancionAnalizadaConEstilos);
+		 
 
 
 		do{
@@ -216,9 +282,10 @@ public class Estilos {
 	 * 
 	 * @param cancionAnalizadaConEstilos
 	 * @return estilo_principal
+	 * @throws EstilosException 
 	 * 
 	 */	
-	public static String deteminarEstiloPrincipal(ArrayList<String> cancionAnalizadaConEstilos){
+	public static String deteminarEstiloPrincipal(ArrayList<String> cancionAnalizadaConEstilos) throws EstilosException{
 
 		//vaciamos las varibles esaticos
 		getMisEstilos().clear();
@@ -227,7 +294,10 @@ public class Estilos {
 		int cont=0,j=-1;
 		String valor="";
 		String GrooveAnt="";
-
+		
+		
+		cancionAnalizadaConEstilos = quitarLastGroove(cancionAnalizadaConEstilos);
+		
 
 		ArrayList miLista = new ArrayList<String>();
 		ArrayList miListaEstilos=new ArrayList<String>();//estilos que aparecen
@@ -291,67 +361,6 @@ public class Estilos {
 
 	
 	
-	/**
-	 * Quita los $_LastGroove de una lista de notas con estilos 
-	 * la lista no debe tener repeats
-	 * 
-	 * @param cancionAnalizadaConEstilos
-	 * @return cancionAnalizadaConEstilos sin los $_LastGroove
-	 * @throws EstilosException
-	 */
-	public static ArrayList<String> quitarLastGroove(ArrayList<String> cancionAnalizadaConEstilos) throws EstilosException{		
-
-		int j=-1;
-		int ultimoIndiceLista =0;
-		String valor="";
-		
-		String grooveAnteUltimo="";
-		String grooveUltimo="";
-		ArrayList<String> miListaEstilos=new ArrayList<String>();//estilos que aparecen
-		ArrayList<String> miCancionAnalizadaSinLastGroove=new ArrayList<String>();//estilos que aparecen
-		
-		do{
-			j++;
-			valor = cancionAnalizadaConEstilos.get(j);//obtengo la linea
-			
-			//si la linea es la que determina el estilo 
-			if (valor.startsWith(Utiles.ESTILO)){
-				miListaEstilos.add(Utiles.obtenerDatos(valor," "));//obtenemos el nombre del groove
-				if (!grooveUltimo.isEmpty()){					
-					grooveAnteUltimo= grooveUltimo;
-				}
-
-				grooveUltimo=Utiles.obtenerDatos(valor, " ");//guardo el nombre del groove
-				
-				try {
-						if(grooveUltimo.indexOf(Utiles.VAR_ULTIMO_ESTILO)!=-1){
-							ultimoIndiceLista = miListaEstilos.size() - 1;
-							grooveUltimo =  miListaEstilos.get(ultimoIndiceLista-2);// el anteultimo groove
-							miListaEstilos.set(ultimoIndiceLista, grooveUltimo);
-							if(DEBUG)
-								System.out.println("reeemplazamos :"+valor +" por:Groove "+grooveUltimo);
-							
-							valor = Utiles.ESTILO+grooveUltimo;
-						}
-				} catch (ArrayIndexOutOfBoundsException e) {
-					throw new EstilosException("EstilosException :  Error en el archivo.");
-				}
-			}
-			
-			miCancionAnalizadaSinLastGroove.add(valor);
-
-		}while(j<(cancionAnalizadaConEstilos.size()-1));
-
-		if(DEBUG){
-			System.out.println(cancionAnalizadaConEstilos.toString());
-			System.out.println(miCancionAnalizadaSinLastGroove.toString());
-		}
-		return miCancionAnalizadaSinLastGroove;
-
-	}
-
-
-
 	public static ArrayList<String> getMisEstilosOrdenados() {
 		return misEstilosOrdenados;
 	}
