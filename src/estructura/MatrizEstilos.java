@@ -20,6 +20,11 @@ public class MatrizEstilos {
 	private static final int CUATRO_COMPASES = 4;
 	private static final int SEIS_COMPASES = 6;
 	private static final int OCHO_COMPASES = 8;
+	
+	private static final int PAR = 2;
+	
+	private static boolean DEBUG = true;
+	
 		
 	/**---------------------------------------------------------------------------
 	  * Constructor
@@ -133,28 +138,49 @@ public class MatrizEstilos {
 	public void setCompas(String estilo , int compas) throws EstilosException{
 		EstilosFila miEstiloFila = this.getMisEstilos().get(estilo);
 		
-		switch (compas){
-			case UN_COMPAS: 
-							miEstiloFila.incCantUnCompas();
-							break;
-			case DOS_COMPASES: 
-							miEstiloFila.incCantDosCompases();
-							break;
-			case TRES_COMPASES: 
-							miEstiloFila.incCantTresCompases();
-							break;				
-			case CUATRO_COMPASES:	
-							miEstiloFila.incCantCuatroCompases();
-							break;
-			case SEIS_COMPASES:	
-							miEstiloFila.incCantSeisCompases();
-							break;
-			case OCHO_COMPASES :
-							miEstiloFila.incCantOchoCompases();
-							break;
-			default :
-					throw new EstilosException("No esta implementado para "+compas+" compases - Estilo :"+estilo);
+		if(compas < 0){
+			throw new EstilosException("Error en compas"+compas+" - Estilo :"+estilo);
 		}
+		if(compas ==0){
+			return;
+		}
+		
+		if(compas % PAR ==0){
+			// es un numero par
+			
+			if(compas % OCHO_COMPASES ==0){
+				miEstiloFila.incCantOchoCompases(compas/OCHO_COMPASES);
+				
+				if(DEBUG)
+					System.out.println(" hay "+compas/OCHO_COMPASES+" de 8 ");
+			}else 
+				if(compas % SEIS_COMPASES ==0){
+					miEstiloFila.incCantSeisCompases(compas/SEIS_COMPASES);
+					if(DEBUG)
+						System.out.println("hay "+compas/SEIS_COMPASES+"  de 6 ");
+				}else 
+					if(compas % CUATRO_COMPASES ==0){
+						miEstiloFila.incCantCuatroCompases(compas/CUATRO_COMPASES);
+						if(DEBUG)
+							System.out.println("hay "+compas/CUATRO_COMPASES+" de 4");
+					}else 
+						if(compas % DOS_COMPASES ==0){
+							miEstiloFila.incCantDosCompases(compas/DOS_COMPASES);
+							if(DEBUG)
+								System.out.println("hay "+compas/DOS_COMPASES+" de 2 ");	
+						}
+			
+		}else{
+			miEstiloFila.incCantUnCompas();
+			if (DEBUG)
+				System.out.println(" hay 1 de un compas");
+			
+			compas = compas -1;
+			setCompas(estilo, compas);
+		}
+		
+		return;
+		
 
 	}
 	

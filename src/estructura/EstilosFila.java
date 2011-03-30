@@ -280,6 +280,50 @@ public class EstilosFila {
 		this.setCantOchoCompases(cant);
 		return;
 	}
+
+	public void incCantUnCompas(int incremento){
+		int cant = this.getCantUnCompas();
+		cant = cant + incremento;
+		this.setCantUnCompas(cant);
+		return;
+	}
+	
+	public void incCantDosCompases(int incremento){
+		int cant = this.getCantDosCompases();
+		cant = cant + incremento;
+		this.setCantDosCompases(cant);
+		return;
+	}
+	
+	public void incCantTresCompases(int incremento){
+		int cant = this.getCantTresCompases();
+		cant = cant + incremento;
+		this.setCantTresCompases(cant);
+		return;
+	}
+	
+	public void incCantCuatroCompases(int incremento){
+		int cant = this.getCantCuatroCompases();
+		cant = cant + incremento;
+		this.setCantCuatroCompases(cant);
+		return;
+	}
+
+	public void incCantSeisCompases(int incremento){
+		int cant = this.getCantSeisCompases();
+		cant = cant + incremento;
+		this.setCantSeisCompases(cant);
+		return;
+	}
+	
+	public void incCantOchoCompases(int incremento){
+		int cant = this.getCantOchoCompases();
+		cant = cant + incremento;
+		this.setCantOchoCompases(cant);
+		return;
+	}
+	
+	
 	
 	public String toString(){
 		
