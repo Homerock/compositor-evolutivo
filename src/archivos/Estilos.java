@@ -22,7 +22,7 @@ public class Estilos {
 
 	private static Map<String,Integer>  misEstilos = new HashMap<String, Integer>();
 	private static ArrayList<String> misEstilosOrdenados = new ArrayList<String>();
-	private static boolean DEBUG = true;
+	private static boolean DEBUG = false;
 
 
 /*################################################################################################################

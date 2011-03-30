@@ -287,7 +287,8 @@ public class Aprendiz {
 				}
 			}
 			this.miMatrizAcordes.calcularAcumulados();
-			this.mostrarDatos();
+			this.miMatrizEstilos.calcularAcumulados();
+		//	this.mostrarDatos();
 
 		}catch(NullPointerException e1){
 			escribir("Error: Aprendiz.iniciar()");
@@ -301,6 +302,8 @@ public class Aprendiz {
 
 		System.out.println("-------------------listado de acordes----------------------");
 		this.miMatrizAcordes.listarAcordes();
+		System.out.println("-------------------listado de estilos-------------------");
+		this.miMatrizEstilos.listarEstilos();
 		System.out.println("-------------------listado de tonicas----------------------");
 		this.miListaDeTonicas.listarValor();
 		System.out.println("-------------------listado de tempos-----------------------");
@@ -341,7 +344,9 @@ public class Aprendiz {
 
 		Compositor miCompositor = new Compositor();
 
-		miCompositor.Componer(this.miMatrizAcordes, tonica);
+		// SEGUN EL ESTILO QUE INGRESE EL USUARIO DEBO OBTENER EL TEMPO Y DURACION MAS USADO (APROX) DE ESE ESTILO
+		
+		miCompositor.componer(this.miMatrizAcordes, this.miMatrizEstilos, tonica, "60sRock", 50, "120");
 	}
 
 	/**---------------------------------------------------------------------------

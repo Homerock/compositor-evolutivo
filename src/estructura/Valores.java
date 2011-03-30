@@ -35,6 +35,19 @@ public class Valores {
 		this.cantidad=cant;
 		return;
 	}
+
+	/**---------------------------------------------------------------------------
+	  * Constructor 
+	  * 
+	  * @param val
+	  * @param valAc
+	  *---------------------------------------------------------------------------*/
+	public Valores(String estilo, int cant){
+		this.valor="";
+		this.estilo= estilo;
+		this.cantidad=cant;
+		return;
+	}
 	
 	/**---------------------------------------------------------------------------
 	 *

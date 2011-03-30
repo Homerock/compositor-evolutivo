@@ -23,7 +23,7 @@ public class MatrizEstilos {
 	
 	private static final int PAR = 2;
 	
-	private static boolean DEBUG = true;
+	private static boolean DEBUG = false;
 	
 		
 	/**---------------------------------------------------------------------------
