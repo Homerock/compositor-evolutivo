@@ -186,6 +186,24 @@ public class EstilosFila {
 	}
 	
 	/**---------------------------------------------------------------------------
+	  * Devuelve el contador total de compases
+	  *  
+	  * @return contador
+	  *---------------------------------------------------------------------------*/
+	public int getContadorCompases() {
+		
+		int contador =  this.getCantUnCompas()+
+						this.getCantDosCompases()+
+						this.getCantTresCompases()+
+						this.getCantCuatroCompases()+
+						this.getCantSeisCompases()+
+						this.getCantOchoCompases();
+	
+		return contador;
+	}
+	
+	
+	/**---------------------------------------------------------------------------
 	  *	Devuelve el nombre de un estilo
 	  * 
 	  * @return nombreEstilo

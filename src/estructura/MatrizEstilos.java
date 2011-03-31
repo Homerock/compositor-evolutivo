@@ -46,7 +46,7 @@ public class MatrizEstilos {
 		while (it.hasNext()) {
 			Map.Entry e = (Map.Entry)it.next();
 			mapEstiloPpal= (EstilosFila) e.getValue();
-			System.out.println(" - Estilo ppal :"+e.getKey()+"- Total :"+mapEstiloPpal.getContador()+" - "+mapEstiloPpal.toString());
+			System.out.println(" - Estilo ppal :"+e.getKey()+"- Total :"+mapEstiloPpal.getContador()+" - Total compases "+mapEstiloPpal.getContadorCompases()+" - "+mapEstiloPpal.toString());
 			
 				
 			mapEstiloPpal.listarEstilos();
