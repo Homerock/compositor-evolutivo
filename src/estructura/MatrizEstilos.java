@@ -41,14 +41,10 @@ public class MatrizEstilos {
 		EstilosFila mapEstiloPpal;
 		Iterator it = mapEstilos.entrySet().iterator();
 		
-		
-		
 		while (it.hasNext()) {
 			Map.Entry e = (Map.Entry)it.next();
 			mapEstiloPpal= (EstilosFila) e.getValue();
-			System.out.println(" - Estilo ppal :"+e.getKey()+"- Total :"+mapEstiloPpal.getContador()+" - Total compases "+mapEstiloPpal.getContadorCompases()+" - "+mapEstiloPpal.toString());
-			
-				
+			System.out.println(" - Estilo ppal :"+e.getKey()+"- Total :"+mapEstiloPpal.getContador()+" - Total compases "+mapEstiloPpal.getContadorCompases()+" - "+mapEstiloPpal.toString());		
 			mapEstiloPpal.listarEstilos();
 		}
 	}
@@ -67,8 +63,6 @@ public class MatrizEstilos {
 			mapEstiloPpal.calcularAcumulados();
 		}
 	}
-	
-	
 	
 	/**---------------------------------------------------------------------------
 	  * se agrega una Estilo ppal en la matriz

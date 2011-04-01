@@ -3,13 +3,17 @@ package compositor;
 import estructura.*;
 import excepciones.ArchivosException;
 import excepciones.EstilosException;
+import excepciones.ValoresException;
 import grafica.Pantalla;
 import orm.*;
 import java.sql.SQLException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Vector;
+
 import javax.swing.JFileChooser;
 import archivos.Archivos;
 import archivos.Estilos;
@@ -31,6 +35,7 @@ public class Aprendiz {
 	private ListaValores miListaDeTonicas;
 	private ListaValores miListaDeTempos;
 	private ListaValores miListaDeDuraciones;
+	private ListaValores miListaDeEstilosPrincipales;
 	private MatrizEstilos miMatrizEstilos;
 	private String estiloPpal ="";
 
@@ -45,6 +50,7 @@ public class Aprendiz {
 		this.setMiListaDeTonicas(new ListaValores());
 		this.setMiListaDeTempos(new ListaValores());
 		this.setMiListaDeDuraciones(new ListaValores());
+		this.setMiListaDeEstilosPrincipales(new ListaValores());
 	}
 
 
@@ -331,6 +337,7 @@ public class Aprendiz {
 		Estilos.guardarEstilosEnMatriz(cancionConEstilos, this.getMiMatrizEstilos());
 		this.setEstiloPpal(Estilos.deteminarEstiloPrincipal(cancionConEstilos));
 		this.cargarCancion(cancion, this.miMatrizAcordes, this.getEstiloPpal());
+		this.miListaDeEstilosPrincipales.agregarValor(this.getEstiloPpal(),this.getEstiloPpal());
 		this.miListaDeTonicas.agregarValor(miArchivo.getTonica(), this.getEstiloPpal());
 		this.miListaDeTempos.agregarValor(miArchivo.getTempo(), this.getEstiloPpal());
 		this.miListaDeDuraciones.agregarValor(String.valueOf(miArchivo.getDuracion()), this.getEstiloPpal());	
@@ -340,13 +347,32 @@ public class Aprendiz {
 	/**---------------------------------------------------------------------------
 	 * componer
 	 *---------------------------------------------------------------------------*/
-	public void componer(String tonica) {
+	public void componer(String tonica, String estilo) {
 
 		Compositor miCompositor = new Compositor();
-
-		// SEGUN EL ESTILO QUE INGRESE EL USUARIO DEBO OBTENER EL TEMPO Y DURACION MAS USADO (APROX) DE ESE ESTILO
+		String tempo;
+		String duracion;
 		
-		miCompositor.componer(this.miMatrizAcordes, this.miMatrizEstilos, tonica, "60sRock", 50, "120");
+		try {
+			tempo = this.miListaDeTempos.obtenerMayorValorPorEstilo(estilo);
+		} catch (ValoresException e) {
+			e.getMessage();
+			return;
+		}
+		try {
+			duracion = this.miListaDeDuraciones.obtenerMayorValorPorEstilo(estilo);
+		} catch (ValoresException e) {
+			e.getMessage();
+			return;
+		}
+		
+		System.out.println("Datos para componer: ");
+		System.out.println("ESTILO: " + estilo);
+		System.out.println("TONICA: " + tonica);
+		System.out.println("DURACION: " + duracion);
+		System.out.println("TEMPO: " + tempo);
+		
+		miCompositor.componer(this.miMatrizAcordes, this.miMatrizEstilos, tonica, estilo, Integer.parseInt(duracion), tempo);
 	}
 
 	/**---------------------------------------------------------------------------
@@ -383,6 +409,22 @@ public class Aprendiz {
 		this.pantalla.actualizarLog(mensaje + "\n");
 	}
 
+	/**---------------------------------------------------------------------------
+	 * getComboEstilos
+	 *---------------------------------------------------------------------------*/
+	public ArrayList<String> getComboEstilos() {
+		
+		ArrayList<Valores> listaValores = this.getMiListaDeEstilosPrincipales().getLista();
+		ArrayList<String> miLista = new ArrayList<String>();
+		
+		for (Valores val : listaValores) {
+			miLista.add(val.getEstilo());
+		}
+		
+		return miLista;
+		
+	}
+	
 	/**---------------------------------------------------------------------------
 	 * setInterfaz
 	 *---------------------------------------------------------------------------*/
@@ -500,5 +542,14 @@ public class Aprendiz {
 	 *---------------------------------------------------------------------------*/
 	public void setMiListaDeDuraciones(ListaValores miListaDeDuraciones) {
 		this.miListaDeDuraciones = miListaDeDuraciones;
+	}
+	
+	public ListaValores getMiListaDeEstilosPrincipales() {
+		return miListaDeEstilosPrincipales;
+	}
+
+	public void setMiListaDeEstilosPrincipales(
+			ListaValores miListaDeEstilosPrincipales) {
+		this.miListaDeEstilosPrincipales = miListaDeEstilosPrincipales;
 	}
 }

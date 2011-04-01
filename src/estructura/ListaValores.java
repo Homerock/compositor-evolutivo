@@ -2,13 +2,16 @@ package estructura;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Random;
+
+import excepciones.ArchivosException;
+import excepciones.ValoresException;
+
 
 public class ListaValores {
 	
-	private List lista;
+	private ArrayList<Valores> lista;
 	
 
 	/**---------------------------------------------------------------------------
@@ -21,12 +24,12 @@ public class ListaValores {
 	}
 
 		
-	public List getLista() {
+	public ArrayList<Valores> getLista() {
 		return lista;
 	}
 
 
-	public void setLista(List lista) {
+	public void setLista(ArrayList<Valores> lista) {
 		this.lista = lista;
 	}
 
@@ -53,7 +56,7 @@ public class ListaValores {
 	  *---------------------------------------------------------------------------*/
 	public void agregarValor(String valor, int cantidad, String estilo) {
 		
-		ArrayList<Valores> listaValores = (ArrayList<Valores>) this.getLista();
+		ArrayList<Valores> listaValores = this.getLista();
 		
 		listaValores.add(new Valores(valor,estilo,cantidad));
 		
@@ -64,7 +67,7 @@ public class ListaValores {
 	  *---------------------------------------------------------------------------*/
 	public void listarValor() {
 		
-		ArrayList<Valores> listaValores = (ArrayList<Valores>) this.getLista();
+		ArrayList<Valores> listaValores = this.getLista();
 		
 		System.out.println("-------------------------------------------------------");
 		for (Valores va : listaValores) {
@@ -73,4 +76,42 @@ public class ListaValores {
 		System.out.println("-------------------------------------------------------");
 	}
 	
+	/**---------------------------------------------------------------------------
+	  * 
+	  *---------------------------------------------------------------------------
+	 * @throws ValoresException */
+	public String obtenerMayorValorPorEstilo(String estilo) throws ValoresException{
+		
+		ArrayList<Valores> listaValores = this.getLista();
+		ArrayList<Valores> miLista = new ArrayList<Valores>(); 
+		Random rnd = new Random();
+		int cant = 0;
+		int miRandom;
+		
+		// cargo en una lista temporal todos los valores que corresponden al estilo que viene por parametro
+		for (Valores va : listaValores) {
+			if (va.getEstilo().equalsIgnoreCase(estilo)) {
+				miLista.add(va);
+				cant = cant + va.getCantidad();
+			}	
+		}
+		
+		System.out.println("VALORES DE MI ESTILO: " + miLista.toString());
+		
+		try {
+			// hago un random sobre esta lista temporal y obtengo el valor (por ej: tempo, duracion) aleatoria para
+			// el estilo que ingreso por parametro
+			do {
+				miRandom = rnd.nextInt(cant);
+			} while(miRandom > miLista.size()-1);
+			Valores va = miLista.get(miRandom);
+			
+			return va.getValor();
+		} catch (IllegalArgumentException e) {
+			throw new ValoresException("El estilo no tiene datos cargados");
+		}
+		 
+		
+		
+	}	
 }

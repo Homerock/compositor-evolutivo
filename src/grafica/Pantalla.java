@@ -1,6 +1,5 @@
 package grafica;
 
-import java.awt.BorderLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -8,16 +7,12 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
 import java.awt.Dimension;
 import javax.swing.JButton;
-
 import compositor.Aprendiz;
-
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import java.awt.Rectangle;
 import java.awt.Point;
+import java.util.ArrayList;
 
 
 /**
@@ -49,6 +44,8 @@ public class Pantalla extends JFrame {
 	private JButton jButtonAceptarComp = null;
 	private JTextField jTextFieldTonica = null;
 	private JLabel jLabelTonica = null;
+	private JLabel jLabelEstilo = null;
+	private JComboBox jComboEstilo = null;
 	private Aprendiz aprendiz;
 
 	
@@ -97,10 +94,12 @@ public class Pantalla extends JFrame {
 			jPanel.add(getJButtonAceptarComp(), null);
 			jPanel.add(getJTextFieldTonica(), null);
 			jPanel.add(getjLabelTonica(), null);
+			jPanel.add(getjLabelEstilo(), null);
+			jPanel.add(getJComboEstilo(), null);
 			jPanel.add(getJScrollPane(), null);
-			jPanel.add(getJButtonPlay());
-			jPanel.add(getJButtonPausa());
-			jPanel.add(getJButtonStop());
+		//	jPanel.add(getJButtonPlay());
+		//	jPanel.add(getJButtonPausa());
+		//	jPanel.add(getJButtonStop());
 		}
 		return jPanel;
 	}
@@ -137,12 +136,23 @@ public class Pantalla extends JFrame {
 			jButtonComponer.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					Pantalla.this.jLabelTonica.setVisible(true);
+					Pantalla.this.jLabelEstilo.setVisible(true);
 					Pantalla.this.jTextFieldTonica.setVisible(true);
+					cargarCombo();
+					Pantalla.this.jComboEstilo.setVisible(true);
 					Pantalla.this.jButtonAceptarComp.setVisible(true);
 				}
 			});
 		}
 		return jButtonComponer;
+	}
+	
+	private void cargarCombo() {
+		ArrayList<String> lista = aprendiz.getComboEstilos();
+		
+		for (String estilo : lista) {
+			Pantalla.this.jComboEstilo.addItem(estilo);
+		}
 	}
 	
 	/**
@@ -202,13 +212,14 @@ public class Pantalla extends JFrame {
 	private JButton getJButtonAceptarComp() {
 		if (jButtonAceptarComp == null) {
 			jButtonAceptarComp = new JButton();
-			jButtonAceptarComp.setText("Ok");
+			jButtonAceptarComp.setText("Generar canción");
 			jButtonAceptarComp.setVisible(false);
-			jButtonAceptarComp.setBounds(new Rectangle(600, 50, 70, 30));
+			jButtonAceptarComp.setBounds(new Rectangle(600, 40, 200, 30));
 			jButtonAceptarComp.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					String tonica = Pantalla.this.getJTextFieldTonica().getText();
-					aprendiz.componer(tonica);
+					String estilo = (String) Pantalla.this.getJComboEstilo().getSelectedItem();
+					aprendiz.componer(tonica, estilo);
 				}
 			});
 		}
@@ -222,7 +233,7 @@ public class Pantalla extends JFrame {
 		if (jTextFieldTonica == null) {
 			jTextFieldTonica = new JTextField();
 			jTextFieldTonica.setVisible(false);
-			jTextFieldTonica.setLocation(new Point(530, 50));
+			jTextFieldTonica.setLocation(new Point(360, 20));
 			jTextFieldTonica.setSize(new Dimension(50, 30));
 		}
 		return jTextFieldTonica;
@@ -235,11 +246,38 @@ public class Pantalla extends JFrame {
 		if (jLabelTonica == null) {
 			jLabelTonica = new JLabel();
 			jLabelTonica.setVisible(false);
-			jLabelTonica.setText("Tónica para componer:");
-			jLabelTonica.setLocation(new Point(350, 50));
+			jLabelTonica.setText("Tónica:");
+			jLabelTonica.setLocation(new Point(300, 20));
 			jLabelTonica.setSize(new Dimension(250, 30));
 		}
 		return jLabelTonica;
+	}
+	
+	/**
+	 * @return
+	 */
+	private JLabel getjLabelEstilo() {
+		if (jLabelEstilo == null) {
+			jLabelEstilo = new JLabel();
+			jLabelEstilo.setVisible(false);
+			jLabelEstilo.setText("Estilo:");
+			jLabelEstilo.setLocation(new Point(300, 60));
+			jLabelEstilo.setSize(new Dimension(250, 30));
+		}
+		return jLabelEstilo;
+	}
+	
+	/**
+	 * @return
+	 */
+	private JComboBox getJComboEstilo() {
+		if (jComboEstilo == null) {
+			jComboEstilo = new JComboBox();
+			jComboEstilo.setVisible(false);
+			jComboEstilo.setLocation(new Point(360, 60));
+			jComboEstilo.setSize(new Dimension(200, 30));
+		}
+		return jComboEstilo;
 	}
 	
 	/**
