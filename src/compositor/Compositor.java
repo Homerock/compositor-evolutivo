@@ -29,49 +29,6 @@ public class Compositor {
 	}
 	
 	/**---------------------------------------------------------------------------
-	  * @param miMatrizAcordes
-	  * @param tonica
-	  *---------------------------------------------------------------------------*/
-	public void componer2(MatrizAcordes miMatrizAcordes, String tonica){
-		
-		AcordesFila mapAcordePpal;
-		String proxAcorde;
-		Random rnd= new Random();
-		int max;
-		int n=1;
-		int miRandom;
-		Archivos miArchivo = new Archivos();
-		
-		if(!miMatrizAcordes.ExisteAcordePpal(tonica)){
-			System.out.println("No conozco esa Acorde principal!");
-			return;
-		}
-		mapAcordePpal = miMatrizAcordes.getMisAcordes().get(tonica);
-		//obetenmos el acumulador total
-		max=mapAcordePpal.getContador();
-		System.out.println("maximo :"+max);
-		//rnd.nextInt(max);
-		miArchivo.escribirArchivo("temp.mma", "groove 60sRock", false);
-		miArchivo.escribirArchivo("temp.mma", 1 + " " + tonica, true);
-		while(n<20){
-			miRandom=rnd.nextInt(max);
-			proxAcorde=mapAcordePpal.buscarAcorde(miRandom);
-			System.out.println("valor :"+miRandom+" Acorde :"+proxAcorde);
-			miArchivo.escribirArchivo("temp.mma", n+1 + " " + proxAcorde, true);
-			mapAcordePpal = miMatrizAcordes.getMisAcordes().get(proxAcorde);
-			max=mapAcordePpal.getContador();
-			n++;
-		}
-		// creamos el archivo midi utilizando el programa mma
-		crearMMA("mma temp.mma", false);
-		// creamos un objeto de nuestra clase midi
-		Midi mid = new Midi();
-		// abrimos el archivo midi para obtener el Sequencer y ahi poder reproducirlo y detenerlo
-		Sequencer seq = mid.abrir("temp.mid");
-		//mid.reproducir(seq);
-	}
-	
-	/**---------------------------------------------------------------------------
 	  * componer
 	  *---------------------------------------------------------------------------*/
 	public void componer(MatrizAcordes miMatrizAcordes, MatrizEstilos miMatrizEstilos, String tonica, String estilo, int duracion, String tempo) {
@@ -174,7 +131,7 @@ public class Compositor {
 			}
 			// dentro de cada estilo genero los acordes que forman este bloque de la estructura
 			while(n <= cant){
-				miRandom=rnd.nextInt(max);
+				miRandom=rnd.nextInt(max+1);
 				proxAcorde=acordePpal.buscarAcorde(miRandom);
 				acordePpal = miMatrizAcordes.getMisAcordes().get(proxAcorde);
 				max=acordePpal.getContador();	
@@ -215,7 +172,7 @@ public class Compositor {
 		// el valor de n es la suma de compases que tiene cada estilo
 		while(n<duracionCancion){
 			duracionEstilo = 4;			// FALTA VER COMO SE CALCULA ESTE VALOR (aleatorio o usando los valores cargados en mapEstilo)
-			miRandom = rnd.nextInt(max);
+			miRandom = rnd.nextInt(max+1);
 			proxEstilo = mapEstilo.buscarEstilo(miRandom);
 			// si encontramos el End terminamos de armar la estructura
 			if ((proxEstilo.indexOf("End") != -1) || (proxEstilo.indexOf("Intro") != -1)) {
