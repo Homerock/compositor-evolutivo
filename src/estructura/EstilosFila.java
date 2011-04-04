@@ -14,9 +14,7 @@ public class EstilosFila {
 	
 	private int cantUnCompas;
 	private int cantDosCompases;
-	private int cantTresCompases;
 	private int cantCuatroCompases;
-	private int cantSeisCompases;
 	private int cantOchoCompases;
 	
 
@@ -32,9 +30,7 @@ public class EstilosFila {
 		this.setContador(0);
 		this.setCantUnCompas(0);
 	 	this.setCantDosCompases(0);
-	 	this.setCantTresCompases(0);
 	 	this.setCantCuatroCompases(0);
-	 	this.setCantSeisCompases(0);
 	 	this.setCantOchoCompases(0);
 	}
 	/**------------------------------------------------------------------------
@@ -49,9 +45,7 @@ public class EstilosFila {
 		this.setContador(cantidad);
 		this.setCantUnCompas(0);
 	 	this.setCantDosCompases(0);
-	 	this.setCantTresCompases(0);
 	 	this.setCantCuatroCompases(0);
-	 	this.setCantSeisCompases(0);
 	 	this.setCantOchoCompases(0);
 	}
 	
@@ -194,9 +188,7 @@ public class EstilosFila {
 		
 		int contador =  this.getCantUnCompas()+
 						this.getCantDosCompases()+
-						this.getCantTresCompases()+
 						this.getCantCuatroCompases()+
-						this.getCantSeisCompases()+
 						this.getCantOchoCompases();
 	
 		return contador;
@@ -232,24 +224,14 @@ public class EstilosFila {
 	public void setCantDosCompases(int cantDosCompases) {
 		this.cantDosCompases = cantDosCompases;
 	}
-	public int getCantTresCompases() {
-		return cantTresCompases;
-	}
-	public void setCantTresCompases(int cantTresCompases) {
-		this.cantTresCompases = cantTresCompases;
-	}
+	
 	public int getCantCuatroCompases() {
 		return cantCuatroCompases;
 	}
 	public void setCantCuatroCompases(int cantCuatroCompases) {
 		this.cantCuatroCompases = cantCuatroCompases;
 	}
-	public int getCantSeisCompases() {
-		return cantSeisCompases;
-	}
-	public void setCantSeisCompases(int cantSeisCompases) {
-		this.cantSeisCompases = cantSeisCompases;
-	}
+	
 	public int getCantOchoCompases() {
 		return cantOchoCompases;
 	}
@@ -271,13 +253,6 @@ public class EstilosFila {
 		return;
 	}
 	
-	public void incCantTresCompases(){
-		int cant = this.getCantTresCompases();
-		cant++;
-		this.setCantTresCompases(cant);
-		return;
-	}
-	
 	public void incCantCuatroCompases(){
 		int cant = this.getCantCuatroCompases();
 		cant++;
@@ -285,13 +260,6 @@ public class EstilosFila {
 		return;
 	}
 
-	public void incCantSeisCompases(){
-		int cant = this.getCantSeisCompases();
-		cant++;
-		this.setCantSeisCompases(cant);
-		return;
-	}
-	
 	public void incCantOchoCompases(){
 		int cant = this.getCantOchoCompases();
 		cant++;
@@ -313,24 +281,10 @@ public class EstilosFila {
 		return;
 	}
 	
-	public void incCantTresCompases(int incremento){
-		int cant = this.getCantTresCompases();
-		cant = cant + incremento;
-		this.setCantTresCompases(cant);
-		return;
-	}
-	
 	public void incCantCuatroCompases(int incremento){
 		int cant = this.getCantCuatroCompases();
 		cant = cant + incremento;
 		this.setCantCuatroCompases(cant);
-		return;
-	}
-
-	public void incCantSeisCompases(int incremento){
-		int cant = this.getCantSeisCompases();
-		cant = cant + incremento;
-		this.setCantSeisCompases(cant);
 		return;
 	}
 	
@@ -341,7 +295,44 @@ public class EstilosFila {
 		return;
 	}
 	
-	
+	public int cantidadCompases() {
+		
+		Random rnd= new Random();
+		int miRandom;
+		Map<Integer, Integer> mapCompases = new HashMap<Integer, Integer>();
+		int acumulado = 0;
+		
+		if (this.getCantUnCompas() > 0) {
+			acumulado += this.getCantUnCompas();
+			mapCompases.put(1, acumulado);
+		}
+		if (this.getCantDosCompases() > 0) {
+			acumulado += this.getCantDosCompases();
+			mapCompases.put(2, acumulado);
+		}
+		if (this.getCantCuatroCompases() > 0) {
+			acumulado += this.getCantCuatroCompases();
+			mapCompases.put(4, acumulado);
+		}
+		if (this.getCantOchoCompases() > 0) {
+			acumulado += this.getCantOchoCompases();
+			mapCompases.put(8, acumulado);
+		}
+		miRandom = rnd.nextInt(acumulado);
+		
+		Iterator it = mapCompases.entrySet().iterator();
+		int valor = 0;
+		
+		while (it.hasNext()) {
+			Map.Entry e = (Map.Entry)it.next();
+			if ((Integer)e.getValue() >= miRandom){
+				valor = (Integer)e.getKey();
+				break;
+			}
+		}
+		return valor;
+		
+	}
 	
 	public String toString(){
 		
@@ -349,9 +340,7 @@ public class EstilosFila {
 		String salida =  " compas:cant =" +
 						"{ 1:"+this.getCantUnCompas() +
 						" | 2:"+this.getCantDosCompases()+
-						" | 3:"+this.getCantTresCompases()+
 						" | 4:"+this.getCantCuatroCompases()+
-						" | 6:"+this.getCantSeisCompases()+
 						" | 8:"+ this.getCantOchoCompases()+" }";
 				
 		return salida;

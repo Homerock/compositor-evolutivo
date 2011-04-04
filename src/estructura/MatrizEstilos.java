@@ -16,9 +16,7 @@ public class MatrizEstilos {
 	
 	private static final int UN_COMPAS = 1;
 	private static final int DOS_COMPASES = 2;
-	private static final int TRES_COMPASES = 3;
 	private static final int CUATRO_COMPASES = 4;
-	private static final int SEIS_COMPASES = 6;
 	private static final int OCHO_COMPASES = 8;
 	
 	private static final int PAR = 2;
@@ -147,12 +145,7 @@ public class MatrizEstilos {
 				
 				if(DEBUG)
 					System.out.println(" hay "+compas/OCHO_COMPASES+" de 8 ");
-			}else 
-				if(compas % SEIS_COMPASES ==0){
-					miEstiloFila.incCantSeisCompases(compas/SEIS_COMPASES);
-					if(DEBUG)
-						System.out.println("hay "+compas/SEIS_COMPASES+"  de 6 ");
-				}else 
+			}else  
 					if(compas % CUATRO_COMPASES ==0){
 						miEstiloFila.incCantCuatroCompases(compas/CUATRO_COMPASES);
 						if(DEBUG)

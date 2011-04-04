@@ -171,9 +171,11 @@ public class Compositor {
 		// busco el siguiente estilo hasta llegar al End o hasta que se alcance el limite de duracion de cancion
 		// el valor de n es la suma de compases que tiene cada estilo
 		while(n<duracionCancion){
-			duracionEstilo = 4;			// FALTA VER COMO SE CALCULA ESTE VALOR (aleatorio o usando los valores cargados en mapEstilo)
+			
+			duracionEstilo = mapEstilo.cantidadCompases();			// FALTA VER COMO SE CALCULA ESTE VALOR (aleatorio o usando los valores cargados en mapEstilo)
 			miRandom = rnd.nextInt(max+1);
 			proxEstilo = mapEstilo.buscarEstilo(miRandom);
+			
 			// si encontramos el End terminamos de armar la estructura
 			if ((proxEstilo.indexOf("End") != -1) || (proxEstilo.indexOf("Intro") != -1)) {
 				break;
