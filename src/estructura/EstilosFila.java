@@ -29,7 +29,7 @@ public class EstilosFila {
 	public EstilosFila(String nombre){
 		this.setNombreEstilo(nombre);
 		this.mapEstilos=new HashMap<String, Valor_Y_Acumulado> ();
-		this.setContador(1);
+		this.setContador(0);
 		this.setCantUnCompas(0);
 	 	this.setCantDosCompases(0);
 	 	this.setCantTresCompases(0);

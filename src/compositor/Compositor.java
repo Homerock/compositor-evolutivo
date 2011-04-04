@@ -91,7 +91,7 @@ public class Compositor {
 		}
 	
 		// si el estilo principal no esta cargado en la matriz no puedo componer
-		if (!miMatrizEstilos.ExisteEstiloPpal(estilo)){
+		if (!miMatrizEstilos.ExisteEstilo(estilo)){
 			System.out.println("No conozco ese estilo principal!");
 			return;
 		}

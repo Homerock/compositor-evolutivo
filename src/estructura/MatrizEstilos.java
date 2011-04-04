@@ -65,11 +65,11 @@ public class MatrizEstilos {
 	}
 	
 	/**---------------------------------------------------------------------------
-	  * se agrega una Estilo ppal en la matriz
+	  * se agrega una Estilo en la matriz
 	  * se deve verificar previamente si esta Estilo ya existe si se reescribe
 	  * @param EstiloPpal
 	  *---------------------------------------------------------------------------*/
-	public void agregarEstiloPrincipal(String EstiloPpal){
+	public void agregarEstilo(String EstiloPpal){
 		
 		Map<String, EstilosFila> mapEstilos = this.getMisEstilos();
 		
@@ -77,7 +77,7 @@ public class MatrizEstilos {
 		return;
 	}
 	
-	public void agregarEstiloPrincipal(String EstiloPpal, int cantidad){
+	public void agregarEstilo(String EstiloPpal, int cantidad){
 		
 		Map<String, EstilosFila> mapEstilos = this.getMisEstilos();
 		
@@ -91,7 +91,7 @@ public class MatrizEstilos {
 	  * @param Estilo
 	  * @return
 	  *---------------------------------------------------------------------------*/
-	public boolean ExisteEstiloPpal(String Estilo){
+	public boolean ExisteEstilo(String Estilo){
 		
 		Map<String, EstilosFila> mapEstilos = this.getMisEstilos();
 		
@@ -105,7 +105,7 @@ public class MatrizEstilos {
 	  * @param EstiloPpal
 	  * @param EstiloSec
 	  *---------------------------------------------------------------------------*/
-	public void agregaOcurrenciaEstiloSecundario(String EstiloPpal, String EstiloSec){
+	public void agregaOcurrenciaEstilo(String EstiloPpal, String EstiloSec){
 		
 		EstilosFila mapEstiloPpal;
 		mapEstiloPpal= this.getMisEstilos().get(EstiloPpal);
@@ -113,7 +113,7 @@ public class MatrizEstilos {
 		return;
 	}
 	
-	public void agregaOcurrenciaEstiloSecundario(String EstiloPpal, String EstiloSec, int valor){
+	public void agregaOcurrenciaEstilo(String EstiloPpal, String EstiloSec, int valor){
 		
 		EstilosFila mapEstiloPpal;
 		mapEstiloPpal= this.getMisEstilos().get(EstiloPpal);

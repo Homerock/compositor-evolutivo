@@ -159,14 +159,14 @@ public class Estilos {
 	}
 
 
-
+	
 	public static void guardarEstilosEnMatriz(ArrayList<String> cancionAnalizadaConEstilos, MatrizEstilos miMatrizEstilos) throws EstilosException{		
 
 		//vaciamos las varibles esaticos
 		getMisEstilos().clear();
 		getMisEstilosOrdenados().clear();
 
-		int cont=0,j=-1;
+		int cont=0;
 		int total=0;
 		String valor="";
 		String grooveAnteUltimo="";
@@ -179,12 +179,12 @@ public class Estilos {
 		
 		cancionAnalizadaConEstilos = quitarLastGroove(cancionAnalizadaConEstilos);
 		 
+		
 
-
-		do{
-			j++;
-
-			valor = cancionAnalizadaConEstilos.get(j);
+		
+		for (int i=0; i< cancionAnalizadaConEstilos.size(); i++){
+			
+			valor = cancionAnalizadaConEstilos.get(i);
 
 			//si la linea es la que determina el estilo 
 			if (valor.startsWith(Utiles.ESTILO)){
@@ -198,19 +198,20 @@ public class Estilos {
 							agregarEstilo(grooveUltimo);// solo para debug
 
 						//guardo las apariciones de los estilos	
-						if(!miMatrizEstilos.ExisteEstiloPpal(grooveUltimo)){
+						if(!miMatrizEstilos.ExisteEstilo(grooveUltimo)){
 
-							miMatrizEstilos.agregarEstiloPrincipal(grooveUltimo);									
+							miMatrizEstilos.agregarEstilo(grooveUltimo);									
 
 						}
 						if(!grooveAnteUltimo.isEmpty()){
-							miMatrizEstilos.agregaOcurrenciaEstiloSecundario(grooveAnteUltimo, grooveUltimo);
+							miMatrizEstilos.agregaOcurrenciaEstilo(grooveAnteUltimo, grooveUltimo);
 						}
 
 						try {//vemos si podemos setear el compas
+							//guaradamos el  estilo con sus compases o equivalencias
 							miMatrizEstilos.setCompas(grooveUltimo, cont);
-						} catch (EstilosException e) {//si no esta comprendido el compas recibimos una excepcion
-							//if(DEBUG)
+							
+						} catch (EstilosException e) {
 							System.err.println(e.getMessage());
 						}
 
@@ -235,24 +236,25 @@ public class Estilos {
 
 				// si la linea NO es la que tiene el estilo 	
 			}else{//agrego notas (de algun grove, antes seteado) e incremento contador
+				//sirve para verificar si un estilo tiene notas 
 
 				miLista.add(valor);
 				cont++;
 			}
 
-		}while(j<(cancionAnalizadaConEstilos.size()-1));
-
+		}
+		
 		//agrego el ultimo groove
 		if(cont>0){
 			total = total + cont;
 			if(DEBUG)
 				agregarEstilo(grooveUltimo);
 
-			if(!miMatrizEstilos.ExisteEstiloPpal(grooveUltimo)){
-				miMatrizEstilos.agregarEstiloPrincipal(grooveUltimo);
+			if(!miMatrizEstilos.ExisteEstilo(grooveUltimo)){
+				miMatrizEstilos.agregarEstilo(grooveUltimo);
 			}
 			if(!grooveAnteUltimo.isEmpty()){
-				miMatrizEstilos.agregaOcurrenciaEstiloSecundario(grooveAnteUltimo, grooveUltimo);
+				miMatrizEstilos.agregaOcurrenciaEstilo(grooveAnteUltimo, grooveUltimo);
 			}
 
 			try {
@@ -273,7 +275,6 @@ public class Estilos {
 		return ;
 
 	}
-
 
 	/**
 	 * dado una lista de acordes y estilos (sin repeats)
