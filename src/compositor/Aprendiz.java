@@ -226,8 +226,8 @@ public class Aprendiz {
 
 
 		} catch (SQLException e) {
-			System.out.println("Error en levantar base");
-			e.printStackTrace();
+			System.err.println("Error en levantar base :"+Aprendiz.class);
+			//e.printStackTrace();
 		}
 
 		this.miMatrizAcordes.calcularAcumulados();

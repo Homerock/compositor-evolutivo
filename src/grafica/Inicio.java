@@ -7,14 +7,15 @@ import orm.*;
 public class Inicio {
 
 	public static void main(String args[]){
-
-		EntityManager manager = Conexion.getConexionMysql();
 		
-		Aprendiz aprendiz = new Aprendiz();
-		aprendiz.levantarBase(manager);
+			EntityManager manager = Conexion.getConexionMysql();
+			Aprendiz aprendiz = new Aprendiz();
+			aprendiz.levantarBase(manager);
+			
+			new Pantalla(aprendiz);
+			while(true);
+			
 		
-		new Pantalla(aprendiz);
-		while(true);
 		
 	}
 	

@@ -47,6 +47,7 @@ public class Estilos {
 				miGroove=getMisEstilosOrdenados().get(i);
 				//me fijo que el groove no tenga en "End"
 				if(miGroove.indexOf(Utiles.END_ESTILO)==-1){
+					
 					int valor = getMisEstilos().get(miGroove);
 					if (valor > cant) {
 						mayor = miGroove;

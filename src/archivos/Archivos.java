@@ -69,8 +69,11 @@ public class Archivos {
 			while(linea != null){
 				//quito los comentarios de la linea
 				linea=Utiles.quitarComentarios(linea);
-
 				if (!linea.isEmpty()){
+					
+					if(Utiles.defineUnEstilo(linea)){
+						throw new ArchivosException("El Archivo '"+nombreArch+"' contiene definicion de estilos. No contemplado en esta version aun.");
+					}
 					lineaEstilos = linea;
 					this.analizarLinea(linea);
 					this.analizarLineaEstilos(lineaEstilos);

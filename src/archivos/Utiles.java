@@ -25,6 +25,7 @@ public class Utiles {
 	protected static final String REPEAT_ENDING = "RepeatEnding";
 	protected static final String REPEAT_END = "RepeatEnd";
 	protected static final String TEMPO = "Tempo";
+	public static final String DEFINICION_VARIABLE= "Set";
 
 
 	private static String[] notasPpales= {"A","B","C","D","E","F","G"};
@@ -363,6 +364,24 @@ public class Utiles {
 		}
 		return false;
 		//falta ver q verifiq todo el resto de la nota	
+	}
+
+	
+	/**---------------------------------------------------------------------------
+	 *  dice si la linea contiene la definicion de un estilo 
+	 *  
+	 * @param linea
+	 * @return  true si tiene la definicion de un estilo false sino
+	 ---------------------------------------------------------------------------*/
+	
+	public static boolean defineUnEstilo(String linea){
+		
+		//EJEMPLO : "Set MainPlus Groove Swing1Plus"
+		
+		if(linea.trim().startsWith(DEFINICION_VARIABLE) && linea.indexOf(ESTILO)!=-1){
+			return true;
+		}
+		return false;
 	}
 
 	/**---------------------------------------------------------------------------
