@@ -43,11 +43,15 @@ public class Estilos {
 
 			String miGroove="";
 			for (int i=0;i<getMisEstilosOrdenados().size();i++){
+				
 				miGroove=getMisEstilosOrdenados().get(i);
-				int valor = getMisEstilos().get(miGroove);
-				if (valor > cant) {
-					mayor = miGroove;
-					cant = valor;
+				//me fijo que el groove no tenga en "End"
+				if(miGroove.indexOf(Utiles.END_ESTILO)==-1){
+					int valor = getMisEstilos().get(miGroove);
+					if (valor > cant) {
+						mayor = miGroove;
+						cant = valor;
+					}
 				}
 
 			}

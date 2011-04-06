@@ -17,6 +17,7 @@ public class Utiles {
 	protected static final String ESTILO = "Groove";//para definir un estilo debe estar definido asi "Groove miEstilo"
 	protected static final String NUEVO_ESTILO ="DefGroove";
 	protected static final String VAR_ULTIMO_ESTILO ="$_LastGroove";
+	protected static final String END_ESTILO ="End";
 	protected static final String SIN_ESTILO = "sinEstilo";
 	protected static final String REPEAT = "Repeat";
 	protected static final String REPEAT_ENDING = "RepeatEnding";
