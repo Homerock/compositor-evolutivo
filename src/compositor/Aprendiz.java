@@ -337,7 +337,8 @@ public class Aprendiz {
 		Estilos.guardarEstilosEnMatriz(cancionConEstilos, this.getMiMatrizEstilos());
 		this.setEstiloPpal(Estilos.deteminarEstiloPrincipal(cancionConEstilos));
 		this.cargarCancion(cancion, this.miMatrizAcordes, this.getEstiloPpal());
-		this.miListaDeEstilosPrincipales.agregarValor(this.getEstiloPpal(),this.getEstiloPpal());
+		//System.out.print(" tema: " + miArchivo.getNombre() + " estiloPpal: " + this.getEstiloPpal());
+		this.miListaDeEstilosPrincipales.agregarValor(this.getEstiloPpal());
 		this.miListaDeTonicas.agregarValor(miArchivo.getTonica(), this.getEstiloPpal());
 		this.miListaDeTempos.agregarValor(miArchivo.getTempo(), this.getEstiloPpal());
 		this.miListaDeDuraciones.agregarValor(String.valueOf(miArchivo.getDuracion()), this.getEstiloPpal());	

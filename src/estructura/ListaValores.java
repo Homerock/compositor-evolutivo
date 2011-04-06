@@ -50,6 +50,23 @@ public class ListaValores {
 		listaValores.add(new Valores(valor,estilo,1));
 		return;	
 	}
+	
+	/**---------------------------------------------------------------------------
+	  * 
+	  *---------------------------------------------------------------------------*/
+	public void agregarValor(String estilo) {
+		
+		ArrayList<Valores> listaValores = (ArrayList<Valores>) this.getLista();
+		
+		for (Valores va : listaValores) {
+			if (va.getEstilo().equalsIgnoreCase(estilo)) {
+				va.incrementarCantidad();
+				return;
+			}
+		}
+		listaValores.add(new Valores(estilo,1));
+		return;	
+	}
 
 	/**---------------------------------------------------------------------------
 	  * 

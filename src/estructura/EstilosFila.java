@@ -10,7 +10,7 @@ public class EstilosFila {
 	
 	private String nombreEstilo;
 	private Map <String,Valor_Y_Acumulado> mapEstilos;
-	private int contador ; 
+	private int contador; 
 	
 	private int cantUnCompas;
 	private int cantDosCompases;

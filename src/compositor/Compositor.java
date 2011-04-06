@@ -12,6 +12,7 @@ import java.util.Random;
 import javax.sound.midi.Sequencer;
 import archivos.Archivos;
 import archivos.Midi;
+import archivos.Utiles;
 
 /**---------------------------------------------------------------------------
   * @author Sebastian Pazos , Yamil Gomez
@@ -31,7 +32,7 @@ public class Compositor {
 	/**---------------------------------------------------------------------------
 	  * componer
 	  *---------------------------------------------------------------------------*/
-	public void componer(MatrizAcordes miMatrizAcordes, MatrizEstilos miMatrizEstilos, String tonica, String estilo, int duracion, String tempo) {
+	public void componer(MatrizAcordes miMatrizAcordes, MatrizEstilos miMatrizEstilos, String tonica, String estiloSeleccionado, int duracion, String tempo) {
 				
 		Map<String, ArrayList<String>> cancion = new HashMap<String, ArrayList<String>>();
 		ArrayList<Valores> estructuraDeCancion = new ArrayList<Valores>();
@@ -48,17 +49,17 @@ public class Compositor {
 		}
 	
 		// si el estilo principal no esta cargado en la matriz no puedo componer
-		if (!miMatrizEstilos.ExisteEstilo(estilo)){
+		if (!miMatrizEstilos.ExisteEstilo(estiloSeleccionado)){
 			System.out.println("No conozco ese estilo principal!");
 			return;
 		}
 		
-		estiloInicial = estilo;
+		estiloInicial = estiloSeleccionado;
 		mapEstilo = miMatrizEstilos.getMisEstilos();
 		// si no contiene la cadena intro la busco dentro del arreglo que le corresponde al estilo principal
-		if (estilo.indexOf("Intro") == -1) {
-			if (mapEstilo.containsKey(estilo+"Intro")) {
-				estiloInicial = estilo+"Intro";		// obtengo el estilo inicial para comenzar a armar la estructura de estilos
+		if (estiloSeleccionado.indexOf("Intro") == -1) {
+			if (mapEstilo.containsKey(estiloSeleccionado+Utiles.INTRO_ESTILO)) {
+				estiloInicial = estiloSeleccionado+Utiles.INTRO_ESTILO;		// obtengo el estilo inicial para comenzar a armar la estructura de estilos
 				System.out.println("Estilo Inicial: " + estiloInicial);
 			} else {
 				System.out.println("No existe Intro para este estilo, tomo como inicial al estilo: " + estiloInicial);
@@ -66,36 +67,30 @@ public class Compositor {
 		}
 		
 		// Armo una lista de estilos que forman la estructura de la cancion
-		estructuraDeCancion = armarEstructuraEstilos(miMatrizEstilos, estiloInicial, duracion);
+		estructuraDeCancion = armarEstructuraEstilos(miMatrizEstilos, estiloInicial, duracion, estiloSeleccionado);
 		
 		// ahora que tengo la lista de estilos (estructura de la cancion)
 		// y tengo la cantidad de compases que tiene cada estilo,
 		// genero los acordes, utilizando la matriz de acordes y escribo el .mma
 		
-		cancion = cargarAcordesEnEstructura(estructuraDeCancion, miMatrizAcordes, tonica, estilo, tempo);
+		cancion = cargarAcordesEnEstructura(estructuraDeCancion, miMatrizAcordes, tonica, estiloSeleccionado, tempo);
 		
-		miArchivo.escribirArchivo("temp.mma", "Tempo " + tempo, false);
-		miArchivo.escribirArchivo("temp.mma", "", true);
+		miArchivo.escribirArchivo(Utiles.NOMBRE_CANCION, "Tempo " + tempo, false);
+		miArchivo.escribirArchivo(Utiles.NOMBRE_CANCION, "", true);
 		
 		// recorro la estructura de la cancion obteniendo los estilos por orden
 		for (Valores va : estructuraDeCancion) {
-			miArchivo.escribirArchivo("temp.mma", "Groove " + va.getEstilo(), true);
+			miArchivo.escribirArchivo(Utiles.NOMBRE_CANCION, "Groove " + va.getEstilo(), true);
 			
 			listaAcordes = cancion.get(va.getEstilo());
 			for (String acorde : listaAcordes) {
 				numLinea++;
-				miArchivo.escribirArchivo("temp.mma", numLinea + " " + acorde, true);
+				miArchivo.escribirArchivo(Utiles.NOMBRE_CANCION, numLinea + " " + acorde, true);
 			}
 		}
 		
-		// Si existe un End para el estilo principal lo agrego y terminamos con un ultimo acorde que seria la tonica
-		if (mapEstilo.containsKey(estilo+"End")) {
-			miArchivo.escribirArchivo("temp.mma", "Groove " + estilo + "End", true);
-			miArchivo.escribirArchivo("temp.mma", numLinea+1 + " " + tonica, true);
-		} 
-		
 		// creamos el archivo midi utilizando el programa mma
-		crearMMA("mma temp.mma", false);
+		crearMMA("mma " + Utiles.NOMBRE_CANCION, false);
 		
 		return;
 	}
@@ -150,18 +145,20 @@ public class Compositor {
 	 * para buscar los nuevos estilos se utiliza la matrizEstilos
 	 * esta lista es la estructura de la cancion
 	 *---------------------------------------------------------------------------*/
-	private ArrayList<Valores> armarEstructuraEstilos(MatrizEstilos miMatrizEstilos, String estiloInicial, int duracionCancion) {
+	private ArrayList<Valores> armarEstructuraEstilos(MatrizEstilos miMatrizEstilos, String estiloInicial, int duracionCancion, String estiloSeleccionado) {
 		
 		ArrayList<Valores> estructuraDeCancion = new ArrayList<Valores>();
 		Random rnd= new Random();
 		int max, duracionEstilo = 0;
 		int n=1;
 		int miRandom;
-		EstilosFila mapEstilo;
-		String proxEstilo;
+		EstilosFila estiloF;
+		String proxEstilo = null;
+		Map<String, EstilosFila> mapEstilos;
 		
-		mapEstilo = miMatrizEstilos.getMisEstilos().get(estiloInicial);
-		max = mapEstilo.getContador();
+		mapEstilos = miMatrizEstilos.getMisEstilos();
+		estiloF = miMatrizEstilos.getMisEstilos().get(estiloInicial);
+		max = estiloF.getContador();
 		
 		// cargo primero el estilo inicial
 		duracionEstilo = 4;
@@ -172,19 +169,25 @@ public class Compositor {
 		// el valor de n es la suma de compases que tiene cada estilo
 		while(n<duracionCancion){
 			
-			duracionEstilo = mapEstilo.cantidadCompases();			// FALTA VER COMO SE CALCULA ESTE VALOR (aleatorio o usando los valores cargados en mapEstilo)
+			duracionEstilo = estiloF.cantidadCompases();			// FALTA VER COMO SE CALCULA ESTE VALOR (aleatorio o usando los valores cargados en mapEstilo)
 			miRandom = rnd.nextInt(max+1);
-			proxEstilo = mapEstilo.buscarEstilo(miRandom);
+			proxEstilo = estiloF.buscarEstilo(miRandom);
 			
 			// si encontramos el End terminamos de armar la estructura
-			if ((proxEstilo.indexOf("End") != -1) || (proxEstilo.indexOf("Intro") != -1)) {
+			if ((proxEstilo.indexOf(Utiles.END_ESTILO) != -1) || (proxEstilo.indexOf(Utiles.INTRO_ESTILO) != -1)) {
 				break;
 			}
 			estructuraDeCancion.add(new Valores(proxEstilo, duracionEstilo));
-			mapEstilo = miMatrizEstilos.getMisEstilos().get(proxEstilo);
-			max = mapEstilo.getContador();
+			estiloF = miMatrizEstilos.getMisEstilos().get(proxEstilo);
+			max = estiloF.getContador();
 			n = n + duracionEstilo;
 		}
+		// Si existe un End para el estilo principal lo agrego y terminamos con un ultimo acorde que seria la tonica
+		if (mapEstilos.containsKey(estiloSeleccionado+Utiles.END_ESTILO)) {
+			duracionEstilo = estiloF.cantidadCompases();
+			estructuraDeCancion.add(new Valores(proxEstilo, duracionEstilo));
+		} 
+		
 		return estructuraDeCancion;
 	}
 	

@@ -27,6 +27,7 @@ public class Archivos {
 	private ArrayList<String> cancionAnalizada=new ArrayList<String>();
 	private ArrayList<String> cancionAnalizadaConEstilo=new ArrayList<String>();
 
+	private String nombre;
 	private String estiloPpal;
 	private String tonica;
 	private String tempo;
@@ -61,6 +62,7 @@ public class Archivos {
 				System.out.println("El formato del fichero "+ fichero.getName()+ " es incorrecto");
 				return false;
 			}
+			this.setNombre(nombreArch);
 			BufferedReader reader = new BufferedReader(new FileReader(fichero));
 			String linea = reader.readLine();
 
@@ -107,6 +109,14 @@ public class Archivos {
 			
 		}
 
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	/**---------------------------------------------------------------------------
