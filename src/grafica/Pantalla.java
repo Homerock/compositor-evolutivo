@@ -116,6 +116,7 @@ public class Pantalla extends JFrame {
 			jButtonAprender.setText("Aprender");
 			jButtonAprender.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
+					mostrarComponer(false);
 					aprendiz.iniciar();
 				}
 			});
@@ -135,24 +136,12 @@ public class Pantalla extends JFrame {
 			jButtonComponer.setBounds(new Rectangle(30, 120, 180, 50));
 			jButtonComponer.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					Pantalla.this.jLabelTonica.setVisible(true);
-					Pantalla.this.jLabelEstilo.setVisible(true);
-					Pantalla.this.jTextFieldTonica.setVisible(true);
+					mostrarComponer(true);
 					cargarCombo();
-					Pantalla.this.jComboEstilo.setVisible(true);
-					Pantalla.this.jButtonAceptarComp.setVisible(true);
 				}
 			});
 		}
 		return jButtonComponer;
-	}
-	
-	private void cargarCombo() {
-		ArrayList<String> lista = aprendiz.getComboEstilos();
-		
-		for (String estilo : lista) {
-			Pantalla.this.jComboEstilo.addItem(estilo);
-		}
 	}
 	
 	/**
@@ -165,6 +154,7 @@ public class Pantalla extends JFrame {
 			jButtonGuardar.setText("Actualizar BD");
 			jButtonGuardar.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
+					mostrarComponer(false);
 					aprendiz.guardar();
 				}
 			});
@@ -182,6 +172,7 @@ public class Pantalla extends JFrame {
 			jButtonLimpiar.setBounds(new Rectangle(30, 260, 180, 50));
 			jButtonLimpiar.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
+					mostrarComponer(false);
 					aprendiz.limpiar();
 				}
 			});
@@ -323,6 +314,24 @@ public class Pantalla extends JFrame {
 			jButtonStop.setBounds(612, 530, 81, 21);
 		}
 		return jButtonStop;
+	}
+	
+	private void mostrarComponer(boolean mostrar) {
+		
+		Pantalla.this.jLabelTonica.setVisible(mostrar);
+		Pantalla.this.jLabelEstilo.setVisible(mostrar);
+		Pantalla.this.jTextFieldTonica.setVisible(mostrar);
+		Pantalla.this.jComboEstilo.setVisible(mostrar);
+		Pantalla.this.jButtonAceptarComp.setVisible(mostrar);
+		
+	}
+	
+	private void cargarCombo() {
+		ArrayList<String> lista = aprendiz.getComboEstilos();
+		
+		for (String estilo : lista) {
+			Pantalla.this.jComboEstilo.addItem(estilo);
+		}
 	}
 
 } 
