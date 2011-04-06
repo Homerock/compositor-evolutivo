@@ -7,6 +7,9 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 import java.awt.Dimension;
 import javax.swing.JButton;
 import compositor.Aprendiz;
@@ -55,6 +58,7 @@ public class Pantalla extends JFrame {
 	 */
 	public Pantalla(Aprendiz aprendiz) {
 		super();
+		this.setGtk();
 		this.aprendiz = aprendiz;
 		aprendiz.setInterfaz(this);
 		initialize();
@@ -332,6 +336,27 @@ public class Pantalla extends JFrame {
 		for (String estilo : lista) {
 			Pantalla.this.jComboEstilo.addItem(estilo);
 		}
+	}
+	
+	public void setGtk(){
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
 	}
 
 } 

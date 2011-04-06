@@ -1,5 +1,8 @@
 package grafica;
 
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 import net.java.ao.*;
 import compositor.Aprendiz;
 import orm.*;
