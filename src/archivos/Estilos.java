@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import estructura.EstilosFila;
 import estructura.MatrizEstilos;
 import excepciones.EstilosException;

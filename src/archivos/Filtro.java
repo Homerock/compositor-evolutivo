@@ -1,6 +1,7 @@
 package archivos;
 
-import java.io.*;
+import java.io.File;
+import java.io.FilenameFilter;
 
 public class Filtro implements FilenameFilter{
     String extension;

@@ -1,4 +1,5 @@
 package archivos;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,15 +8,9 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
-import estructura.EstilosFila;
-import estructura.ValorAcordes;
 import excepciones.ArchivosException;
 
 /**---------------------------------------------------------------------------

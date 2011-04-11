@@ -1,23 +1,31 @@
 package compositor;
 
-import estructura.*;
+import estructura.AcordesFila;
+import estructura.ListaValores;
+import estructura.MatrizAcordes;
+import estructura.MatrizEstilos;
+import estructura.ValorAcordes;
+import estructura.Valores;
 import excepciones.ArchivosException;
 import excepciones.EstilosException;
 import excepciones.ValoresException;
 import grafica.Pantalla;
-import orm.*;
-import java.sql.SQLException;
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Vector;
-
 import javax.swing.JFileChooser;
+import net.java.ao.EntityManager;
+import orm.Acordes;
+import orm.AcordesDTO;
+import orm.EstilosDTO;
+import orm.OcurrenciasAcordes;
+import orm.OcurrenciasAcordesDTO;
+import orm.Tonicas;
+import orm.TonicasDTO;
 import archivos.Archivos;
 import archivos.Estilos;
-import net.java.ao.EntityManager;
 
 /**---------------------------------------------------------------------------
  * @author Sebastian Pazos , Yamil Gomez

@@ -1,6 +1,9 @@
 package estructura;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * @author Yamil Gomez ,Sebastian Pazos

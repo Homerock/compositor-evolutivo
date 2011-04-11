@@ -1,21 +1,22 @@
 package grafica;
 
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.ArrayList;
+
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import java.awt.Dimension;
-import javax.swing.JButton;
 import compositor.Aprendiz;
-import java.awt.Rectangle;
-import java.awt.Point;
-import java.util.ArrayList;
 
 
 /**
