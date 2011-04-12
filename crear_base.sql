@@ -26,9 +26,7 @@ create table estilos(
 	nombre text default null,
 	cantuncompas integer default null,
 	cantdoscompases integer default null,
-	canttrescompases integer default null,
 	cantcuatrocompases integer default null,
-	cantseiscompases integer default null,
 	cantochocompases integer default null
 );
 
