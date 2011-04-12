@@ -15,8 +15,6 @@ public class Inicio {
 			
 			new Pantalla(aprendiz);
 			while(true);
-			
-		
 		
 	}
 	

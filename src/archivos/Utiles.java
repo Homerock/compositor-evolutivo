@@ -68,14 +68,15 @@ public class Utiles {
 		String valor="";
 
 		String Traza="\n";
-
+		Reconocedor.cargarTablasAcordes();
 		try {
 			while(pos< cancion.size()){
 				valor =cancion.get(pos);
 				if (!valor.startsWith(REPEAT)) {
 
 					if (soloAcordes) {
-						if (esNotaValida(valor)) {
+						//if (esNotaValida(valor)) { //Metodo anterior a usar el reconocedor
+						if (Reconocedor.esAcordeValido(valor)) {
 							listaDeNotas.add(valor);
 						}
 					} else {

@@ -140,8 +140,6 @@ public class Archivos {
 			e1.printStackTrace();
 		}
 
-		
-		
 		try {
 			buffer = new BufferedOutputStream(archivo);
 			buffer.write(contenido.getBytes());
