@@ -12,7 +12,7 @@ import java.util.Random;
 public class EstilosFila {
 	
 	private String nombreEstilo;
-	private Map <String,Valor_Y_Acumulado> mapEstilos;
+	private Map <String,ValorEstilos> mapEstilos;
 	private int contador; 
 	
 	private int cantUnCompas;
@@ -29,7 +29,7 @@ public class EstilosFila {
 	  *---------------------------------------------------------------------------*/
 	public EstilosFila(String nombre){
 		this.setNombreEstilo(nombre);
-		this.mapEstilos=new HashMap<String, Valor_Y_Acumulado> ();
+		this.mapEstilos=new HashMap<String, ValorEstilos> ();
 		this.setContador(0);
 		this.setCantUnCompas(0);
 	 	this.setCantDosCompases(0);
@@ -44,7 +44,7 @@ public class EstilosFila {
 	 ------------------------------------------------------------------------*/
 	public EstilosFila(String nombre, int cantidad){
 		this.setNombreEstilo(nombre);
-		this.mapEstilos=new HashMap<String, Valor_Y_Acumulado> ();
+		this.mapEstilos=new HashMap<String, ValorEstilos> ();
 		this.setContador(cantidad);
 		this.setCantUnCompas(0);
 	 	this.setCantDosCompases(0);
@@ -60,16 +60,16 @@ public class EstilosFila {
 	 */
 	public void agregarEstilo(String Estilo){
 		
-		Map<String, Valor_Y_Acumulado> mapEstilos = this.getMapEstilos();
+		Map<String, ValorEstilos> mapEstilos = this.getMapEstilos();
 		Integer cant=0;
-		Valor_Y_Acumulado miValEstilo;
+		ValorEstilos miValEstilo;
 		
 		if (mapEstilos.containsKey(Estilo)){
 			cant= new Integer(mapEstilos.get(Estilo).getValor());
 			cant=cant+1;
 			mapEstilos.get(Estilo).setValor(cant);
 		}else{
-			miValEstilo = new Valor_Y_Acumulado(1);
+			miValEstilo = new ValorEstilos(1);
 			mapEstilos.put(Estilo, miValEstilo);//se sobreescribe con el valor nuevo
 		}
 		return;
@@ -81,13 +81,13 @@ public class EstilosFila {
 	  *---------------------------------------------------------------------------*/
 	public void agregarEstilo(String Estilo, int cantidad){
 		
-		Map<String, Valor_Y_Acumulado> mapEstilos = this.getMapEstilos();
-		Valor_Y_Acumulado miValEstilo;
+		Map<String, ValorEstilos> mapEstilos = this.getMapEstilos();
+		ValorEstilos miValEstilo;
 		
 		if (mapEstilos.containsKey(Estilo)){
 			mapEstilos.get(Estilo).setValor(cantidad);
 		}else{
-			miValEstilo = new Valor_Y_Acumulado(cantidad);
+			miValEstilo = new ValorEstilos(cantidad);
 			mapEstilos.put(Estilo, miValEstilo);//se sobreescribe con el valor nuevo
 		}
 		return;
@@ -98,7 +98,7 @@ public class EstilosFila {
 	  *---------------------------------------------------------------------------*/
 	public void listarEstilos(){
 		
-		Map<String, Valor_Y_Acumulado> mapEstilos = this.getMapEstilos();
+		Map<String, ValorEstilos> mapEstilos = this.getMapEstilos();
 		Iterator it = mapEstilos.entrySet().iterator();
 
 		while (it.hasNext()) {
@@ -116,14 +116,14 @@ public class EstilosFila {
 	  *---------------------------------------------------------------------------*/
 	public String buscarEstilo(int valor){
 		
-		Map<String, Valor_Y_Acumulado> mapEstilos = this.getMapEstilos();
+		Map<String, ValorEstilos> mapEstilos = this.getMapEstilos();
 		Iterator it = mapEstilos.entrySet().iterator();
-		Valor_Y_Acumulado miValEstilo;
+		ValorEstilos miValEstilo;
 		String Estilo="";
 
 		while (it.hasNext()) {
 			Map.Entry e = (Map.Entry)it.next();
-			miValEstilo = (Valor_Y_Acumulado)e.getValue(); 
+			miValEstilo = (ValorEstilos)e.getValue(); 
 			if (miValEstilo.getValorAcumulado()>=valor){
 				Estilo= (String)e.getKey();
 				break;
@@ -135,14 +135,14 @@ public class EstilosFila {
 	/**---------------------------------------------------------------------------
 	  * @return
 	  *---------------------------------------------------------------------------*/
-	public Map<String, Valor_Y_Acumulado> getMapEstilos() {
+	public Map<String, ValorEstilos> getMapEstilos() {
 		return mapEstilos;
 	}
 
 	/**---------------------------------------------------------------------------
 	  * @param mapEstilos
 	  *---------------------------------------------------------------------------*/
-	public void setMapEstilos(Map<String, Valor_Y_Acumulado> mapEstilos) {
+	public void setMapEstilos(Map<String, ValorEstilos> mapEstilos) {
 		this.mapEstilos = mapEstilos;
 	}
 	
@@ -160,13 +160,13 @@ public class EstilosFila {
 	public void calcularAcumulados(){
 		
 		int acumulador=0;
-		Valor_Y_Acumulado miValEstilos;
-		Map<String, Valor_Y_Acumulado> mapEstilos = this.getMapEstilos();
+		ValorEstilos miValEstilos;
+		Map<String, ValorEstilos> mapEstilos = this.getMapEstilos();
 		Iterator it = mapEstilos.entrySet().iterator();
 
 		while (it.hasNext()) {
 			Map.Entry e = (Map.Entry)it.next();
-			miValEstilos=(Valor_Y_Acumulado)e.getValue();
+			miValEstilos=(ValorEstilos)e.getValue();
 			acumulador=acumulador+miValEstilos.getValor();
 			miValEstilos.setValorAcumulado(acumulador);	
 		}
