@@ -6,7 +6,7 @@ package estructura;
   * @author Yamil Gomez -  Sebastian Pazos
   *
   *---------------------------------------------------------------------------*/
-public class Valor_Y_Acumulado {
+public class ValorEstilos {
 	
 	private int valor;
 	private int valorAcumulado;
@@ -15,7 +15,7 @@ public class Valor_Y_Acumulado {
 	/**---------------------------------------------------------------------------
 	  * Constructor  
 	  *---------------------------------------------------------------------------*/
-	public Valor_Y_Acumulado(){
+	public ValorEstilos(){
 		this.valor=0;
 		this.valorAcumulado=0;
 		return;
@@ -26,7 +26,7 @@ public class Valor_Y_Acumulado {
 	  * 
 	  * @param val
 	  *---------------------------------------------------------------------------*/
-	public Valor_Y_Acumulado(int val){
+	public ValorEstilos(int val){
 		this.valor=val;
 		this.valorAcumulado=0;
 		return;
@@ -38,7 +38,7 @@ public class Valor_Y_Acumulado {
 	  * @param val
 	  * @param valAc
 	  *---------------------------------------------------------------------------*/
-	public Valor_Y_Acumulado(int val , int valAc){
+	public ValorEstilos(int val , int valAc){
 		this.valor= val;
 		this.valorAcumulado=valAc;
 		return;

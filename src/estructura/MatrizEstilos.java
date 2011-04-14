@@ -14,13 +14,14 @@ public class MatrizEstilos {
 	
 	private Map <String,EstilosFila> misEstilos;
 	
+	
+	
+	//CONSTANTES A UTILIZAR
 	private static final int UN_COMPAS = 1;
 	private static final int DOS_COMPASES = 2;
 	private static final int CUATRO_COMPASES = 4;
 	private static final int OCHO_COMPASES = 8;
-	
 	private static final int PAR = 2;
-	
 	private static boolean DEBUG = false;
 	
 		
