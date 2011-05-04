@@ -180,8 +180,8 @@ public class Estilos {
 		EstilosFila miEstilosFila;
 
 
-		ArrayList miLista = new ArrayList<String>();
-		ArrayList miListaEstilos=new ArrayList<String>();//estilos que aparecen
+		ArrayList<String> miLista = new ArrayList<String>();
+		ArrayList<String> miListaEstilos=new ArrayList<String>();//estilos que aparecen
 		
 		cancionAnalizadaConEstilos = quitarLastGroove(cancionAnalizadaConEstilos);
 		 
@@ -216,6 +216,8 @@ public class Estilos {
 						try {//vemos si podemos setear el compas
 							//guaradamos el  estilo con sus compases o equivalencias
 							miMatrizEstilos.setCompas(grooveUltimo, cont);
+							//Guardamos la cantidad de acordes por compas en este estilo(grooveUltimo)
+							miMatrizEstilos.setAcordesEnCompas(grooveUltimo, miLista);
 							
 						} catch (EstilosException e) {
 							System.err.println(e.getMessage());
@@ -265,6 +267,8 @@ public class Estilos {
 
 			try {
 				miMatrizEstilos.setCompas(grooveUltimo, cont);
+				
+				miMatrizEstilos.setAcordesEnCompas(grooveUltimo, miLista);
 			} catch (EstilosException e) {
 				//if(DEBUG)
 				System.err.println(e.getMessage());

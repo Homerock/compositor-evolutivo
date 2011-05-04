@@ -8,8 +8,8 @@ import java.util.StringTokenizer;
 public class Utiles {
 
 
-	/*################################################################################################################
-  ###################						CONSTANTES						###################################### 
+/*################################################################################################################
+ ###################						CONSTANTES						###################################### 
  ################################################################################################################# */
 
 	protected static final String COMENTARIO = "//";
@@ -26,6 +26,11 @@ public class Utiles {
 	protected static final String REPEAT_END = "RepeatEnd";
 	protected static final String TEMPO = "Tempo";
 	public static final String DEFINICION_VARIABLE= "Set";
+	public static final String ACORDE_REPETIDO = "/";
+	public static final int UN_ACORDE = 1;
+	public static final int DOS_ACORDE = 2;
+	public static final int TRES_ACORDE = 3;
+	public static final int CUATRO_ACORDE = 4;
 
 
 	private static String[] notasPpales= {"A","B","C","D","E","F","G"};
@@ -351,22 +356,6 @@ public class Utiles {
 		}
 	}
 
-	/**---------------------------------------------------------------------------
-	 * @param nota
-	 * @return
-	 *---------------------------------------------------------------------------*/
-	public static boolean esNotaValida(String nota){
-		//dice si una nota esta contenida
-		String notaSimple  = nota.substring(0, 1);//obtengo solo la primera letra
-
-		if( getNotasPosibles().contains(notaSimple)){
-			//System.out.println("nota : "+nota+"- notaSimple : "+notaSimple);
-			return true;
-		}
-		return false;
-		//falta ver q verifiq todo el resto de la nota	
-	}
-
 	
 	/**---------------------------------------------------------------------------
 	 *  dice si la linea contiene la definicion de un estilo 
@@ -384,7 +373,36 @@ public class Utiles {
 		}
 		return false;
 	}
-
+	/**
+	 * retorna la cantidad de acordes validos que tiene una linea
+	 * si empieza con una barra(/) se cuenta como un acorde
+	 * si la barra esta en el medio no se cuenta
+	 * 
+	 * @param linea
+	 * @return cantidad de acordes validos
+	 */
+	public static int calculaCantAcordesPorCompas(String linea) {
+		int cant=0;
+		linea = linea.trim();
+		
+		String[] tokens = linea.split(" ");
+		
+		if(tokens.length>0){
+			// si empieza con "/"
+			if(tokens[0].equals(ACORDE_REPETIDO)){
+				cant++;
+			}
+			
+			for (String tok : tokens) {
+				if (Reconocedor.esAcordeValido(tok)) {
+					cant++;
+				}
+			}
+		}
+		return cant;
+		
+	}
+	
 	/**---------------------------------------------------------------------------
 	 * @return
 	 *---------------------------------------------------------------------------*/

@@ -308,6 +308,8 @@ public class Reconocedor {
 		//System.out.println("Acorde: " + acord);
 		acord.trim();
 		
+		try {
+		
 		if (acord.equals("/")) {
 			return false;
 		}
@@ -330,6 +332,9 @@ public class Reconocedor {
 				//System.out.println("nuevo acorde: "+acord+"/"+inversion);
 				return true;
 			}
+		}
+		} catch (StringIndexOutOfBoundsException e) {
+			return false;
 		}
 		return false;
 	}
