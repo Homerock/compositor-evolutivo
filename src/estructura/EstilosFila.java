@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Random;
 
 /**
+ * Esta clase representa un estilo 
+ * 
  * @author Yamil Gomez ,Sebastian Pazos
  *
  */
@@ -20,6 +22,12 @@ public class EstilosFila {
 	private int cantCuatroCompases;
 	private int cantOchoCompases;
 	
+	
+	//contadores de acordes por compas
+	private int unAcordeEnCompas;
+	private int dosAcordesEnCompas;
+	private int tresAcordesEnCompas;
+	private int cuatroAcordesEnCompas;
 
 
 	/**---------------------------------------------------------------------------
@@ -35,6 +43,11 @@ public class EstilosFila {
 	 	this.setCantDosCompases(0);
 	 	this.setCantCuatroCompases(0);
 	 	this.setCantOchoCompases(0);
+	 	
+	 	this.unAcordeEnCompas = 0;
+		this.dosAcordesEnCompas = 0;
+		this.tresAcordesEnCompas = 0;
+		this.cuatroAcordesEnCompas = 0;
 	}
 	/**------------------------------------------------------------------------
 	 * Constructor de Estilos Fila
@@ -337,6 +350,58 @@ public class EstilosFila {
 		
 	}
 	
+
+
+	public int getUnAcordeEnCompas() {
+		return unAcordeEnCompas;
+	}
+
+	public void setUnAcordeEnCompas(int unAcordeEnCompas) {
+		this.unAcordeEnCompas = unAcordeEnCompas;
+	}
+
+	public void incrementarUnAcordeEnCompas() {
+		this.unAcordeEnCompas++;
+	}
+	
+	public int getDosAcordesEnCompas() {
+		return dosAcordesEnCompas;
+	}
+
+	public void setDosAcordesEnCompas(int dosAcordesEnCompas) {
+		this.dosAcordesEnCompas = dosAcordesEnCompas;
+	}
+	
+	public void incrementarDosAcordeEnCompas() {
+		this.dosAcordesEnCompas++;
+	}
+
+	public int getTresAcordesEnCompas() {
+		return tresAcordesEnCompas;
+	}
+
+	public void setTresAcordesEnCompas(int tresAcordesEnCompas) {
+		this.tresAcordesEnCompas = tresAcordesEnCompas;
+	}
+
+	public void incrementarTresAcordeEnCompas() {
+		this.tresAcordesEnCompas++;
+	}
+	
+	public int getCuatroAcordesEnCompas() {
+		return cuatroAcordesEnCompas;
+	}
+
+	public void setCuatroAcordesEnCompas(int cuatroAcordesEnCompas) {
+		this.cuatroAcordesEnCompas = cuatroAcordesEnCompas;
+	}
+
+	public void incrementarCuatroAcordeEnCompas() {
+		this.cuatroAcordesEnCompas++;
+	}
+	
+	
+	
 	public String toString(){
 		
 		
@@ -344,7 +409,13 @@ public class EstilosFila {
 						"{ 1:"+this.getCantUnCompas() +
 						" | 2:"+this.getCantDosCompases()+
 						" | 4:"+this.getCantCuatroCompases()+
-						" | 8:"+ this.getCantOchoCompases()+" }";
+						" | 8:"+ this.getCantOchoCompases()+" }" +
+						" notas x compas =" +
+						"{ 1:"+this.getUnAcordeEnCompas() +
+						" | 2:"+this.getDosAcordesEnCompas()+
+						" | 3:"+this.getTresAcordesEnCompas()+
+						" | 4:"+ this.getCuatroAcordesEnCompas()+" }" ;
+						
 				
 		return salida;
 		

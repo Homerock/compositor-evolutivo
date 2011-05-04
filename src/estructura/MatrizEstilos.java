@@ -1,8 +1,11 @@
 package estructura;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import archivos.Utiles;
 
 import excepciones.EstilosException;
 
@@ -123,7 +126,7 @@ public class MatrizEstilos {
 	
 	/**---------------------------------------------------------------------------
 	 * Seteamos el compas de un estilo determinado
-	 * solo consideramos los de 1,2,3,4,6,8 compases
+	 * solo consideramos los de 1,2,4,8 compases
 	 * 
 	 * @param estilo
 	 * @param compas
@@ -169,7 +172,35 @@ public class MatrizEstilos {
 		
 		return;
 		
-
+	}
+	
+	/**
+	 *  Se encarga de contabilizar la cantidad de acordes que hay en cada compas de la canción para un estilo determinado.
+	 * teniendo en cuenta estos contadores: unAcordeEnCompas, dosAcordesEnCompas, tresAcordesEnCompas, cuatroAcordesEnCompas
+	 *  
+	 * @param estilo : nombre del estilo
+	 * @param acordesDeUnEstilo : arraylist de acordes en este estilo
+	 */
+	 
+	public void setAcordesEnCompas(String estilo, ArrayList<String> acordesDeUnEstilo) {
+		EstilosFila miEstiloFila = this.getMisEstilos().get(estilo);
+		
+		int cant;
+		for (String acordes : acordesDeUnEstilo){
+			cant = Utiles.calculaCantAcordesPorCompas(acordes);
+		
+			switch (cant) {
+				case Utiles.UN_ACORDE: miEstiloFila.incrementarUnAcordeEnCompas();
+										break;
+				case Utiles.DOS_ACORDE: miEstiloFila.incrementarDosAcordeEnCompas();
+										break;
+				case Utiles.TRES_ACORDE: miEstiloFila.incrementarTresAcordeEnCompas();
+										break;
+				case Utiles.CUATRO_ACORDE: miEstiloFila.incrementarCuatroAcordeEnCompas();
+										break;
+			}
+		}
+		
 	}
 	
 	/**---------------------------------------------------------------------------

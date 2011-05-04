@@ -19,9 +19,11 @@ import excepciones.ArchivosException;
  *---------------------------------------------------------------------------*/
 public class Archivos {
 
-	private ArrayList<String> cancionAnalizada=new ArrayList<String>();
-	private ArrayList<String> cancionAnalizadaConEstilo=new ArrayList<String>();
+	private ArrayList<String> cancionAnalizada;
+	private ArrayList<String> cancionAnalizadaConEstilo;
 
+	
+	
 	private String nombre;
 	private String estiloPpal;
 	private String tonica;
@@ -33,7 +35,11 @@ public class Archivos {
 	 * 
 	 *---------------------------------------------------------------------------*/
 	public Archivos(){
-
+		this.cancionAnalizada=new ArrayList<String>();
+		this.cancionAnalizadaConEstilo=new ArrayList<String>();
+		
+		
+		this.duracion=0;
 	}
 
 	/**---------------------------------------------------------------------------
@@ -70,6 +76,7 @@ public class Archivos {
 						throw new ArchivosException("El Archivo '"+nombreArch+"' contiene definicion de estilos. No contemplado en esta version aun.");
 					}
 					lineaEstilos = linea;
+					//this.contarAcordesEnCompas(linea);
 					this.analizarLinea(linea);
 					this.analizarLineaEstilos(lineaEstilos);
 				}
@@ -152,14 +159,15 @@ public class Archivos {
 	}
 
 	
-	
-	/**---------------------------------------------------------------------------
+	/*---------------------------------------------------------------------------*/
+	/**
 	 * analiza una linea y guarda :
-	 *  - los acordes y "repeat" en el arrayList cancionAnalizada
-	 *  - los acordes , "repeats" y estilos en el arraylist cancionAnalizadoConEstilos 
+	 * los acordes y "Repeat" en un arrayList (cancionAnalizada).
+	 * Se interpretan como acordes, si la linea empiza con un numero.
 	 * 
 	 * @param linea
-	 *---------------------------------------------------------------------------*/
+	 */
+	/*---------------------------------------------------------------------------*/
 	public void analizarLinea(String linea){
 
 		try{
@@ -191,16 +199,17 @@ public class Archivos {
 			//util para las lineas vacias y con espacios en blanco
 		}
 	}
-
-	/**---------------------------------------------------------------------------
+	/*---------------------------------------------------------------------------*/
+	/**
 	 * analiza una linea y guarda :
-	 *  - los acordes y "repeat" en el arrayList cancionAnalizada
-	 *  - los acordes , "repeats" y estilos en el arraylist cancionAnalizadoConEstilos 
+	 *  los acordes , "repeats" y estilos en un arraylist (cancionAnalizadoConEstilos).
+	 *   Se interpretan como acordes, si la linea empiza con un numero.
+	 *   Si se define un estilo se lanza una ArchivosException
 	 * 
 	 * @param linea
-	  *
 	 * @throws ArchivosException 
-	 * ---------------------------------------------------------------------------*/
+	 */
+	/*---------------------------------------------------------------------------*/
 	public void analizarLineaEstilos(String linea) throws ArchivosException{
 
 		try{
@@ -209,7 +218,7 @@ public class Archivos {
 			String acordesAux="";
 			//si es un numero 
 			if (Utiles.isNumeric(primerToken)){
-				while (tokens.hasMoreTokens()){
+				while (tokens.hasMoreTokens()){//algo en el otro
 					String tok = tokens.nextToken();
 					acordesAux = acordesAux + " " + tok;
 				}
@@ -232,6 +241,8 @@ public class Archivos {
 		}
 	}
 
+	
+	
 	/**---------------------------------------------------------------------------
 	 * 
 	 *---------------------------------------------------------------------------*/

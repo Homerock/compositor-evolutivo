@@ -247,7 +247,7 @@ public class Aprendiz {
 	 *---------------------------------------------------------------------------*/
 	public void iniciar() {
 
-		Archivos miArchivo = new Archivos();
+		Archivos miArchivo;
 
 		try {
 			JFileChooser chooser= new JFileChooser();
@@ -268,6 +268,8 @@ public class Aprendiz {
 					escribir("Directorio a cargar :"+path);
 					File[] listOfFiles = folder.listFiles();
 					for (int i = 0; i < listOfFiles.length; i++) {
+						miArchivo = new Archivos();
+						
 						if (listOfFiles[i].isFile()) {
 							files = listOfFiles[i].getName();
 							escribir("Archivo a leer :"+path+files);
@@ -290,6 +292,7 @@ public class Aprendiz {
 			//si es un archivo
 			if(tipo.compareTo(ARCHIVO)==0){
 				escribir("Archivo a leer :"+chooser.getSelectedFile());
+				miArchivo = new Archivos();
 				try {
 					if (miArchivo.leerArchivo(chooser.getSelectedFile().toString())){
 						this.procesarArchivo(miArchivo);
@@ -302,7 +305,7 @@ public class Aprendiz {
 			}
 			this.miMatrizAcordes.calcularAcumulados();
 			this.miMatrizEstilos.calcularAcumulados();
-		//	this.mostrarDatos();
+			this.mostrarDatos();
 
 		}catch(NullPointerException e1){
 			escribir("Error: Aprendiz.iniciar()");
@@ -345,6 +348,7 @@ public class Aprendiz {
 		Estilos.guardarEstilosEnMatriz(cancionConEstilos, this.getMiMatrizEstilos());
 		this.setEstiloPpal(Estilos.deteminarEstiloPrincipal(cancionConEstilos));
 		this.cargarCancion(cancion, this.miMatrizAcordes, this.getEstiloPpal());
+		
 		//System.out.print(" tema: " + miArchivo.getNombre() + " estiloPpal: " + this.getEstiloPpal());
 		this.miListaDeEstilosPrincipales.agregarValor(this.getEstiloPpal());
 		this.miListaDeTonicas.agregarValor(miArchivo.getTonica(), this.getEstiloPpal());
