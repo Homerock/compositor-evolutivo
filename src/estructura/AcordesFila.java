@@ -103,14 +103,15 @@ public class AcordesFila {
 			System.out.println(va.getAcordeSecundario() + "  " + va.getEstilo() + "  [ " + va.getValor() + " " + va.getValorAcumulado() + " ]");
 		}
 	}
-	
-	/**---------------------------------------------------------------------------
-	  * devuelve una Acorde segun el valor pasado por parametro
-	  * nos fijamos en los valores acumulados de cada Acorde
-	  * y devolvemos el mayor mas cercano
+	//---------------------------------------------------------------------------
+	/**
+	  * Devuelve el proximo Acorde de la matriz acumulada, correspondiente al valor pasado por parametro.
+	  * Nos fijamos en los valores acumulados de cada Acorde
+	  * y devolvemos el mayor mas cercano.
 	  * @param valor
 	  * @return
-	  *---------------------------------------------------------------------------*/
+	  **/
+	//---------------------------------------------------------------------------
 	public String buscarAcorde(int valor){
 		
 		String acorde="";
@@ -124,7 +125,6 @@ public class AcordesFila {
 		}
 		return acorde;
 	}
-
 	
 	/**---------------------------------------------------------------------------
 	  * 
