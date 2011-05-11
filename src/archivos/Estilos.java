@@ -9,12 +9,14 @@ import estructura.EstilosFila;
 import estructura.MatrizEstilos;
 import excepciones.EstilosException;
 
+//#########################################################################################
 /**
  * Esta clase se encarga del manejo de los estilos 
  * 
  * @author yamil gomez , sebastian pazos
  *
  */
+//#########################################################################################
 public class Estilos {
 
 /*################################################################################################################
@@ -30,11 +32,13 @@ public class Estilos {
  ###################				METODOS ESTATICOS PRIVADOS						############################## 
  ################################################################################################################# */
 
+	//#########################################################################################
 	/**
 	 *   Determina cual de todos los estilos es el principal, segun la cantidad de apariciones o precendencia
 	 *   
 	 * @return mayor
 	 */
+	//#########################################################################################
 	private static String calcularEstiloPrincipal(){
 		String mayor = null;
 		int cant=0;
@@ -61,6 +65,7 @@ public class Estilos {
 		return  mayor;
 	}
 
+	//#########################################################################################
 	/**
 	 * Incrementa un estilo en la matriz misEstilos si existe y lo agrega si no existe
 	 * tambien guarda en una lista los estilos en el orden de aparicion 
@@ -68,6 +73,7 @@ public class Estilos {
 	 * 
 	 * @param estilo
 	 */
+	//#########################################################################################
 	private static void agregarEstilo(String estilo){
 
 		Integer cant= new Integer(1);
@@ -86,7 +92,7 @@ public class Estilos {
 		return;
 	}
 
-
+	//#########################################################################################
 	/**
 	 * Quita los $_LastGroove de una lista de notas con estilos 
 	 * la lista no debe tener repeats
@@ -95,6 +101,7 @@ public class Estilos {
 	 * @return cancionAnalizadaConEstilos sin los $_LastGroove
 	 * @throws EstilosException : cuando no tiene un $_LastGroove para reemplazar, es decir esta mal hecho el archivo mma.
 	 */
+	//#########################################################################################
 	private static ArrayList<String> quitarLastGroove(ArrayList<String> cancionAnalizadaConEstilos) throws EstilosException{		
 
 		int j=-1;
@@ -147,12 +154,15 @@ public class Estilos {
 
 	}
 
-
-
 /*################################################################################################################
  ###################				METODOS ESTATICOS PUBLICOS       				############################## 
  ################################################################################################################# */
 
+	//#########################################################################################
+	/**
+	 * 
+	 */
+	//#########################################################################################
 	public static void imprimirMap(){
 		Map<String, Integer> mapEstilos = getMisEstilos();
 
@@ -164,8 +174,14 @@ public class Estilos {
 		}
 	}
 
-
-	
+	//#########################################################################################
+	/**
+	 * 
+	 * @param cancionAnalizadaConEstilos
+	 * @param miMatrizEstilos
+	 * @throws EstilosException
+	 */
+	//#########################################################################################
 	public static void guardarEstilosEnMatriz(ArrayList<String> cancionAnalizadaConEstilos, MatrizEstilos miMatrizEstilos) throws EstilosException{		
 
 		//vaciamos las varibles esaticos
@@ -184,10 +200,7 @@ public class Estilos {
 		ArrayList<String> miListaEstilos=new ArrayList<String>();//estilos que aparecen
 		
 		cancionAnalizadaConEstilos = quitarLastGroove(cancionAnalizadaConEstilos);
-		 
-		
 
-		
 		for (int i=0; i< cancionAnalizadaConEstilos.size(); i++){
 			
 			valor = cancionAnalizadaConEstilos.get(i);
@@ -286,6 +299,7 @@ public class Estilos {
 
 	}
 
+	//#########################################################################################
 	/**
 	 * dado una lista de acordes y estilos (sin repeats)
 	 * nos devuelve cual sera el estilo principal de dicha cancion
@@ -296,6 +310,7 @@ public class Estilos {
 	 * @throws EstilosException 
 	 * 
 	 */	
+	//#########################################################################################
 	public static String deteminarEstiloPrincipal(ArrayList<String> cancionAnalizadaConEstilos) throws EstilosException{
 
 		//vaciamos las varibles esaticos
@@ -349,9 +364,7 @@ public class Estilos {
 
 				miLista.add(valor);
 				cont++;
-
 			}
-
 
 		}while(j<(cancionAnalizadaConEstilos.size()-1));
 
@@ -363,26 +376,47 @@ public class Estilos {
 				System.out.println("cant : "+cont);
 				System.out.println("Acordes : "+miLista.toString());
 			}
-
 		}				
 		String estiloPpal = calcularEstiloPrincipal();//calcula cual es el estilo ppal
 		return estiloPpal;
 	}
 
-
-	
-	
+	//#########################################################################################
+	/**
+	 * 
+	 * @return
+	 */
+	//#########################################################################################
 	public static ArrayList<String> getMisEstilosOrdenados() {
 		return misEstilosOrdenados;
 	}
+	
+	//#########################################################################################
+	/**
+	 * 
+	 * @param misEstilosOrdenados
+	 */
+	//#########################################################################################
 	public static void setMisEstilosOrdenados(ArrayList<String> misEstilosOrdenados) {
 		misEstilosOrdenados = misEstilosOrdenados;
 	}
 
+	//#########################################################################################
+	/**
+	 * 
+	 * @return
+	 */
+	//#########################################################################################
 	public static Map<String, Integer> getMisEstilos() {
 		return misEstilos;
 	}
 
+	//#########################################################################################
+	/**
+	 * 
+	 * @param misEstilos
+	 */
+	//#########################################################################################
 	public static void setMisEstilos(Map<String, Integer> misEstilos) {
 		misEstilos = misEstilos;
 	}

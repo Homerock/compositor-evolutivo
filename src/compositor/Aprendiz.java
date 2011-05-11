@@ -75,7 +75,7 @@ public class Aprendiz {
 	 * @param miMatrizAcordes
 	 **/
 	//#########################################################################################
-	public void cargarCancion(ArrayList<String> cancion, MatrizAcordes miMatrizAcordes, String estiloPpal) {
+	public void cargarCancion(ArrayList<String> cancion, MatrizAcordes miMatrizAcordes) {
 
 		int pos = 0;
 		String principal;
@@ -248,15 +248,15 @@ public class Aprendiz {
 			//e.printStackTrace();
 		}
 
-	//	this.miMatrizAcordes.calcularAcumulados();
-	//	this.miMatrizAcordes.listarAcordes();	
+		//	this.miMatrizAcordes.calcularAcumulados();
+		//	this.miMatrizAcordes.listarAcordes();	
 	}
 
 	//#########################################################################################
 	/**
 	 * Iniciar
 	 **/
-	 //#########################################################################################
+	//#########################################################################################
 	public void iniciar() {
 
 		Archivos miArchivo;
@@ -281,7 +281,7 @@ public class Aprendiz {
 					File[] listOfFiles = folder.listFiles();
 					for (int i = 0; i < listOfFiles.length; i++) {
 						miArchivo = new Archivos();
-						
+
 						if (listOfFiles[i].isFile()) {
 							files = listOfFiles[i].getName();
 							escribir("Archivo a leer :"+path+files);
@@ -289,7 +289,7 @@ public class Aprendiz {
 								if (miArchivo.leerArchivo(path+files)){
 									this.procesarArchivo(miArchivo);
 								}
-								
+
 							} catch (EstilosException ee) {
 								System.err.println(ee.getMessage());
 							} catch (ArchivosException ae) {
@@ -315,7 +315,7 @@ public class Aprendiz {
 					System.err.println(ae.getMessage());
 				}
 			}
-			
+
 			this.calcularAcumuladoDeMap(this.getMatrizEvolutiva());
 			this.miMatrizEstilos.calcularAcumulados();
 			this.mostrarDatos();
@@ -324,7 +324,7 @@ public class Aprendiz {
 			escribir("Error: Aprendiz.iniciar()");
 		}	
 	}
-	
+
 	//#########################################################################################
 	/**
 	 * calcularAcumuladoDeMap
@@ -332,11 +332,11 @@ public class Aprendiz {
 	 **/
 	//#########################################################################################
 	private void calcularAcumuladoDeMap(Map<String, MatrizAcordes> mapMatriz) {
-		
+
 		Map<String, MatrizAcordes> mapMatrizEvolutiva = this.getMatrizEvolutiva();
 		MatrizAcordes miMatriz;
 		Iterator it = mapMatrizEvolutiva.entrySet().iterator();
-		
+
 		//tengo que iterar para calcular los acumulados de todas la matrices del map
 		while (it.hasNext()) {
 			Map.Entry e = (Map.Entry)it.next();
@@ -344,17 +344,17 @@ public class Aprendiz {
 			miMatriz.calcularAcumulados();
 		}
 	}
-	
+
 	//#########################################################################################
 	/**
 	 * buscarMatrizEnMap
 	 * Busca la matriz correspondiente a un estilo principal dentro del map de matrices evolutivas
 	 **/
 	//#########################################################################################
-	private MatrizAcordes buscarMatrizEnMap(String estilo) {
-		
+	public MatrizAcordes buscarMatrizEnMap(String estilo) {
+
 		MatrizAcordes miMatrizAcordes = this.getMatrizEvolutiva().get(estilo);
-		
+
 		if (miMatrizAcordes == null) {
 			miMatrizAcordes = new MatrizAcordes();
 			this.getMatrizEvolutiva().put(estilo, miMatrizAcordes);
@@ -404,17 +404,17 @@ public class Aprendiz {
 
 		ArrayList<String> cancion=new ArrayList<String>();
 		ArrayList<String> cancionConEstilos=new ArrayList<String>();
-		
+
 		cancion = miArchivo.getCancionAnalizada();
 		cancionConEstilos = miArchivo.getCancionAnalizadaConEstilo();//repeats , acordes  y estilos
 		escribir("LISTA DE ACORDES: "+cancion.toString());
 		Estilos.guardarEstilosEnMatriz(cancionConEstilos, this.getMiMatrizEstilos());
 		this.setEstiloPpal(Estilos.deteminarEstiloPrincipal(cancionConEstilos));
-		
+
 		// obtengo la matriz de acordes correspondiente al estilo principal
 		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(this.getEstiloPpal());
-		this.cargarCancion(cancion, miMatrizAcordes, this.getEstiloPpal());
-		
+		this.cargarCancion(cancion, miMatrizAcordes);
+
 		//System.out.print(" tema: " + miArchivo.getNombre() + " estiloPpal: " + this.getEstiloPpal());
 		this.miListaDeEstilosPrincipales.agregarValor(this.getEstiloPpal());
 		this.miListaDeTonicas.agregarValor(miArchivo.getTonica(), this.getEstiloPpal());
@@ -433,7 +433,7 @@ public class Aprendiz {
 		Compositor miCompositor = new Compositor();
 		String tempo;
 		String duracion;
-		
+
 		try {
 			tempo = this.miListaDeTempos.obtenerMayorValorPorEstilo(estilo);
 		} catch (ValoresException e) {
@@ -446,17 +446,17 @@ public class Aprendiz {
 			e.getMessage();
 			return;
 		}
-		
+
 		System.out.println("Datos para componer: ");
 		System.out.println("ESTILO: " + estilo);
 		System.out.println("TONICA: " + tonica);
 		System.out.println("DURACION: " + duracion);
 		System.out.println("TEMPO: " + tempo);
-		
+
 		//Obtengo la matriz de acordes correspondiente a el estilo principal
 		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(estilo);
 		miCompositor.componer(miMatrizAcordes, this.miMatrizEstilos, tonica, estilo, Integer.parseInt(duracion), tempo);
-	
+
 		//Tenemos que devolver el nombre del archivo en el metodo componer
 		//este nombre no deberia ser fijo y hay que controlar que el archivo este creado
 		//antes de intentar leerlo
@@ -471,9 +471,9 @@ public class Aprendiz {
 		} catch (ArchivosException ae) {
 			System.err.println(ae.getMessage());
 		}
-	
+
 	}
-	
+
 	//#########################################################################################
 	/**
 	 * limpiar
@@ -484,14 +484,14 @@ public class Aprendiz {
 		Map<String, MatrizAcordes> mapMatrizEvolutiva = this.getMatrizEvolutiva();
 		MatrizAcordes miMatriz;
 		Iterator it = mapMatrizEvolutiva.entrySet().iterator();
-		
+
 		//tengo que iterar para vaciar todas la matrices del map
 		while (it.hasNext()) {
 			Map.Entry e = (Map.Entry)it.next();
 			miMatriz = (MatrizAcordes) e.getValue();
 			miMatriz.vaciarMatriz();
 		}
-		
+
 		OcurrenciasAcordesDTO.EliminarTabla();
 		AcordesDTO.EliminarTabla();
 	}
@@ -532,18 +532,18 @@ public class Aprendiz {
 	 **/
 	//#########################################################################################
 	public ArrayList<String> getComboEstilos() {
-		
+
 		ArrayList<Valores> listaValores = this.getMiListaDeEstilosPrincipales().getLista();
 		ArrayList<String> miLista = new ArrayList<String>();
-		
+
 		for (Valores val : listaValores) {
 			miLista.add(val.getEstilo());
 		}
-		
+
 		return miLista;
-		
+
 	}
-	
+
 	//#########################################################################################
 	/**
 	 * setInterfaz
@@ -696,7 +696,7 @@ public class Aprendiz {
 	public void setMiListaDeDuraciones(ListaValores miListaDeDuraciones) {
 		this.miListaDeDuraciones = miListaDeDuraciones;
 	}
-	
+
 	//#########################################################################################
 	/**
 	 * getMiListaDeEstilosPrincipales
