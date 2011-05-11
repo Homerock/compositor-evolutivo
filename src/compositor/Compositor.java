@@ -5,6 +5,8 @@ import estructura.EstilosFila;
 import estructura.MatrizAcordes;
 import estructura.MatrizEstilos;
 import estructura.Valores;
+import excepciones.ArchivosException;
+import excepciones.EstilosException;
 import grafica.Pantalla;
 
 import java.io.BufferedReader;
@@ -18,24 +20,30 @@ import java.util.Random;
 import archivos.Archivos;
 import archivos.Utiles;
 
-/**---------------------------------------------------------------------------
+//################################################################################
+/**
   * @author Sebastian Pazos , Yamil Gomez
   *
-  *---------------------------------------------------------------------------*/
+  **/
+//################################################################################
 public class Compositor {
 	
 	Pantalla pantalla;
 	
-	/**---------------------------------------------------------------------------
+	//################################################################################
+	/**
 	  * Constructor
-	  *---------------------------------------------------------------------------*/
+	  **/
+	//################################################################################
 	public Compositor(){
 		
 	}
 	
-	/**---------------------------------------------------------------------------
+	//################################################################################
+	/**
 	  * componer
-	  *---------------------------------------------------------------------------*/
+	  **/
+	//################################################################################
 	public void componer(MatrizAcordes miMatrizAcordes, MatrizEstilos miMatrizEstilos, String tonica, String estiloSeleccionado, int duracion, String tempo) {
 				
 		Map<String, ArrayList<String>> cancion = new HashMap<String, ArrayList<String>>();
@@ -95,13 +103,15 @@ public class Compositor {
 		
 		// creamos el archivo midi utilizando el programa mma
 		crearMMA("mma " + Utiles.NOMBRE_CANCION, false);
-		
+			
 		return;
 	}
 	
-	/**---------------------------------------------------------------------------
+	//################################################################################
+	/**
 	 * cargarAcordesEnEstructura
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//################################################################################
 	private Map<String, ArrayList<String>> cargarAcordesEnEstructura(ArrayList<Valores> estructuraDeCancion, MatrizAcordes miMatrizAcordes, String tonica, String estilo, String tempo) {
 	
 		Map<String, ArrayList<String>> cancion = new HashMap<String, ArrayList<String>>();
@@ -114,7 +124,7 @@ public class Compositor {
 		int numLinea = 1;
 		
 		acordePpal = miMatrizAcordes.getMisAcordes().get(tonica);
-		max=acordePpal.getContador();
+		max=acordePpal.getValorAcumuladoFila();
 		
 		// recorro la estructura de la cancion obteniendo los estilos por orden
 		for (Valores va : estructuraDeCancion) {
@@ -122,6 +132,7 @@ public class Compositor {
 			if (cancion.containsKey(va.getEstilo())) {
 				continue;
 			}
+			
 			cant = va.getCantidad();
 			n = 1;
 			if (numLinea == 1) {
@@ -133,7 +144,7 @@ public class Compositor {
 				miRandom=rnd.nextInt(max+1);
 				proxAcorde=acordePpal.buscarAcorde(miRandom);
 				acordePpal = miMatrizAcordes.getMisAcordes().get(proxAcorde);
-				max=acordePpal.getContador();	
+				max=acordePpal.getValorAcumuladoFila();	
 				n++;
 				numLinea++;
 				listaAcordes.add(proxAcorde);
@@ -143,12 +154,14 @@ public class Compositor {
 		return cancion;
 	}
 	
-	/**---------------------------------------------------------------------------
+	//################################################################################
+	/**
 	 * armarEstructuraEstilos
 	 * partiendo de un estilo principal, arma una lista con los estilos que tendra la cancion
 	 * para buscar los nuevos estilos se utiliza la matrizEstilos
 	 * esta lista es la estructura de la cancion
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//################################################################################
 	private ArrayList<Valores> armarEstructuraEstilos(MatrizEstilos miMatrizEstilos, String estiloInicial, int duracionCancion, String estiloSeleccionado) {
 		
 		ArrayList<Valores> estructuraDeCancion = new ArrayList<Valores>();
@@ -195,19 +208,23 @@ public class Compositor {
 		return estructuraDeCancion;
 	}
 	
-	/**---------------------------------------------------------------------------
+	//################################################################################
+	/**
 	 * escribir
 	 * Muestra un mensaje en el log de la pantalla principal
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//################################################################################
 	private void escribir(String mensaje) {
 	
 		pantalla.actualizarLog(mensaje);
 		
 	}
 	
-	/**---------------------------------------------------------------------------
+	//################################################################################
+	/**
 	 * crearMMA
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//################################################################################
 	private boolean crearMMA(String command, boolean flagbackground) {
 		
 		// Definimos la cadena del interprete de comandos del sistema 
@@ -247,6 +264,5 @@ public class Compositor {
 		} 
 		return true; 
 	}
-	
 	
 }

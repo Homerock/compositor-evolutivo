@@ -10,7 +10,7 @@ public class AcordesFila {
 	
 	private String nombreAcorde;
 	private ArrayList<ValorAcordes> listaOcurrencias;
-	private int contador; 
+	private int valorAcumuladoFila; 
 
 
 	/**---------------------------------------------------------------------------
@@ -19,33 +19,31 @@ public class AcordesFila {
 	public AcordesFila(String nombre){
 		this.setNombreAcorde(nombre);
 		this.listaOcurrencias = new ArrayList<ValorAcordes>();
-		this.setContador(0);
+		this.setValorAcumuladoFila(0);
 	
 	}
 	
-	public AcordesFila(String nombre, int cantidad){
+	public AcordesFila(String nombre, int valor){
 		this.setNombreAcorde(nombre);
 		this.listaOcurrencias = new ArrayList<ValorAcordes>();
-		this.setContador(cantidad);
+		this.setValorAcumuladoFila(valor);
 	
 	}
 	
 	/**---------------------------------------------------------------------------
 	  * @param Acorde
 	  *---------------------------------------------------------------------------*/
-	public void agregarAcorde(String acorde, String estilo){
+	public void agregarAcorde(String acorde){
 		
 		ArrayList<ValorAcordes> listaAcordes = this.getListaOcurrencias();
 		int cant=0;
 		ValorAcordes miValAcorde;
 		boolean encontrado=false;
 		String sec;
-		String est;
 	
 		for (ValorAcordes va : listaAcordes) {
 			sec = va.getAcordeSecundario();
-			est = va.getEstilo();
-			if (sec.equalsIgnoreCase(acorde) && est.equalsIgnoreCase(estilo)) {
+			if (sec.equalsIgnoreCase(acorde)) {
 				cant = va.getValor();
 				cant = cant+1;
 				va.setValor(cant);
@@ -55,7 +53,7 @@ public class AcordesFila {
 		}
 		
 		if (!encontrado) {
-			miValAcorde = new ValorAcordes(acorde, 1, estilo);
+			miValAcorde = new ValorAcordes(acorde, 1);
 			listaAcordes.add(miValAcorde);
 		}
 		return;
@@ -66,7 +64,7 @@ public class AcordesFila {
 	  * Agrego el Acorde secundario y el valor de cantidad de ocurrencias
 	  * @param Acorde
 	  *---------------------------------------------------------------------------*/
-	public void agregarAcorde(String acorde, int valor, String estilo){
+	public void agregarAcorde(String acorde, int valor){
 				
 		ArrayList<ValorAcordes> listaAcordes = this.getListaOcurrencias();
 		ValorAcordes miValAcorde;
@@ -76,8 +74,7 @@ public class AcordesFila {
 		
 		for (ValorAcordes va : listaAcordes) {
 			sec = va.getAcordeSecundario();
-			est = va.getEstilo();
-			if (sec.equalsIgnoreCase(acorde) && est.equalsIgnoreCase(estilo)) {
+			if (sec.equalsIgnoreCase(acorde)) {
 				va.setValor(valor);
 				encontrado = true;
 				break;
@@ -85,7 +82,7 @@ public class AcordesFila {
 		}
 		
 		if (!encontrado) {
-			miValAcorde = new ValorAcordes(acorde, valor, estilo);
+			miValAcorde = new ValorAcordes(acorde, valor);
 			listaAcordes.add(miValAcorde);
 		}
 		return;
@@ -100,7 +97,7 @@ public class AcordesFila {
 		ArrayList<ValorAcordes> listaAcordes = this.getListaOcurrencias();
 			
 		for (ValorAcordes va : listaAcordes) {
-			System.out.println(va.getAcordeSecundario() + "  " + va.getEstilo() + "  [ " + va.getValor() + " " + va.getValorAcumulado() + " ]");
+			System.out.println(va.getAcordeSecundario() +  "  [ " + va.getValor() + " " + va.getValorAcumulado() + " ]");
 		}
 	}
 	//---------------------------------------------------------------------------
@@ -138,41 +135,23 @@ public class AcordesFila {
 			acumulador = acumulador + va.getValor();
 			va.setValorAcumulado(acumulador);
 		}
-		this.setContador(acumulador);
-		
-	}
-	
-	/**---------------------------------------------------------------------------
-	  * 
-	  *---------------------------------------------------------------------------*/
-	public void calcularAcumulados(String estilo){
-		
-		int acumulador=0;
-		ArrayList<ValorAcordes> listaAcordes = this.getListaOcurrencias();
-		
-		for (ValorAcordes va : listaAcordes) {
-			if (va.getEstilo().equalsIgnoreCase(estilo)) {
-				acumulador = acumulador + va.getValor();
-				va.setValorAcumulado(acumulador);
-			}
-		}
-		this.setContador(acumulador);
+		this.setValorAcumuladoFila(acumulador);
 		
 	}
 	
 	/**---------------------------------------------------------------------------
 	  * @param contador
 	  *---------------------------------------------------------------------------*/
-	public void setContador(int contador) {
-		this.contador = contador;
+	public void setValorAcumuladoFila(int valor) {
+		this.valorAcumuladoFila = valor;
 	}
 	
 	/**---------------------------------------------------------------------------
 	  * devuelve el acumulador total 
 	  * @return
 	  *---------------------------------------------------------------------------*/
-	public int getContador() {
-		return contador;
+	public int getValorAcumuladoFila() {
+		return this.valorAcumuladoFila;
 	}
 	
 	/**---------------------------------------------------------------------------

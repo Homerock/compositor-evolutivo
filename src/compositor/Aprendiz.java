@@ -13,6 +13,7 @@ import grafica.Pantalla;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import javax.swing.JFileChooser;
@@ -26,34 +27,37 @@ import orm.Tonicas;
 import orm.TonicasDTO;
 import archivos.Archivos;
 import archivos.Estilos;
+import archivos.Utiles;
 
-/**---------------------------------------------------------------------------
+//#########################################################################################
+/**
  * @author Sebastian Pazos , Yamil Gomez
  *
- *---------------------------------------------------------------------------*/
+ **/
+//#########################################################################################
 
 public class Aprendiz {
 
-	private final static String DIRECTORIO="Directorio";
+	private final static String DIRECTORIO = "Directorio";
 	private final static String ARCHIVO = "Archivo genérico";
 	private int contConsultas;
 	private Pantalla pantalla;
 	private EntityManager manager;
-	private MatrizAcordes miMatrizAcordes;
 	private ListaValores miListaDeTonicas;
 	private ListaValores miListaDeTempos;
 	private ListaValores miListaDeDuraciones;
 	private ListaValores miListaDeEstilosPrincipales;
 	private MatrizEstilos miMatrizEstilos;
 	private String estiloPpal ="";
+	private Map<String, MatrizAcordes> MatrizEvolutiva;
 
-
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * Constructor
-	 *---------------------------------------------------------------------------*/
-
+	 **/
+	//#########################################################################################
 	public Aprendiz(){	
-		this.setMiMatrizAcordes(new MatrizAcordes());
+		this.setMatrizEvolutiva(new HashMap<String, MatrizAcordes>());
 		this.setMiMatrizEstilos(new MatrizEstilos());
 		this.setMiListaDeTonicas(new ListaValores());
 		this.setMiListaDeTempos(new ListaValores());
@@ -61,15 +65,16 @@ public class Aprendiz {
 		this.setMiListaDeEstilosPrincipales(new ListaValores());
 	}
 
-
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * Recibe por parametros una lista llamada cancion que contiene todas las Acordes
 	 * que componen la cancion, recorre esta lista cargando en la matriz las Acordes
 	 * principales y luego las ocurrencias de estas con las secundarias
 	 * 
 	 * @param cancion
 	 * @param miMatrizAcordes
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public void cargarCancion(ArrayList<String> cancion, MatrizAcordes miMatrizAcordes, String estiloPpal) {
 
 		int pos = 0;
@@ -88,17 +93,19 @@ public class Aprendiz {
 				miMatrizAcordes.agregarAcordePrincipal(principal);
 			} 
 			pos++;			
-
-			miMatrizAcordes.agregaOcurrenciaAcordeSecundario(principal, secundaria, estiloPpal);	
+			// CARGAR EN LA MATRIZ DE ESE ESTILO PRINCIPAL
+			miMatrizAcordes.agregaOcurrenciaAcordeSecundario(principal, secundaria);	
 		}
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * actualiza la base de datos 
 	 * se actualiza con los datos en memoria, si no existen los agrega
 	 * Acordes y ocurrencias
 	 * @param miMatrizAcordes
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public void actualizarBD( MatrizAcordes miMatrizAcordes, ListaValores miListaTonicas, String estiloPpal) {
 
 		String nombreAPpal, nombreASec;
@@ -116,13 +123,13 @@ public class Aprendiz {
 			Map.Entry e = (Map.Entry)it.next();
 			acordePpal = (AcordesFila) e.getValue();
 			nombreAPpal = (String) e.getKey();
-			escribir(" ---- Acorde ppal :"+ nombreAPpal +" ---- Total :" + acordePpal.getContador());
+			escribir(" ---- Acorde ppal :"+ nombreAPpal +" ---- Total :" + acordePpal.getValorAcumuladoFila());
 
 			try {
 				if (AcordesDTO.existe(this.manager, nombreAPpal)) {
-					AcordesDTO.Actualizar(this.manager, nombreAPpal, acordePpal.getContador());
+					AcordesDTO.Actualizar(this.manager, nombreAPpal, acordePpal.getValorAcumuladoFila());
 				} else {
-					AcordesDTO.Insertar(this.manager, nombreAPpal, acordePpal.getContador());
+					AcordesDTO.Insertar(this.manager, nombreAPpal, acordePpal.getValorAcumuladoFila());
 				}
 
 				//ahora vamos a cargar las ocurrencias 
@@ -173,10 +180,12 @@ public class Aprendiz {
 
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * @param AcordePpal
 	 * @param AcordeSec
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	private void actualizarBDOcurrencias(String nombreAPpal, String nombreASec, int cantidad, String estiloPpal) {
 
 		int cant = 0;
@@ -203,14 +212,15 @@ public class Aprendiz {
 		}
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * levantarBase
 	 * 
 	 *
 	 * @param manager 
 	 * 
-	 * ---------------------------------------------------------------------------
-	 * */
+	 **/
+	//#########################################################################################
 	public void levantarBase(EntityManager m) {
 
 		this.manager = m;
@@ -219,12 +229,12 @@ public class Aprendiz {
 
 			Acordes[] listaAcordes = AcordesDTO.seleccionarTodos(this.manager);
 			for (Acordes a : listaAcordes){
-				this.miMatrizAcordes.agregarAcordePrincipal(a.getNombre(),a.getCantApariciones());
+				//this.miMatrizAcordes.agregarAcordePrincipal(a.getNombre(),a.getCantApariciones());
 			}
 
 			OcurrenciasAcordes[] listaOcurrencias =  OcurrenciasAcordesDTO.seleccionarTodos(this.manager);
 			for (OcurrenciasAcordes oa : listaOcurrencias){
-				this.miMatrizAcordes.agregaOcurrenciaAcordeSecundario(oa.getAcordePrincipal().getNombre(), oa.getAcordeSecundario().getNombre(), oa.getCantidad(), oa.getEstilos().getNombre());
+				//this.miMatrizAcordes.agregaOcurrenciaAcordeSecundario(oa.getAcordePrincipal().getNombre(), oa.getAcordeSecundario().getNombre(), oa.getCantidad());
 			}
 
 			Tonicas[] listaTonicas = TonicasDTO.seleccionarTodos(manager);
@@ -238,13 +248,15 @@ public class Aprendiz {
 			//e.printStackTrace();
 		}
 
-		this.miMatrizAcordes.calcularAcumulados();
-		this.miMatrizAcordes.listarAcordes();	
+	//	this.miMatrizAcordes.calcularAcumulados();
+	//	this.miMatrizAcordes.listarAcordes();	
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * Iniciar
-	 *---------------------------------------------------------------------------*/
+	 **/
+	 //#########################################################################################
 	public void iniciar() {
 
 		Archivos miArchivo;
@@ -303,7 +315,8 @@ public class Aprendiz {
 					System.err.println(ae.getMessage());
 				}
 			}
-			this.miMatrizAcordes.calcularAcumulados();
+			
+			this.calcularAcumuladoDeMap(this.getMatrizEvolutiva());
 			this.miMatrizEstilos.calcularAcumulados();
 			this.mostrarDatos();
 
@@ -311,14 +324,62 @@ public class Aprendiz {
 			escribir("Error: Aprendiz.iniciar()");
 		}	
 	}
+	
+	//#########################################################################################
+	/**
+	 * calcularAcumuladoDeMap
+	 * @param mapMatriz
+	 **/
+	//#########################################################################################
+	private void calcularAcumuladoDeMap(Map<String, MatrizAcordes> mapMatriz) {
+		
+		Map<String, MatrizAcordes> mapMatrizEvolutiva = this.getMatrizEvolutiva();
+		MatrizAcordes miMatriz;
+		Iterator it = mapMatrizEvolutiva.entrySet().iterator();
+		
+		//tengo que iterar para calcular los acumulados de todas la matrices del map
+		while (it.hasNext()) {
+			Map.Entry e = (Map.Entry)it.next();
+			miMatriz = (MatrizAcordes) e.getValue();
+			miMatriz.calcularAcumulados();
+		}
+	}
+	
+	//#########################################################################################
+	/**
+	 * buscarMatrizEnMap
+	 * Busca la matriz correspondiente a un estilo principal dentro del map de matrices evolutivas
+	 **/
+	//#########################################################################################
+	private MatrizAcordes buscarMatrizEnMap(String estilo) {
+		
+		MatrizAcordes miMatrizAcordes = this.getMatrizEvolutiva().get(estilo);
+		
+		if (miMatrizAcordes == null) {
+			miMatrizAcordes = new MatrizAcordes();
+			this.getMatrizEvolutiva().put(estilo, miMatrizAcordes);
+		}
+		return miMatrizAcordes;
+	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * MostrarDatos
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	private void mostrarDatos() {
 
 		System.out.println("-------------------listado de acordes----------------------");
-		this.miMatrizAcordes.listarAcordes();
+		Map<String, MatrizAcordes> mapMatrizEvolutiva = this.getMatrizEvolutiva();
+		MatrizAcordes miMatriz;
+		Iterator it = mapMatrizEvolutiva.entrySet().iterator();
+		//tengo que iterar para listar todas la matrices del map
+		while (it.hasNext()) {
+			Map.Entry e = (Map.Entry)it.next();
+			System.out.println("-----listado de acordes de estilo: " + e.getKey() +" ----------------------");
+			miMatriz = (MatrizAcordes) e.getValue();
+			miMatriz.listarAcordes();
+		}
 		System.out.println("-------------------listado de estilos-------------------");
 		this.miMatrizEstilos.listarEstilos();
 		System.out.println("-------------------listado de tonicas----------------------");
@@ -329,14 +390,16 @@ public class Aprendiz {
 		this.miListaDeDuraciones.listarValor();
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * procesarArchivo
 	 * Se encarga de analizar una cancion extraida de un archivo
 	 * carga las matrices de acordes y de estilos, ademas obtiene tonica, tempo y duracion del tema
 	 * y los carga en sus listas correspondientes.
 	 * @param miArchivo
 	 * @throws EstilosException 
-	 * ---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	private void procesarArchivo(Archivos miArchivo) throws EstilosException {
 
 		ArrayList<String> cancion=new ArrayList<String>();
@@ -347,7 +410,10 @@ public class Aprendiz {
 		escribir("LISTA DE ACORDES: "+cancion.toString());
 		Estilos.guardarEstilosEnMatriz(cancionConEstilos, this.getMiMatrizEstilos());
 		this.setEstiloPpal(Estilos.deteminarEstiloPrincipal(cancionConEstilos));
-		this.cargarCancion(cancion, this.miMatrizAcordes, this.getEstiloPpal());
+		
+		// obtengo la matriz de acordes correspondiente al estilo principal
+		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(this.getEstiloPpal());
+		this.cargarCancion(cancion, miMatrizAcordes, this.getEstiloPpal());
 		
 		//System.out.print(" tema: " + miArchivo.getNombre() + " estiloPpal: " + this.getEstiloPpal());
 		this.miListaDeEstilosPrincipales.agregarValor(this.getEstiloPpal());
@@ -357,9 +423,11 @@ public class Aprendiz {
 		cancion.clear();
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * componer
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public void componer(String tonica, String estilo) {
 
 		Compositor miCompositor = new Compositor();
@@ -385,46 +453,84 @@ public class Aprendiz {
 		System.out.println("DURACION: " + duracion);
 		System.out.println("TEMPO: " + tempo);
 		
-		miCompositor.componer(this.miMatrizAcordes, this.miMatrizEstilos, tonica, estilo, Integer.parseInt(duracion), tempo);
+		//Obtengo la matriz de acordes correspondiente a el estilo principal
+		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(estilo);
+		miCompositor.componer(miMatrizAcordes, this.miMatrizEstilos, tonica, estilo, Integer.parseInt(duracion), tempo);
+	
+		//Tenemos que devolver el nombre del archivo en el metodo componer
+		//este nombre no deberia ser fijo y hay que controlar que el archivo este creado
+		//antes de intentar leerlo
+		escribir("Archivo a leer :"+Utiles.NOMBRE_CANCION);
+		Archivos miArchivo = new Archivos();
+		try {
+			if (miArchivo.leerArchivo(Utiles.NOMBRE_CANCION)){
+				this.procesarArchivo(miArchivo);
+			}
+		} catch (EstilosException ee) {
+			System.err.println(ee.getMessage());
+		} catch (ArchivosException ae) {
+			System.err.println(ae.getMessage());
+		}
+	
 	}
-
-	/**---------------------------------------------------------------------------
+	
+	//#########################################################################################
+	/**
 	 * limpiar
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public void limpiar() {
 
-		this.miMatrizAcordes.vaciarMatriz();
+		Map<String, MatrizAcordes> mapMatrizEvolutiva = this.getMatrizEvolutiva();
+		MatrizAcordes miMatriz;
+		Iterator it = mapMatrizEvolutiva.entrySet().iterator();
+		
+		//tengo que iterar para vaciar todas la matrices del map
+		while (it.hasNext()) {
+			Map.Entry e = (Map.Entry)it.next();
+			miMatriz = (MatrizAcordes) e.getValue();
+			miMatriz.vaciarMatriz();
+		}
+		
 		OcurrenciasAcordesDTO.EliminarTabla();
 		AcordesDTO.EliminarTabla();
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * guardar
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public void guardar() {
 
 		//this.actualizarBD(this.miMatrizAcordes, this.miListaDeTonicas, this.estiloPpal);
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * salir
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public void salir() {
 
 		System.exit(0);
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * escribir
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public void escribir(String mensaje) {
 
 		this.pantalla.actualizarLog(mensaje + "\n");
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * getComboEstilos
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public ArrayList<String> getComboEstilos() {
 		
 		ArrayList<Valores> listaValores = this.getMiListaDeEstilosPrincipales().getLista();
@@ -438,129 +544,173 @@ public class Aprendiz {
 		
 	}
 	
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * setInterfaz
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public void setInterfaz(Pantalla pantalla) {
 		this.pantalla = pantalla;
 	}
 
-	/**---------------------------------------------------------------------------
-	 * getMiMatrizAcordes
-	 *---------------------------------------------------------------------------*/
-	public MatrizAcordes getMiMatrizAcordes() {
-		return miMatrizAcordes;
+	//#########################################################################################
+	/**
+	 * getMatrizEvolutiva
+	 **/
+	//#########################################################################################
+	public Map<String, MatrizAcordes> getMatrizEvolutiva() {
+		return MatrizEvolutiva;
 	}
 
-	/**---------------------------------------------------------------------------
-	 * setMiMatrizAcordes
-	 *---------------------------------------------------------------------------*/
-	public void setMiMatrizAcordes(MatrizAcordes miMatrizAcordes) {
-		this.miMatrizAcordes = miMatrizAcordes;
+	//#########################################################################################
+	/**
+	 * setMatrizEvolutiva
+	 **/
+	//#########################################################################################
+	public void setMatrizEvolutiva(Map<String, MatrizAcordes> matrizEvolutiva) {
+		MatrizEvolutiva = matrizEvolutiva;
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * getMiListaDeTonicas
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public ListaValores getMiListaDeTonicas() {
 		return miListaDeTonicas;
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * setMiListaDeTonicas
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public void setMiListaDeTonicas(ListaValores miListaDeTonicas) {
 		this.miListaDeTonicas = miListaDeTonicas;
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * getContConsultas
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public int getContConsultas() {
 		return contConsultas;
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * setContConsultas
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public void setContConsultas(int contConsultas) {
 		this.contConsultas = contConsultas;
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * getManager
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public EntityManager getManager() {
 		return manager;
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * setManager
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public void setManager(EntityManager manager) {
 		this.manager = manager;
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * setMiMatrizEstilos
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public void setMiMatrizEstilos(MatrizEstilos miMatrizEstilos) {
 		this.miMatrizEstilos = miMatrizEstilos;
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * getMiMatrizEstilos
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public MatrizEstilos getMiMatrizEstilos() {
 		return miMatrizEstilos;
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * getMiListaDeTempos
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public ListaValores getMiListaDeTempos() {
 		return miListaDeTempos;
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * setMiListaDeTempos
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public void setMiListaDeTempos(ListaValores miListaDeTempos) {
 		this.miListaDeTempos = miListaDeTempos;
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * getEstiloPpal
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public String getEstiloPpal() {
 		return estiloPpal;
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * setEstiloPpal
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public void setEstiloPpal(String estiloPpal) {
 		this.estiloPpal = estiloPpal;
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * getMiListaDeDuraciones
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public ListaValores getMiListaDeDuraciones() {
 		return miListaDeDuraciones;
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * setMiListaDeDuraciones
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public void setMiListaDeDuraciones(ListaValores miListaDeDuraciones) {
 		this.miListaDeDuraciones = miListaDeDuraciones;
 	}
 	
+	//#########################################################################################
+	/**
+	 * getMiListaDeEstilosPrincipales
+	 **/
+	//#########################################################################################
 	public ListaValores getMiListaDeEstilosPrincipales() {
 		return miListaDeEstilosPrincipales;
 	}
 
+	//#########################################################################################
+	/**
+	 * setMiListaDeEstilosPrincipales
+	 **/
+	//#########################################################################################
 	public void setMiListaDeEstilosPrincipales(
 			ListaValores miListaDeEstilosPrincipales) {
 		this.miListaDeEstilosPrincipales = miListaDeEstilosPrincipales;

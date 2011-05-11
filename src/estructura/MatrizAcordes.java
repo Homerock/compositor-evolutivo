@@ -30,7 +30,7 @@ public class MatrizAcordes {
 		while (it.hasNext()) {
 			Map.Entry e = (Map.Entry)it.next();
 			mapAcordePpal= (AcordesFila) e.getValue();
-			System.out.println(" ---- Acorde ppal :"+e.getKey()+" ---- Total :"+mapAcordePpal.getContador());	
+			System.out.println(" ---- Acorde ppal :"+e.getKey()+" ---- Total :"+mapAcordePpal.getValorAcumuladoFila());	
 			mapAcordePpal.listarAcordes();
 		}
 	}
@@ -91,20 +91,20 @@ public class MatrizAcordes {
 	  * @param AcordePpal
 	  * @param AcordeSec
 	  *---------------------------------------------------------------------------*/
-	public void agregaOcurrenciaAcordeSecundario(String AcordePpal, String AcordeSec, String estilo){
+	public void agregaOcurrenciaAcordeSecundario(String AcordePpal, String AcordeSec){
 		
 		AcordesFila mapAcordePpal;
 		mapAcordePpal= this.getMisAcordes().get(AcordePpal);
-		mapAcordePpal.agregarAcorde(AcordeSec, estilo);
+		mapAcordePpal.agregarAcorde(AcordeSec);
 		return;
 	}
 	
 	/**---------------------------------------------------------------------------*/
-	public void agregaOcurrenciaAcordeSecundario(String AcordePpal, String AcordeSec, int valor, String estilo){
+	public void agregaOcurrenciaAcordeSecundario(String AcordePpal, String AcordeSec, int valor){
 		
 		AcordesFila mapAcordePpal;
 		mapAcordePpal= this.getMisAcordes().get(AcordePpal);
-		mapAcordePpal.agregarAcorde(AcordeSec, valor, estilo);
+		mapAcordePpal.agregarAcorde(AcordeSec, valor);
 		
 		return;
 	}
