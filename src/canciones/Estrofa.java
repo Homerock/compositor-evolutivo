@@ -17,7 +17,9 @@ public class Estrofa {
 	private int numeroEstrofa ;//numero correlativo que representa a la estrofa
 	private String estilo;//estilo de la estrofa 
 	private int cantidadCompases;
-	private ArrayList<Compas> compases;
+	private ArrayList<Compas> listaDeCompases;
+	private boolean esEstrofaGemela;
+	private int nroEstrofaGemela ;//dice si es copia de otra estrofa, -1 si no es .
 	
 
 	/*################################################################################################################
@@ -27,11 +29,29 @@ public class Estrofa {
 	public Estrofa(){
 	}
 	
-	
+	/**
+	 * 
+	 * @param numeroEstrofa
+	 * @param estilo
+	 * @param cantidadCompases
+	 */
+	public Estrofa(int numeroEstrofa, String estilo, int cantidadCompases) {
+		
+		this.numeroEstrofa = numeroEstrofa;
+		this.estilo = estilo;
+		this.cantidadCompases = cantidadCompases;
+		this.esEstrofaGemela = false;
+	}
 
 	/*################################################################################################################
 	 ###################						METODOS PUBLICOS				###################################### 
 	 ################################################################################################################# */
+
+	
+	public void agregarCompas(Compas miCompas) {
+		this.getListaDeCompases().add(miCompas);
+	}
+
 
 	public String getEstilo() {
 		return estilo;
@@ -45,11 +65,11 @@ public class Estrofa {
 	public void setCantidadCompases(int cantidadCompases) {
 		this.cantidadCompases = cantidadCompases;
 	}
-	public ArrayList<Compas> getCompases() {
-		return compases;
+	public ArrayList<Compas> getListaDeCompases() {
+		return listaDeCompases;
 	}
-	public void setCompases(ArrayList<Compas> compases) {
-		this.compases = compases;
+	public void setListaDeCompases(ArrayList<Compas> compases) {
+		this.listaDeCompases = compases;
 	}
 
 	public int getNumeroEstrofa() {
@@ -59,7 +79,25 @@ public class Estrofa {
 	public void setNumeroEstrofa(int numeroEstrofa) {
 		this.numeroEstrofa = numeroEstrofa;
 	}
-	
+
+	public boolean isEsEstrofaGemela() {
+		return esEstrofaGemela;
+	}
+
+	public void setEsEstrofaGemela(boolean esEstrofaGemela) {
+		
+		this.esEstrofaGemela = esEstrofaGemela;
+	}
+
+	public int getNroEstrofaGemela() {
+		return nroEstrofaGemela;
+	}
+
+	public void setNroEstrofaGemela(int nroEstrofaGemela) {
+		this.nroEstrofaGemela = nroEstrofaGemela;
+	}
+
+
 	
 	
 	

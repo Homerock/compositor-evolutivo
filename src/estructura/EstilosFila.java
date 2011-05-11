@@ -310,47 +310,6 @@ public class EstilosFila {
 		this.setCantOchoCompases(cant);
 		return;
 	}
-	
-	public int cantidadCompases() {
-		
-		Random rnd= new Random();
-		int miRandom;
-		Map<Integer, Integer> mapCompases = new HashMap<Integer, Integer>();
-		int acumulado = 0;
-		
-		if (this.getCantUnCompas() > 0) {
-			acumulado += this.getCantUnCompas();
-			mapCompases.put(1, acumulado);
-		}
-		if (this.getCantDosCompases() > 0) {
-			acumulado += this.getCantDosCompases();
-			mapCompases.put(2, acumulado);
-		}
-		if (this.getCantCuatroCompases() > 0) {
-			acumulado += this.getCantCuatroCompases();
-			mapCompases.put(4, acumulado);
-		}
-		if (this.getCantOchoCompases() > 0) {
-			acumulado += this.getCantOchoCompases();
-			mapCompases.put(8, acumulado);
-		}
-		miRandom = rnd.nextInt(acumulado);
-		
-		Iterator it = mapCompases.entrySet().iterator();
-		int valor = 0;
-		
-		while (it.hasNext()) {
-			Map.Entry e = (Map.Entry)it.next();
-			if ((Integer)e.getValue() >= miRandom){
-				valor = (Integer)e.getKey();
-				break;
-			}
-		}
-		return valor;
-		
-	}
-	
-
 
 	public int getUnAcordeEnCompas() {
 		return unAcordeEnCompas;
