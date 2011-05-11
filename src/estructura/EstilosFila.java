@@ -410,7 +410,7 @@ public class EstilosFila {
 						" | 2:"+this.getCantDosCompases()+
 						" | 4:"+this.getCantCuatroCompases()+
 						" | 8:"+ this.getCantOchoCompases()+" }" +
-						" notas x compas =" +
+						" acordes x compas =" +
 						"{ 1:"+this.getUnAcordeEnCompas() +
 						" | 2:"+this.getDosAcordesEnCompas()+
 						" | 3:"+this.getTresAcordesEnCompas()+

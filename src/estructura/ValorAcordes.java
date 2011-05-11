@@ -8,27 +8,24 @@ package estructura;
 public class ValorAcordes {
 	
 	private String acordeSecundario;
-	private String estilo;
 	private int valor;
 	private int valorAcumulado;
 	
 	/**---------------------------------------------------------------------------
 	  * 
 	  *---------------------------------------------------------------------------*/
-	public ValorAcordes(String acorde, String estilo){
+	public ValorAcordes(String acorde){
 		this.valor=0;
 		this.valorAcumulado=0;
 		this.acordeSecundario = acorde;
-		this.estilo = estilo;
 		return;
 	}
 	
 	/**---------------------------------------------------------------------------
 	  * @param val
 	  *---------------------------------------------------------------------------*/
-	public ValorAcordes(String acorde, int val, String estilo){
+	public ValorAcordes(String acorde, int val){
 		this.acordeSecundario = acorde;
-		this.estilo = estilo;
 		this.valor=val;
 		this.valorAcumulado=0;
 		
@@ -79,14 +76,6 @@ public class ValorAcordes {
 
 	public void setAcordeSecundario(String acordeSecundario) {
 		this.acordeSecundario = acordeSecundario;
-	}
-
-	public String getEstilo() {
-		return estilo;
-	}
-
-	public void setEstilo(String estilo) {
-		this.estilo = estilo;
 	}
 	
 	/* ---------------------------------------------------------------------------

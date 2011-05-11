@@ -18,19 +18,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import compositor.Aprendiz;
 
-
-/**
-* This code was edited or generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
-* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
-* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
-*/
 public class Pantalla extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -53,10 +40,11 @@ public class Pantalla extends JFrame {
 	private Aprendiz aprendiz;
 
 	
-		
+	//#############################################################	
 	/**
 	 * This is the default constructor
 	 */
+	//#############################################################
 	public Pantalla(Aprendiz aprendiz) {
 		super();
 		this.setGtk();
@@ -65,11 +53,13 @@ public class Pantalla extends JFrame {
 		initialize();
 	}
 
+	//#############################################################
 	/**
 	 * This method initializes this
 	 * 
 	 * @return void
 	 */
+	//#############################################################
 	private void initialize() {
 		this.setSize(850, 600);
 		this.setContentPane(getJPanel());
@@ -82,11 +72,13 @@ public class Pantalla extends JFrame {
 		});
 	}
 
+	//#############################################################
 	/**
 	 * This method initializes jPanel	
 	 * 	
 	 * @return javax.swing.JPanel	
 	 */
+	//#############################################################
 	private JPanel getJPanel() {
 		if (jPanel == null) {
 			jPanel = new JPanel();
@@ -109,11 +101,13 @@ public class Pantalla extends JFrame {
 		return jPanel;
 	}
 
+	//#############################################################
 	/**
 	 * This method initializes jButtonAprender	
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
+	//#############################################################
 	private JButton getJButtonAprender() {
 		if (jButtonAprender == null) {
 			jButtonAprender = new JButton();
@@ -129,11 +123,13 @@ public class Pantalla extends JFrame {
 		return jButtonAprender;
 	}
 
+	//#############################################################
 	/**
 	 * This method initializes jButtonComponer
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
+	//#############################################################
 	private JButton getJButtonComponer() {
 		if (jButtonComponer == null) {
 			jButtonComponer = new JButton();
@@ -149,9 +145,11 @@ public class Pantalla extends JFrame {
 		return jButtonComponer;
 	}
 	
+	//#############################################################
 	/**
 	 * @return
 	 */
+	//#############################################################
 	private JButton getJButtonGuardar() {
 		if (jButtonGuardar == null) {
 			jButtonGuardar = new JButton();
@@ -167,9 +165,11 @@ public class Pantalla extends JFrame {
 		return jButtonGuardar;
 	}
 	
+	//#############################################################
 	/**
 	 * @return
 	 */
+	//#############################################################
 	private JButton getJButtonLimpiar() {
 		if (jButtonLimpiar == null) {
 			jButtonLimpiar = new JButton();
@@ -185,9 +185,11 @@ public class Pantalla extends JFrame {
 		return jButtonLimpiar;
 	}
 	
+	//#############################################################
 	/**
 	 * @return
 	 */
+	//#############################################################
 	private JButton getJButtonSalir() {
 		if (jButtonSalir == null) {
 			jButtonSalir = new JButton();
@@ -202,9 +204,11 @@ public class Pantalla extends JFrame {
 		return jButtonSalir;
 	}
 	
+	//#############################################################
 	/**
 	 * @return
 	 */
+	//#############################################################
 	private JButton getJButtonAceptarComp() {
 		if (jButtonAceptarComp == null) {
 			jButtonAceptarComp = new JButton();
@@ -222,9 +226,11 @@ public class Pantalla extends JFrame {
 		return jButtonAceptarComp;
 	}
 	
+	//#############################################################
 	/**
 	 * @return
 	 */
+	//#############################################################
 	private JTextField getJTextFieldTonica() {
 		if (jTextFieldTonica == null) {
 			jTextFieldTonica = new JTextField();
@@ -235,9 +241,11 @@ public class Pantalla extends JFrame {
 		return jTextFieldTonica;
 	}
 	
+	//#############################################################
 	/**
 	 * @return
 	 */
+	//#############################################################
 	private JLabel getjLabelTonica() {
 		if (jLabelTonica == null) {
 			jLabelTonica = new JLabel();
@@ -249,9 +257,11 @@ public class Pantalla extends JFrame {
 		return jLabelTonica;
 	}
 	
+	//#############################################################
 	/**
 	 * @return
 	 */
+	//#############################################################
 	private JLabel getjLabelEstilo() {
 		if (jLabelEstilo == null) {
 			jLabelEstilo = new JLabel();
@@ -263,9 +273,11 @@ public class Pantalla extends JFrame {
 		return jLabelEstilo;
 	}
 	
+	//#############################################################
 	/**
 	 * @return
 	 */
+	//#############################################################
 	private JComboBox getJComboEstilo() {
 		if (jComboEstilo == null) {
 			jComboEstilo = new JComboBox();
@@ -276,11 +288,13 @@ public class Pantalla extends JFrame {
 		return jComboEstilo;
 	}
 	
+	//#############################################################
 	/**
 	 * This method initializes jScrollPane	
 	 * 	
 	 * @return javax.swing.JScrollPane	
 	 */
+	//#############################################################
 	private JScrollPane getJScrollPane() {
 		if (jScrollPane == null) {
 			jTextArea = new JTextArea();
@@ -290,10 +304,16 @@ public class Pantalla extends JFrame {
 		return jScrollPane;
 	}
 	
+	//#############################################################
+	
+	//#############################################################
 	public void actualizarLog(String info){
 		this.jTextArea.append(info);
 	}
 	
+	//#############################################################
+	
+	//#############################################################
 	private JButton getJButtonPlay() {
 		if(jButtonPlay == null) {
 			jButtonPlay = new JButton();
@@ -303,6 +323,9 @@ public class Pantalla extends JFrame {
 		return jButtonPlay;
 	}
 	
+	//#############################################################
+	
+	//#############################################################
 	private JButton getJButtonPausa() {
 		if(jButtonPausa == null) {
 			jButtonPausa = new JButton();
@@ -312,6 +335,9 @@ public class Pantalla extends JFrame {
 		return jButtonPausa;
 	}
 	
+	//#############################################################
+	
+	//#############################################################
 	private JButton getJButtonStop() {
 		if(jButtonStop == null) {
 			jButtonStop = new JButton();
@@ -321,6 +347,9 @@ public class Pantalla extends JFrame {
 		return jButtonStop;
 	}
 	
+	//#############################################################
+	
+	//#############################################################
 	private void mostrarComponer(boolean mostrar) {
 		
 		Pantalla.this.jLabelTonica.setVisible(mostrar);
@@ -331,6 +360,9 @@ public class Pantalla extends JFrame {
 		
 	}
 	
+	//#############################################################
+	
+	//#############################################################
 	private void cargarCombo() {
 		ArrayList<String> lista = aprendiz.getComboEstilos();
 		
@@ -339,6 +371,9 @@ public class Pantalla extends JFrame {
 		}
 	}
 	
+	//#############################################################
+	
+	//#############################################################
 	public void setGtk(){
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
