@@ -35,7 +35,15 @@ public class Cancion {
 		this.setEstrofas(new ArrayList<Estrofa>());
 	}
 	
-	
+	/**
+	 * Crea un nuevo objeto cancion.
+	 * 
+	 * @param nombre
+	 * @param tempo
+	 * @param duracion
+	 * @param tonica
+	 * @param estiloPrincipal
+	 */
 	public Cancion(String nombre,String tempo,int duracion,String tonica,String estiloPrincipal){
 		this.setNombre(nombre);
 		this.setTempo(tempo);
@@ -51,6 +59,12 @@ public class Cancion {
 	 ###################						METODOS PUBLICOS				###################################### 
 	 ################################################################################################################# */
 
+	public void agregarEstrofa(Estrofa miEstrofa) {
+		
+		this.getEstrofas().add(miEstrofa);
+		
+	}
+	
 	public String getNombre() {
 		return nombre;
 	}
@@ -98,7 +112,23 @@ public class Cancion {
 	public void setEstrofas(ArrayList<Estrofa> estrofas) {
 		this.estrofas = estrofas;
 	}
-	
+	/**
+	 * verifica en la lista de estilos de la cancion existe alguna estrofa con un estilo determinado. 
+	 * @param estilo que queremos aviriguar si existe
+	 * @return true si existe el estilo en alguna de las estrofas de la cancion , false si no.
+	 */
+	public boolean existeEstrofaEstilo(String estilo){
+		boolean existe=false;
+		ArrayList<Estrofa> estrofas = this.getEstrofas();
+		
+		for (Estrofa e :estrofas ){
+			if(e.getEstilo().equals(estilo)){
+				existe =true;
+				break;
+			}
+		}
+		return existe;
+	}
 	
 
 }

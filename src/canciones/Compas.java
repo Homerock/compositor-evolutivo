@@ -26,7 +26,10 @@ public class Compas {
 		this.setAcordes(new ArrayList<Acorde>());
 	}
 	
-	
+	public Compas(int cantidadAcordes) {
+		this.cantidadAcordes = cantidadAcordes;
+		this.setAcordes(new ArrayList<Acorde>());
+	}
 
 	/*################################################################################################################
 	 ###################						METODOS PUBLICOS				###################################### 

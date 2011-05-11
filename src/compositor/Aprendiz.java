@@ -7,6 +7,7 @@ import estructura.MatrizEstilos;
 import estructura.ValorAcordes;
 import estructura.Valores;
 import excepciones.ArchivosException;
+import excepciones.CancionException;
 import excepciones.EstilosException;
 import excepciones.ValoresException;
 import grafica.Pantalla;
@@ -455,23 +456,16 @@ public class Aprendiz {
 
 		//Obtengo la matriz de acordes correspondiente a el estilo principal
 		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(estilo);
-		miCompositor.componer(miMatrizAcordes, this.miMatrizEstilos, tonica, estilo, Integer.parseInt(duracion), tempo);
-
-		//Tenemos que devolver el nombre del archivo en el metodo componer
-		//este nombre no deberia ser fijo y hay que controlar que el archivo este creado
-		//antes de intentar leerlo
-		escribir("Archivo a leer :"+Utiles.NOMBRE_CANCION);
-		Archivos miArchivo = new Archivos();
+		
 		try {
-			if (miArchivo.leerArchivo(Utiles.NOMBRE_CANCION)){
-				this.procesarArchivo(miArchivo);
-			}
-		} catch (EstilosException ee) {
-			System.err.println(ee.getMessage());
-		} catch (ArchivosException ae) {
-			System.err.println(ae.getMessage());
+			miCompositor.componerCancion(miMatrizAcordes, this.miMatrizEstilos, tonica, estilo, Integer.parseInt(duracion), tempo);
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CancionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
 	}
 
 	//#########################################################################################

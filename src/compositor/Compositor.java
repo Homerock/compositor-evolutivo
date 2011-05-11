@@ -6,6 +6,7 @@ import estructura.MatrizAcordes;
 import estructura.MatrizEstilos;
 import estructura.Valores;
 import excepciones.ArchivosException;
+import excepciones.CancionException;
 import excepciones.EstilosException;
 import grafica.Pantalla;
 
@@ -14,8 +15,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
+
+import canciones.*;
 
 import archivos.Archivos;
 import archivos.Utiles;
@@ -44,7 +48,7 @@ public class Compositor {
 	  * componer
 	  **/
 	//################################################################################
-	public void componer(MatrizAcordes miMatrizAcordes, MatrizEstilos miMatrizEstilos, String tonica, String estiloSeleccionado, int duracion, String tempo) {
+	/*public void componer(MatrizAcordes miMatrizAcordes, MatrizEstilos miMatrizEstilos, String tonica, String estiloSeleccionado, int duracion, String tempo) {
 				
 		Map<String, ArrayList<String>> cancion = new HashMap<String, ArrayList<String>>();
 		ArrayList<Valores> estructuraDeCancion = new ArrayList<Valores>();
@@ -105,12 +109,183 @@ public class Compositor {
 		crearMMA("mma " + Utiles.NOMBRE_CANCION, false);
 			
 		return;
+	}*/
+
+	//reemplaza a componer
+	public void componerCancion(
+			MatrizAcordes miMatrizAcordes, 
+			MatrizEstilos miMatrizEstilos, 
+			String tonica, 
+			String estiloSeleccionado, 
+			int duracion, 
+			String tempo) throws CancionException{
+		
+		if(!miMatrizAcordes.ExisteAcordePpal(tonica)){
+			throw new CancionException("No se encuentra el acorde '"+tonica+"' en la base de conocimientos.");
+		}
+	
+		// si el estilo principal no esta cargado en la matriz no puedo componer
+		if (!miMatrizEstilos.ExisteEstilo(estiloSeleccionado)){
+			throw new CancionException("No se encuentra el estilo '"+estiloSeleccionado+"' en la base de conocimientos.");
+			
+		}
+		String nombreCancion= estiloSeleccionado+"_"+tonica;
+		Cancion nuevaCancion = new Cancion(nombreCancion,tempo,duracion,tonica,estiloSeleccionado);
+		
+		this.armarEstructuraEstilos(miMatrizEstilos, nuevaCancion);
+		
+		// FALTA LLENAR LA CANCION CON ACORDES
+		
+		return;
+	}
+	/**
+	 * 
+	 * @param miMatrizEstilos
+	 * @param nuevaCancion
+	 */
+	//reemplaza el otro armarEstructuraEstilos
+	private void armarEstructuraEstilos(
+			MatrizEstilos miMatrizEstilos,
+			Cancion nuevaCancion) {
+		
+		int numEstrofa = 1;
+		String estiloInicial = nuevaCancion.getEstiloPrincipal();
+		Map<String, EstilosFila> mapEstilo = miMatrizEstilos.getMisEstilos();
+		
+		if (estiloInicial.indexOf("Intro") == -1) {
+			if (mapEstilo.containsKey(estiloInicial+Utiles.INTRO_ESTILO)) {
+				estiloInicial = estiloInicial+Utiles.INTRO_ESTILO;		// obtengo el estilo inicial para comenzar a armar la estructura de estilos
+			} 
+		}
+		
+		
+		EstilosFila miEstiloFila;
+		String proxEstilo;
+		int cantCompases;
+		Estrofa miEstrofa;
+		int n = 1;
+		int semilla;
+		Random rnd = new Random();
+		String estilo = estiloInicial;
+		int cantAcordes;
+		
+		while(n < nuevaCancion.getDuracion()) {
+			
+			//if (nuevaCancion.existeEstrofaEstilo(estilo)) {
+				// CONTROLAR SI ESTE ESTILO YA ESTA EN LA CANCION
+				// OSEA SI LA ESTROFA ES GEMELA
+			//} else {
+				miEstiloFila = miMatrizEstilos.getMisEstilos().get(estilo);
+				semilla = miEstiloFila.getContador();
+				cantCompases = this.calcularCantidadCompases(miEstiloFila);
+				miEstrofa = new Estrofa(numEstrofa,estilo,cantCompases);
+				for (int i = 0; i < cantCompases; i++) {
+					cantAcordes = this.calcularCantidadAcordesUnCompas(miEstiloFila);
+					Compas miCompas = new Compas(cantAcordes);
+					miEstrofa.agregarCompas(miCompas);
+				}
+				nuevaCancion.agregarEstrofa(miEstrofa);
+			//}
+			
+			
+			
+			numEstrofa++;
+			n = n + cantCompases;		
+			estilo = miEstiloFila.buscarEstilo(rnd.nextInt(semilla+1));
+			
+			// si encontramos el End terminamos de armar la estructura
+			if ((estilo.indexOf(Utiles.END_ESTILO) != -1) || (estilo.indexOf(Utiles.INTRO_ESTILO) != -1)) {
+				break;
+			}
+		}
 	}
 	
-	//################################################################################
+	private int calcularCantidadAcordesUnCompas(EstilosFila miEstiloFila) {
+		
+		Random rnd= new Random();
+		int miRandom;
+		Map<Integer, Integer> mapCompases = new HashMap<Integer, Integer>();
+		int acumulado = 0;
+		
+		if (miEstiloFila.getUnAcordeEnCompas() > 0) {
+			acumulado += miEstiloFila.getUnAcordeEnCompas();
+			mapCompases.put(1, acumulado);
+		}
+		if (miEstiloFila.getDosAcordesEnCompas() > 0) {
+			acumulado += miEstiloFila.getDosAcordesEnCompas();
+			mapCompases.put(2, acumulado);
+		}
+		if (miEstiloFila.getTresAcordesEnCompas() > 0) {
+			acumulado += miEstiloFila.getTresAcordesEnCompas();
+			mapCompases.put(3, acumulado);
+		}
+		if (miEstiloFila.getCuatroAcordesEnCompas() > 0) {
+			acumulado += miEstiloFila.getCuatroAcordesEnCompas();
+			mapCompases.put(4, acumulado);
+		}
+		miRandom = rnd.nextInt(acumulado);
+		
+		Iterator it = mapCompases.entrySet().iterator();
+		int valor = 0;
+		
+		while (it.hasNext()) {
+			Map.Entry e = (Map.Entry)it.next();
+			if ((Integer)e.getValue() >= miRandom){
+				valor = (Integer)e.getKey();
+				break;
+			}
+		}
+		return valor;
+	}
+	
 	/**
+	 * devuelve la cantidad de compases para un estilo, este valor lo obtiene haciendo un random entre los datos cargados.
+	 * @return valor
+	 */
+	public int calcularCantidadCompases(EstilosFila miEstiloFila) {
+		
+		Random rnd= new Random();
+		int miRandom;
+		Map<Integer, Integer> mapCompases = new HashMap<Integer, Integer>();
+		int acumulado = 0;
+		
+		if (miEstiloFila.getCantUnCompas() > 0) {
+			acumulado += miEstiloFila.getCantUnCompas();
+			mapCompases.put(1, acumulado);
+		}
+		if (miEstiloFila.getCantDosCompases() > 0) {
+			acumulado += miEstiloFila.getCantDosCompases();
+			mapCompases.put(2, acumulado);
+		}
+		if (miEstiloFila.getCantCuatroCompases() > 0) {
+			acumulado += miEstiloFila.getCantCuatroCompases();
+			mapCompases.put(4, acumulado);
+		}
+		if (miEstiloFila.getCantOchoCompases() > 0) {
+			acumulado += miEstiloFila.getCantOchoCompases();
+			mapCompases.put(8, acumulado);
+		}
+		miRandom = rnd.nextInt(acumulado);
+		
+		Iterator it = mapCompases.entrySet().iterator();
+		int valor = 0;
+		
+		while (it.hasNext()) {
+			Map.Entry e = (Map.Entry)it.next();
+			if ((Integer)e.getValue() >= miRandom){
+				valor = (Integer)e.getKey();
+				break;
+			}
+		}
+		return valor;
+		
+	}
+	
+
+	/*//################################################################################
+	*//**
 	 * cargarAcordesEnEstructura
-	 **/
+	 **//*
 	//################################################################################
 	private Map<String, ArrayList<String>> cargarAcordesEnEstructura(ArrayList<Valores> estructuraDeCancion, MatrizAcordes miMatrizAcordes, String tonica, String estilo, String tempo) {
 	
@@ -152,15 +327,15 @@ public class Compositor {
 			cancion.put(va.getEstilo(), listaAcordes);
 		}
 		return cancion;
-	}
+	}*/
 	
-	//################################################################################
-	/**
+	/*//################################################################################
+	*//**
 	 * armarEstructuraEstilos
 	 * partiendo de un estilo principal, arma una lista con los estilos que tendra la cancion
 	 * para buscar los nuevos estilos se utiliza la matrizEstilos
 	 * esta lista es la estructura de la cancion
-	 **/
+	 **//*
 	//################################################################################
 	private ArrayList<Valores> armarEstructuraEstilos(MatrizEstilos miMatrizEstilos, String estiloInicial, int duracionCancion, String estiloSeleccionado) {
 		
@@ -186,7 +361,7 @@ public class Compositor {
 		// el valor de n es la suma de compases que tiene cada estilo
 		while(n<duracionCancion){
 			
-			duracionEstilo = estiloF.cantidadCompases();			// FALTA VER COMO SE CALCULA ESTE VALOR (aleatorio o usando los valores cargados en mapEstilo)
+			duracionEstilo = estiloF.cantidadCompases();			
 			miRandom = rnd.nextInt(max+1);
 			proxEstilo = estiloF.buscarEstilo(miRandom);
 			
@@ -206,7 +381,7 @@ public class Compositor {
 		} 
 		
 		return estructuraDeCancion;
-	}
+	}*/
 	
 	//################################################################################
 	/**
