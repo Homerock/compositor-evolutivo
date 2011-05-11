@@ -41,7 +41,8 @@ public class Utiles {
   ###################						 FUNCIONES 						###################################### 
  ################################################################################################################# */
 
-	/** ---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 *
 	 * Quita los repeats del arreglo de notas y agrega las notas necesarias
 	 * 
@@ -59,7 +60,8 @@ public class Utiles {
 	 * @param soloAcordes: indica si solo guardaremos acordes (true), o todo 
 	 * @return ArrayList con la cancion sin los repeats o null en caso de error
 	 *  
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public static ArrayList<String> quitarRepets(ArrayList<String> cancion, boolean soloAcordes){
 
 		ArrayList<Integer> arrayRepeat=new ArrayList<Integer>();
@@ -152,9 +154,7 @@ public class Utiles {
 							Traza+= "array repeats (r):"+arrayRepeat.toString()+"\n"; 
 							Traza+= "array repeatend (r):"+arrayRepeatEnd.toString()+"\n";
 							Traza+= "array repeatending (r):"+arrayRepeatEnding.toString()+"\n";
-
 						}
-
 					}else {
 						//si es Repeat
 						if (valor.indexOf(REPEAT)!=-1){
@@ -175,17 +175,17 @@ public class Utiles {
 			e.printStackTrace();
 			return null;
 		}
-
 		return listaDeNotas;
 	}
 
-
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * obtenerDuracion
 	 * Obtiene la duracion de una cancion (cantidad de compases) analizando la lista cancionConEstilos
 	 * @param cancion con estilos
 	 * @return la duracion de la cancion
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public static int obtenerDuracion(ArrayList<String> cancion){
 
 		ArrayList<Integer> arrayRepeat=new ArrayList<Integer>();
@@ -256,7 +256,6 @@ public class Utiles {
 							arrayRepeatEnd.remove(arrayRepeatEnd.size()-1);
 							arrayRepeat.remove(arrayRepeat.size()-1);
 						}
-
 					}else {
 						//si es Repeat
 						if (valor.indexOf(REPEAT)!=-1){
@@ -275,20 +274,19 @@ public class Utiles {
 			e.printStackTrace();
 			return 0;
 		}
-
 		return cont;
 	}
 
-
-
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * calcula las repeticiones a realizar
 	 * 
 	 * Si tiene especificado la cantidad devolvera ese valor , en caso contrario 1
 	 * 
 	 * @param linea ej : "RepeatEnd" o "RepeatEnd 2"
 	 * @return la cantidad de repeticiones
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	private static int calcRepeticiones(String linea){
 
 		int cant = 1;
@@ -304,12 +302,13 @@ public class Utiles {
 		return cant;
 	}
 
-
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * verifica si es un numero una cadena
 	 * @param cadena
 	 * @return
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public static boolean isNumeric(String cadena){
 		try{
 			Integer.parseInt(cadena);
@@ -319,15 +318,16 @@ public class Utiles {
 		}
 	}
 
-
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * quita los comentarios de una linea
 	 *  
 	 * @param linea 
 	 * 	ej : "RepeatEnding          // In the sheet music this is a "to coda" "
 	 * @return cadena sin comentarios
 	 * 	ej :  "RepeatEnding"      
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public static String quitarComentarios(String linea){
 
 		if(linea.startsWith(COMENTARIO)){
@@ -337,7 +337,7 @@ public class Utiles {
 		return campos[0];
 	}
 
-
+	//#########################################################################################
 	/**
 	 * dada una linea y un separador (token) devuelve el valor siguiente al separador
 	 * 
@@ -345,6 +345,7 @@ public class Utiles {
 	 * @param token
 	 * @return
 	 */
+	//#########################################################################################
 	public static String obtenerDatos(String linea, String token){
 
 		try {
@@ -356,14 +357,14 @@ public class Utiles {
 		}
 	}
 
-	
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 *  dice si la linea contiene la definicion de un estilo 
 	 *  
 	 * @param linea
 	 * @return  true si tiene la definicion de un estilo false sino
-	 ---------------------------------------------------------------------------*/
-	
+	 */
+	//#########################################################################################
 	public static boolean defineUnEstilo(String linea){
 		
 		//EJEMPLO : "Set MainPlus Groove Swing1Plus"
@@ -373,6 +374,8 @@ public class Utiles {
 		}
 		return false;
 	}
+	
+	//#########################################################################################
 	/**
 	 * retorna la cantidad de acordes validos que tiene una linea
 	 * si empieza con una barra(/) se cuenta como un acorde
@@ -381,6 +384,7 @@ public class Utiles {
 	 * @param linea
 	 * @return cantidad de acordes validos
 	 */
+	//#########################################################################################
 	public static int calculaCantAcordesPorCompas(String linea) {
 		int cant=0;
 		linea = linea.trim();
@@ -403,19 +407,21 @@ public class Utiles {
 		
 	}
 	
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * @return
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public static ArrayList<String> getNotasPosibles() {
 		return notasPosibles;
 	}
 
-	/**---------------------------------------------------------------------------
+	//#########################################################################################
+	/**
 	 * @param notasPosibles
-	 *---------------------------------------------------------------------------*/
+	 **/
+	//#########################################################################################
 	public void setNotasPosibles(ArrayList<String> notasPosibles) {
 		this.notasPosibles = notasPosibles;
 	}
-
-
 }
