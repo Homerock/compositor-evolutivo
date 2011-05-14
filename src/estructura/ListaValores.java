@@ -110,8 +110,6 @@ public class ListaValores {
 			}	
 		}
 		
-		System.out.println("VALORES DE MI ESTILO: " + miLista.toString());
-		
 		try {
 			// hago un random sobre esta lista temporal y obtengo el valor (por ej: tempo, duracion) aleatoria para
 			// el estilo que ingreso por parametro

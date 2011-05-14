@@ -41,6 +41,7 @@ public class Estrofa {
 		this.estilo = estilo;
 		this.cantidadCompases = cantidadCompases;
 		this.esEstrofaGemela = false;
+		this.listaDeCompases = new ArrayList<Compas>();
 	}
 
 	/*################################################################################################################
@@ -48,6 +49,14 @@ public class Estrofa {
 	 ################################################################################################################# */
 
 	
+	@Override
+	public String toString() {
+		return "\n\nEstrofa [numeroEstrofa = " + numeroEstrofa + ", estilo = " + estilo 
+				+ ", cantidadCompases = " + cantidadCompases+ "\n" 
+				+ "listaDeCompases = " + listaDeCompases + "\n" 
+				+ "esEstrofaGemela = " + esEstrofaGemela + ", nroEstrofaGemela = " + nroEstrofaGemela + "]";
+	}
+
 	public void agregarCompas(Compas miCompas) {
 		this.getListaDeCompases().add(miCompas);
 	}

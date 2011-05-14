@@ -41,6 +41,11 @@ public class Acorde {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+
+	@Override
+	public String toString() {
+		return "Acorde [nombre=" + nombre + "]";
+	}
 	
 	
 

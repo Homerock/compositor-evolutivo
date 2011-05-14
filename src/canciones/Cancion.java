@@ -118,16 +118,38 @@ public class Cancion {
 	 * @return true si existe el estilo en alguna de las estrofas de la cancion , false si no.
 	 */
 	public boolean existeEstrofaEstilo(String estilo){
+		
 		boolean existe=false;
 		ArrayList<Estrofa> estrofas = this.getEstrofas();
-		
-		for (Estrofa e :estrofas ){
+	
+		for (Estrofa e : estrofas){
 			if(e.getEstilo().equals(estilo)){
 				existe =true;
 				break;
 			}
 		}
 		return existe;
+	}
+	
+	
+	public Estrofa buscarEstrofaEstilo(String estilo){
+		
+		ArrayList<Estrofa> estrofas = this.getEstrofas();
+		Estrofa miEstrofa = null;
+		
+		for (Estrofa e : estrofas){
+			if(e.getEstilo().equals(estilo)){
+				miEstrofa = e;
+			}
+		}
+		return miEstrofa;
+	}
+
+	@Override
+	public String toString() {
+		return "Cancion [nombre = " + nombre + ", tempo = " + tempo + ", duracion = " + duracion + ", tonica = " 
+				+ tonica + ", estiloPrincipal = " + estiloPrincipal + "\n"
+				+ "estrofas = " + estrofas + "]\n";
 	}
 	
 

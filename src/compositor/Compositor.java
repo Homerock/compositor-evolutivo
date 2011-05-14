@@ -111,7 +111,19 @@ public class Compositor {
 		return;
 	}*/
 
-	//reemplaza a componer
+	
+	//################################################################################
+	/**
+	 * reemplaza a componer
+	 * @param miMatrizAcordes
+	 * @param miMatrizEstilos
+	 * @param tonica
+	 * @param estiloSeleccionado
+	 * @param duracion
+	 * @param tempo
+	 * 
+	 */
+	//################################################################################
 	public void componerCancion(
 			MatrizAcordes miMatrizAcordes, 
 			MatrizEstilos miMatrizEstilos, 
@@ -119,6 +131,8 @@ public class Compositor {
 			String estiloSeleccionado, 
 			int duracion, 
 			String tempo) throws CancionException{
+		
+		boolean DEBUG = false;
 		
 		if(!miMatrizAcordes.ExisteAcordePpal(tonica)){
 			throw new CancionException("No se encuentra el acorde '"+tonica+"' en la base de conocimientos.");
@@ -133,20 +147,79 @@ public class Compositor {
 		Cancion nuevaCancion = new Cancion(nombreCancion,tempo,duracion,tonica,estiloSeleccionado);
 		
 		this.armarEstructuraEstilos(miMatrizEstilos, nuevaCancion);
+		this.cargarAcordesEnEstructura(miMatrizAcordes, nuevaCancion);
+		this.armarArchivo(nuevaCancion);
 		
-		// FALTA LLENAR LA CANCION CON ACORDES
-		
-		return;
+		//PARA VER LA ESTRUCTURA DE LA CANCION
+		//System.out.println(nuevaCancion.toString());
+		// FALTA ARMAR UN ARCHIVO DE TEXTO Y CREAR EL MIDI
+		// CONTROLAR QUE LA PRIMER NOTA DE LA CANCION SEA LA TONICA
+		// CONTROLAR QUE EL ACORDE ANTERIOR SEA EL CORRECTO
+		// CONTROLAR QUE LOS ACORDES DE ESTROFAS GEMELAS SEAN LAS MISMAS, ANDA Y NO SE PORQUE!!?!?!?!?!?!?!?
+		if (DEBUG) {
+			ArrayList<Estrofa> todasLasEstrofas = nuevaCancion.getEstrofas();
+			System.out.println("CANCION: " + nuevaCancion.getNombre());
+			for (Estrofa est : todasLasEstrofas) {
+				System.out.println("----------------Num de estrofa: " + est.getNumeroEstrofa() + " --- " + "Estilo: " + est.getEstilo() + "--------------------");
+				ArrayList<Compas> todosLosCompases = est.getListaDeCompases();
+				System.out.println("cantidad de compases: " + est.getCantidadCompases());
+				for (Compas com : todosLosCompases) {
+					System.out.print("Cant acordes del compas: " + com.getCantidadAcordes());
+					ArrayList<Acorde> todosLosAcordes = com.getAcordes();
+					System.out.print(" [ ");
+					for (Acorde ac : todosLosAcordes) {
+						System.out.print(ac.getNombre() + " ");
+					}
+					System.out.print(" ] \n");
+				}	
+				System.out.println("----------------------------Fin de estrofa------------------------------\n\n");
+			}
+		}
 	}
+	
+	//################################################################################
 	/**
-	 * 
+	 * genera un archivo de texto con el formato de mma
+	 * @param miCancion
+	 */
+	//################################################################################
+	private void armarArchivo(Cancion miCancion) {
+		
+		String compas = " ";
+		ArrayList<Estrofa> todasLasEstrofas = miCancion.getEstrofas();
+		int linea = 1;
+		
+		Archivos miArchivo = new Archivos();
+		miArchivo.escribirArchivo(miCancion.getNombre()+".mma", "Tempo " + miCancion.getTempo(), false);
+		miArchivo.escribirArchivo(miCancion.getNombre()+".mma", "", true);
+		
+		for (Estrofa est : todasLasEstrofas) {
+			
+			miArchivo.escribirArchivo(miCancion.getNombre()+".mma", "Groove " + est.getEstilo(), true);
+			
+			ArrayList<Compas> todosLosCompases = est.getListaDeCompases();
+		
+			for (Compas com : todosLosCompases) {
+				ArrayList<Acorde> todosLosAcordes = com.getAcordes();
+				compas = " ";
+				for (Acorde ac : todosLosAcordes) {
+					compas = compas + " " + ac.getNombre();
+				}
+				miArchivo.escribirArchivo(miCancion.getNombre()+".mma", linea + compas, true);
+				linea++;
+			}	
+		}
+		System.out.println("Nuevo archivo generado: " + miCancion.getNombre()+".mma");
+	}
+	
+	//################################################################################
+	/**
+	 * reemplaza el otro armarEstructuraEstilos
 	 * @param miMatrizEstilos
 	 * @param nuevaCancion
 	 */
-	//reemplaza el otro armarEstructuraEstilos
-	private void armarEstructuraEstilos(
-			MatrizEstilos miMatrizEstilos,
-			Cancion nuevaCancion) {
+	//################################################################################
+	private void armarEstructuraEstilos(MatrizEstilos miMatrizEstilos, Cancion nuevaCancion) {
 		
 		int numEstrofa = 1;
 		String estiloInicial = nuevaCancion.getEstiloPrincipal();
@@ -158,11 +231,9 @@ public class Compositor {
 			} 
 		}
 		
-		
 		EstilosFila miEstiloFila;
-		String proxEstilo;
 		int cantCompases;
-		Estrofa miEstrofa;
+		Estrofa miEstrofa, estrofaGemela;
 		int n = 1;
 		int semilla;
 		Random rnd = new Random();
@@ -171,12 +242,18 @@ public class Compositor {
 		
 		while(n < nuevaCancion.getDuracion()) {
 			
-			//if (nuevaCancion.existeEstrofaEstilo(estilo)) {
-				// CONTROLAR SI ESTE ESTILO YA ESTA EN LA CANCION
-				// OSEA SI LA ESTROFA ES GEMELA
-			//} else {
-				miEstiloFila = miMatrizEstilos.getMisEstilos().get(estilo);
-				semilla = miEstiloFila.getContador();
+			miEstiloFila = miMatrizEstilos.getMisEstilos().get(estilo);
+			// busco si ya existe la estrofa con este estilo
+			if (nuevaCancion.existeEstrofaEstilo(estilo)) {
+				miEstrofa = nuevaCancion.buscarEstrofaEstilo(estilo);
+				cantCompases = miEstrofa.getCantidadCompases();
+				estrofaGemela = new Estrofa(numEstrofa,estilo,cantCompases);
+				estrofaGemela.setEsEstrofaGemela(true);
+				estrofaGemela.setNroEstrofaGemela(miEstrofa.getNumeroEstrofa());
+				estrofaGemela.setListaDeCompases(miEstrofa.getListaDeCompases());
+				nuevaCancion.agregarEstrofa(estrofaGemela);
+			} else {	
+				// si no existe la creo
 				cantCompases = this.calcularCantidadCompases(miEstiloFila);
 				miEstrofa = new Estrofa(numEstrofa,estilo,cantCompases);
 				for (int i = 0; i < cantCompases; i++) {
@@ -185,21 +262,101 @@ public class Compositor {
 					miEstrofa.agregarCompas(miCompas);
 				}
 				nuevaCancion.agregarEstrofa(miEstrofa);
-			//}
-			
-			
-			
+			}
+
 			numEstrofa++;
 			n = n + cantCompases;		
+			semilla = miEstiloFila.getContador();
 			estilo = miEstiloFila.buscarEstilo(rnd.nextInt(semilla+1));
 			
 			// si encontramos el End terminamos de armar la estructura
 			if ((estilo.indexOf(Utiles.END_ESTILO) != -1) || (estilo.indexOf(Utiles.INTRO_ESTILO) != -1)) {
+				System.out.println("CORTE POR ENCONTRAR: " + estilo);
 				break;
 			}
 		}
 	}
 	
+	//################################################################################
+	/**
+	 * recorre la lista de estrofas de una cancion y llama al metodo correspondiente para agregarle acordes a cada estrofa
+	 * @param miMatrizAcordes
+	 * @param nuevaCancion
+	 */
+	//################################################################################
+	private void cargarAcordesEnEstructura(MatrizAcordes miMatrizAcordes, Cancion nuevaCancion) {
+		
+		ArrayList<Estrofa> listaEstrofas = nuevaCancion.getEstrofas();
+		String acordeAnterior = nuevaCancion.getTonica();
+		int ultimo;
+		ArrayList<Acorde> nuevosAcordes;
+		
+		for (Estrofa miEstrofa : listaEstrofas) {	
+			for (Compas miCompas : miEstrofa.getListaDeCompases()) {
+				nuevosAcordes = this.generarAcordesDeCompas(miMatrizAcordes, acordeAnterior, miCompas);
+				miCompas.setAcordes(nuevosAcordes);
+				ultimo = miCompas.getAcordes().size();
+				acordeAnterior = miCompas.getAcordes().get(ultimo-1).getNombre();	
+			}
+		}
+	}
+	
+	//################################################################################
+	/**
+	 * genera y devuelve una lista de acordes para un compas (entre uno y cuatro acordes)
+	 * @param miMatrizAcordes
+	 * @param acordeAnterior
+	 * @param miCompas
+	 * @return
+	 */
+	//################################################################################
+	private ArrayList<Acorde> generarAcordesDeCompas(MatrizAcordes miMatrizAcordes, String acordeAnterior, Compas miCompas) {
+		
+		
+		ArrayList<Acorde> listaAcordes = new ArrayList<Acorde>();
+		Acorde miAcorde;
+		int cantidad;
+		
+		cantidad = miCompas.getCantidadAcordes();
+		for (int i=1; i <= cantidad;i++) {
+			miAcorde = this.generarAcorde(miMatrizAcordes, acordeAnterior);
+			acordeAnterior = miAcorde.getNombre();
+			listaAcordes.add(miAcorde);
+		}
+		return listaAcordes;
+		
+	}
+	
+	
+	//################################################################################
+	/**
+	 * genera un nuevo acorde obteniendolo de la matriz de acordes teniendo en cuenta un acorde anterior
+	 * @param listaAcordes
+	 */
+	//################################################################################
+	private Acorde generarAcorde(MatrizAcordes miMatrizAcordes, String acordeAnterior) {
+		
+		AcordesFila acordePpal;
+		Random rnd = new Random();
+		String proxAcorde;
+		int max;
+		
+		acordePpal = miMatrizAcordes.getMisAcordes().get(acordeAnterior);
+		max = acordePpal.getValorAcumuladoFila();
+		proxAcorde = acordePpal.buscarAcorde(rnd.nextInt(max+1));
+		
+		Acorde miAcorde = new Acorde();
+		miAcorde.setNombre(proxAcorde);
+		return miAcorde;
+	}
+	
+	//################################################################################
+	/**
+	 * 
+	 * @param miEstiloFila
+	 * @return
+	 */
+	//################################################################################
 	private int calcularCantidadAcordesUnCompas(EstilosFila miEstiloFila) {
 		
 		Random rnd= new Random();
@@ -238,10 +395,12 @@ public class Compositor {
 		return valor;
 	}
 	
+	//################################################################################
 	/**
 	 * devuelve la cantidad de compases para un estilo, este valor lo obtiene haciendo un random entre los datos cargados.
 	 * @return valor
 	 */
+	//################################################################################
 	public int calcularCantidadCompases(EstilosFila miEstiloFila) {
 		
 		Random rnd= new Random();
@@ -280,7 +439,6 @@ public class Compositor {
 		return valor;
 		
 	}
-	
 
 	/*//################################################################################
 	*//**
@@ -392,7 +550,7 @@ public class Compositor {
 	private void escribir(String mensaje) {
 	
 		pantalla.actualizarLog(mensaje);
-		
+
 	}
 	
 	//################################################################################
