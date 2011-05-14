@@ -319,7 +319,7 @@ public class Aprendiz {
 
 			this.calcularAcumuladoDeMap(this.getMatrizEvolutiva());
 			this.miMatrizEstilos.calcularAcumulados();
-			this.mostrarDatos();
+			//this.mostrarDatos();
 
 		}catch(NullPointerException e1){
 			escribir("Error: Aprendiz.iniciar()");
@@ -434,7 +434,7 @@ public class Aprendiz {
 		Compositor miCompositor = new Compositor();
 		String tempo;
 		String duracion;
-
+		
 		try {
 			tempo = this.miListaDeTempos.obtenerMayorValorPorEstilo(estilo);
 		} catch (ValoresException e) {
@@ -448,11 +448,11 @@ public class Aprendiz {
 			return;
 		}
 
-		System.out.println("Datos para componer: ");
-		System.out.println("ESTILO: " + estilo);
-		System.out.println("TONICA: " + tonica);
-		System.out.println("DURACION: " + duracion);
-		System.out.println("TEMPO: " + tempo);
+		//System.out.println("Datos para componer: ");
+		//System.out.println("ESTILO: " + estilo);
+		//System.out.println("TONICA: " + tonica);
+		//System.out.println("DURACION: " + duracion);
+		//System.out.println("TEMPO: " + tempo);
 
 		//Obtengo la matriz de acordes correspondiente a el estilo principal
 		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(estilo);
@@ -460,11 +460,9 @@ public class Aprendiz {
 		try {
 			miCompositor.componerCancion(miMatrizAcordes, this.miMatrizEstilos, tonica, estilo, Integer.parseInt(duracion), tempo);
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 		} catch (CancionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 		}
 	}
 

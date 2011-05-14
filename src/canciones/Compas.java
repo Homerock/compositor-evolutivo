@@ -48,6 +48,12 @@ public class Compas {
 	public void setAcordes(ArrayList<Acorde> acordes) {
 		this.acordes = acordes;
 	}
+
+	@Override
+	public String toString() {
+		return "Compas [cantidadAcordes=" + cantidadAcordes + ", acordes="
+				+ acordes + "]";
+	}
 	
 
 	
