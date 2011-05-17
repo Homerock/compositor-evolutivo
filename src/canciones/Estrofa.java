@@ -61,6 +61,10 @@ public class Estrofa {
 		this.getListaDeCompases().add(miCompas);
 	}
 
+	public Compas getUltimoCompas() {
+		int ultimo = this.getListaDeCompases().size() -1;
+		return this.getListaDeCompases().get(ultimo);
+	}
 
 	public String getEstilo() {
 		return estilo;

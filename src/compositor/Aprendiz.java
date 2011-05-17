@@ -459,10 +459,10 @@ public class Aprendiz {
 		
 		try {
 			miCompositor.componerCancion(miMatrizAcordes, this.miMatrizEstilos, tonica, estilo, Integer.parseInt(duracion), tempo);
+		}  catch (CancionException e) {
+			System.err.println(e.getMessage());
 		} catch (NumberFormatException e) {
-			
-		} catch (CancionException e) {
-			
+			System.err.println(e.getMessage());
 		}
 	}
 

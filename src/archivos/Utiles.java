@@ -31,6 +31,8 @@ public class Utiles {
 	public static final int DOS_ACORDE = 2;
 	public static final int TRES_ACORDE = 3;
 	public static final int CUATRO_ACORDE = 4;
+	public static final int MINIMO_ACORDES = 1;	// cantidad minima de acorde por compas
+	public static final int MAXIMO_ACORDES = 4; // cantidad maxima de acordes por compas
 
 
 	private static String[] notasPpales= {"A","B","C","D","E","F","G"};
