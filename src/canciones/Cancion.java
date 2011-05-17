@@ -17,7 +17,7 @@ public class Cancion {
 	private String nombre;
 	private String tempo;
 	private int duracion;// cantidad de compases de toda la cancion
-	private String tonica ;
+	private Acorde tonica ;
 	private String estiloPrincipal;
 	private ArrayList<Estrofa> estrofas;// estrofas de la cancion
 
@@ -30,7 +30,7 @@ public class Cancion {
 		this.setNombre(null);
 		this.setTempo(null);
 		this.setDuracion(0);
-		this.setTonica(null);
+		this.setTonica(new Acorde());
 		this.setEstiloPrincipal(null);
 		this.setEstrofas(new ArrayList<Estrofa>());
 	}
@@ -44,7 +44,7 @@ public class Cancion {
 	 * @param tonica
 	 * @param estiloPrincipal
 	 */
-	public Cancion(String nombre,String tempo,int duracion,String tonica,String estiloPrincipal){
+	public Cancion(String nombre,String tempo,int duracion,Acorde tonica,String estiloPrincipal){
 		this.setNombre(nombre);
 		this.setTempo(tempo);
 		this.setDuracion(duracion);
@@ -89,11 +89,11 @@ public class Cancion {
 		this.duracion = duracion;
 	}
 
-	public String getTonica() {
+	public Acorde getTonica() {
 		return tonica;
 	}
 
-	public void setTonica(String tonica) {
+	public void setTonica(Acorde tonica) {
 		this.tonica = tonica;
 	}
 
@@ -140,6 +140,7 @@ public class Cancion {
 		for (Estrofa e : estrofas){
 			if(e.getEstilo().equals(estilo)){
 				miEstrofa = e;
+				break;
 			}
 		}
 		return miEstrofa;

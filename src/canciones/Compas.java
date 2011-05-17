@@ -35,6 +35,10 @@ public class Compas {
 	 ###################						METODOS PUBLICOS				###################################### 
 	 ################################################################################################################# */
 
+	public Acorde getUltimoAcorde(){
+		int ultimo = this.getAcordes().size()-1;
+		return this.getAcordes().get(ultimo);
+	}
 	
 	public int getCantidadAcordes() {
 		return cantidadAcordes;
