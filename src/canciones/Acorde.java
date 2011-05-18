@@ -8,7 +8,7 @@ package canciones;
  *
  */
 
-public class Acorde {
+public class Acorde implements Cloneable{
 
 
 	/*################################################################################################################
@@ -28,7 +28,15 @@ public class Acorde {
 		this.setNombre(nombre);
 	}
 	
-	
+    public Object clone(){
+        Object obj=null;
+        try{
+            obj=super.clone();
+        }catch(CloneNotSupportedException ex){
+            System.out.println(" no se puede duplicar");
+        }
+        return obj;
+    }
 
 	/*################################################################################################################
 	 ###################						METODOS PUBLICOS				###################################### 

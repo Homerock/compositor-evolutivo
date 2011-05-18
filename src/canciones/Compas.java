@@ -9,7 +9,7 @@ import java.util.ArrayList;
  *
  */
 
-public class Compas {
+public class Compas implements Cloneable{
 
 	/*################################################################################################################
 	 ###################						ATRIBUTOS						###################################### 
@@ -31,6 +31,25 @@ public class Compas {
 		this.setAcordes(new ArrayList<Acorde>());
 	}
 
+	public Object clone(){
+        Compas obj=null;
+        try{
+            obj=(Compas)super.clone();
+        }catch(CloneNotSupportedException ex){
+            System.out.println(" no se puede duplicar");
+        }
+        
+      //  ((Compas)obj).setAcordes((ArrayList)acordes.clone());
+        
+        ArrayList<Acorde> nuevaLista = new ArrayList<Acorde>(obj.getAcordes().size());
+        for (Acorde nuevoAcorde : obj.getAcordes()) {
+        	nuevaLista.add((Acorde) nuevoAcorde.clone());
+        }
+        obj.acordes = nuevaLista;
+        
+        return obj;
+    }
+	
 	/*################################################################################################################
 	 ###################						METODOS PUBLICOS				###################################### 
 	 ################################################################################################################# */

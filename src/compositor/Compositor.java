@@ -5,6 +5,7 @@ import estructura.EstilosFila;
 import estructura.MatrizAcordes;
 import estructura.MatrizEstilos;
 import estructura.Valores;
+import excepciones.AcordesException;
 import excepciones.ArchivosException;
 import excepciones.CancionException;
 import excepciones.EstilosException;
@@ -84,9 +85,6 @@ public class Compositor {
 		//PARA VER LA ESTRUCTURA DE LA CANCION
 		//System.out.println(nuevaCancion.toString());
 		// FALTA ARMAR UN ARCHIVO DE TEXTO Y CREAR EL MIDI
-		// CONTROLAR QUE LA PRIMER NOTA DE LA CANCION SEA LA TONICA
-		// CONTROLAR QUE EL ACORDE ANTERIOR SEA EL CORRECTO
-		// CONTROLAR QUE LOS ACORDES DE ESTROFAS GEMELAS SEAN LAS MISMAS, ANDA Y NO SE PORQUE!!?!?!?!?!?!?!?
 		if (DEBUG) {
 			ArrayList<Estrofa> todasLasEstrofas = nuevaCancion.getEstrofas();
 			System.out.println("CANCION: " + nuevaCancion.getNombre());
@@ -144,6 +142,8 @@ public class Compositor {
 			}	
 		}
 		System.out.println("Nuevo archivo generado: " + miCancion.getNombre()+".mma");
+		this.crearMMA("mma " + miCancion.getNombre(), false);
+
 	}
 	
 	//################################################################################
@@ -180,12 +180,12 @@ public class Compositor {
 			// busco si ya existe la estrofa con este estilo
 			if (nuevaCancion.existeEstrofaEstilo(estilo)) {
 				miEstrofa = nuevaCancion.buscarEstrofaEstilo(estilo);
-				cantCompases = miEstrofa.getCantidadCompases();
-				estrofaGemela = new Estrofa(numEstrofa,estilo,cantCompases);
+				estrofaGemela = (Estrofa) miEstrofa.clone();
 				estrofaGemela.setEsEstrofaGemela(true);
+				estrofaGemela.setNumeroEstrofa(numEstrofa);
 				estrofaGemela.setNroEstrofaGemela(miEstrofa.getNumeroEstrofa());
-				estrofaGemela.setListaDeCompases(miEstrofa.getListaDeCompases());
 				nuevaCancion.agregarEstrofa(estrofaGemela);
+				cantCompases = nuevaCancion.getEstrofaPorNumero(numEstrofa).getCantidadCompases();
 			} else {	
 				// si no existe la creo
 				cantCompases = this.calcularCantidadCompases(miEstiloFila);
@@ -210,6 +210,7 @@ public class Compositor {
 			}
 		}
 	}
+
 	
 	//################################################################################
 	/**
@@ -221,32 +222,73 @@ public class Compositor {
 	//################################################################################
 	private void cargarAcordesEnEstructura(MatrizAcordes miMatrizAcordes, Cancion nuevaCancion) throws CancionException {
 		
-		ArrayList<Estrofa> listaEstrofas = nuevaCancion.getEstrofas();
+		
 		Acorde acordeAnterior = nuevaCancion.getTonica();
-		int ultimo;
 		ArrayList<Acorde> nuevosAcordes;
 		Estrofa miEstrofa;
+		int numEstrofa = 1;
 		
-		Estrofa est = listaEstrofas.get(0);
+		Estrofa est = nuevaCancion.getEstrofaPorNumero(numEstrofa);
+		
 		this.cargarPrimerEstrofa(miMatrizAcordes, acordeAnterior, est);
-		nuevaCancion.agregarEstrofa(est);
+
 		//obtenemos el ultimo acorde de la 1er estrofa
 		acordeAnterior = est.getUltimoCompas().getUltimoAcorde();
 		
 		
 		for (int i = 1; i < nuevaCancion.getEstrofas().size(); i++) {
-			miEstrofa = nuevaCancion.getEstrofas().get(i);
-			for (Compas miCompas : miEstrofa.getListaDeCompases()) {
-				nuevosAcordes = this.generarAcordesDeCompas(miMatrizAcordes, acordeAnterior, miCompas);
-				miCompas.setAcordes(nuevosAcordes);
+			numEstrofa++;
+			miEstrofa = nuevaCancion.getEstrofaPorNumero(numEstrofa);
+			if (miEstrofa.isEsEstrofaGemela()) {
+				int numOriginal = miEstrofa.getNroEstrofaGemela();
+				Estrofa estrofaOriginal = nuevaCancion.getEstrofaPorNumero(numOriginal);
 				
-				acordeAnterior = miCompas.getUltimoAcorde();	
+				ArrayList<Compas> listaCompases = estrofaOriginal.getListaDeCompases();
+				ArrayList<Compas> nuevaListaCompases = new ArrayList<Compas>();
+				for (Compas compasOriginal : listaCompases) {
+					nuevaListaCompases.add((Compas) compasOriginal.clone());
+				}
+				miEstrofa.setListaDeCompases(nuevaListaCompases);
+				acordeAnterior = miEstrofa.getUltimoCompas().getUltimoAcorde();
 				
+			} else {
+				for (Compas miCompas : miEstrofa.getListaDeCompases()) {
+					nuevosAcordes = this.generarAcordesDeCompas(miMatrizAcordes, acordeAnterior, miCompas, nuevaCancion.getTonica());
+					miCompas.setAcordes(nuevosAcordes);
+					acordeAnterior = miCompas.getUltimoAcorde();			
+				}
 			}
 		}
 	}
 	
-	// cargo la primer estrofa con la tonica
+	//################################################################################
+	/**
+	 * 
+	 * @param miCompas
+	 * @return
+	 */
+	//################################################################################
+	public ArrayList<Acorde> copiarAcordesDeCompas(Compas miCompas) {
+		
+		ArrayList<Acorde> listaAcordes = miCompas.getAcordes();
+		ArrayList<Acorde> listaNuevosAcordes = new ArrayList<Acorde>();
+		Acorde miAcorde;
+		int cantidad = miCompas.getCantidadAcordes();
+		String nombre;
+		
+		for (int i = 0; i < cantidad; i++) {
+			nombre = listaAcordes.get(i).getNombre();
+			miAcorde = new Acorde(nombre);
+			listaNuevosAcordes.add(miAcorde);
+		}
+		return listaNuevosAcordes;
+	}
+	
+	//################################################################################
+	/**
+	 * cargo la primer estrofa con la tonica
+	 */
+	//################################################################################
 	private void cargarPrimerEstrofa(MatrizAcordes miMatrizAcordes, Acorde tonica, Estrofa miEstrofa) {
 		
 		ArrayList<Compas> listaCompas = miEstrofa.getListaDeCompases();
@@ -258,7 +300,13 @@ public class Compositor {
 		Acorde acordeAnterior = tonica;
 		
 		while (primerCompas.getAcordes().size() < primerCompas.getCantidadAcordes()) {
-			miAcorde = this.generarAcorde(miMatrizAcordes, acordeAnterior);
+			try {
+				miAcorde = this.generarAcorde(miMatrizAcordes, acordeAnterior);
+			} catch (AcordesException e) {
+				// cuando no se puede generar el siguiente acorde, cargamos la tonica
+				// esto sucede cuando el acordeAnterior es solo el ultimo acorde de una cancion, esto hace que no tenga siguiente
+				miAcorde = new Acorde(tonica.getNombre());
+			}
 			primerCompas.getAcordes().add(miAcorde);
 			
 			acordeAnterior = miAcorde;
@@ -268,7 +316,13 @@ public class Compositor {
 		for (int i = 1; i < listaCompas.size(); i++) {
 			miCompas = listaCompas.get(i);
 			while (miCompas.getAcordes().size() < miCompas.getCantidadAcordes()) {
-				miAcorde = this.generarAcorde(miMatrizAcordes, acordeAnterior);
+				try {
+					miAcorde = this.generarAcorde(miMatrizAcordes, acordeAnterior);
+				} catch (AcordesException e) {
+					// cuando no se puede generar el siguiente acorde, cargamos la tonica
+					// esto sucede cuando el acordeAnterior es solo el ultimo acorde de una cancion, esto hace que no tenga siguiente
+					miAcorde = new Acorde(tonica.getNombre());
+				}
 				miCompas.getAcordes().add(miAcorde);
 				
 				acordeAnterior = miAcorde;
@@ -287,7 +341,7 @@ public class Compositor {
 	 * @throws CancionException 
 	 */
 	//################################################################################
-	private ArrayList<Acorde> generarAcordesDeCompas(MatrizAcordes miMatrizAcordes, Acorde acordeAnterior, Compas miCompas) throws CancionException {
+	private ArrayList<Acorde> generarAcordesDeCompas(MatrizAcordes miMatrizAcordes, Acorde acordeAnterior, Compas miCompas, Acorde tonica) throws CancionException {
 		
 		
 		ArrayList<Acorde> listaAcordes = new ArrayList<Acorde>();
@@ -306,7 +360,13 @@ public class Compositor {
 
 		
 		for (int i = 1; i <= cantidad;i++) {
-			miAcorde = this.generarAcorde(miMatrizAcordes, acordeAnterior);			
+			try {
+				miAcorde = this.generarAcorde(miMatrizAcordes, acordeAnterior);
+			} catch (AcordesException e) {
+				// cuando no se puede generar el siguiente acorde, cargamos la tonica
+				// esto sucede cuando el acordeAnterior es solo el ultimo acorde de una cancion, esto hace que no tenga siguiente
+				miAcorde = new Acorde(tonica.getNombre());
+			}			
 			listaAcordes.add(miAcorde);
 			
 			acordeAnterior = miAcorde;
@@ -321,15 +381,20 @@ public class Compositor {
 	 * @param listaAcordes
 	 */
 	//################################################################################
-	private Acorde generarAcorde(MatrizAcordes miMatrizAcordes, Acorde acordeAnterior) {
+	private Acorde generarAcorde(MatrizAcordes miMatrizAcordes, Acorde acordeAnterior) throws AcordesException {
 		
 		AcordesFila acordePpal;
 		Random rnd = new Random();
 		Acorde proxAcorde = new Acorde();
 		int max;
 		
-		acordePpal = miMatrizAcordes.getMisAcordes().get(acordeAnterior.getNombre());
-		max = acordePpal.getValorAcumuladoFila();
+		try {
+			acordePpal = miMatrizAcordes.getMisAcordes().get(acordeAnterior.getNombre());
+			max = acordePpal.getValorAcumuladoFila();
+		} catch (NullPointerException e) {
+			throw new AcordesException("No se pudo generar el siguiente acorde " + Compositor.class);
+		}
+		
 		proxAcorde.setNombre(acordePpal.buscarAcorde(rnd.nextInt(max+1)));
 		
 		return proxAcorde;
