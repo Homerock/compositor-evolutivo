@@ -7,9 +7,15 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
+
+import canciones.Acorde;
+import canciones.Cancion;
+import canciones.Compas;
+import canciones.Estrofa;
 
 import excepciones.ArchivosException;
 
@@ -22,10 +28,7 @@ import excepciones.ArchivosException;
 public class Archivos {
 
 	private ArrayList<String> cancionAnalizada;
-	private ArrayList<String> cancionAnalizadaConEstilo;
-
-	
-	
+	private ArrayList<String> cancionAnalizadaConEstilo;	
 	private String nombre;
 	private String estiloPpal;
 	private String tonica;
@@ -144,7 +147,7 @@ public class Archivos {
 	 * @param agregar : true agrega una nueva linea , false crea uno nuevo o sobreescribe el que esta
 	 **/
 	//#########################################################################################
-	public void escribirArchivo(String nombre, String contenido, boolean agregar) {
+	private static void escribirArchivo(String nombre, String contenido, boolean agregar) {
 
 		FileOutputStream archivo = null;
 		BufferedOutputStream buffer = null;
@@ -165,9 +168,95 @@ public class Archivos {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
 
+	//################################################################################
+	/**
+	 * genera un archivo de texto con el formato de mma, de acuerdo a los datos de un objeto cancion
+	 * pasado por parametro.
+	 * @param miCancion
+	 */
+	//################################################################################
+	public static void generarArchivo(Cancion miCancion) {
+		
+		String compas = " ";
+		ArrayList<Estrofa> todasLasEstrofas = miCancion.getEstrofas();
+		int linea = 1;
+		
+		// preguntar si el nombre de la cancion ya existe en el directorio, si existe agregarle un numero
+		// ejemplo: rock_Am_1 volver a preguntar a ver si este tambien existe
+		
+		escribirArchivo(miCancion.getNombre()+".mma", "Tempo " + miCancion.getTempo(), false);
+		escribirArchivo(miCancion.getNombre()+".mma", "", true);
+		
+		for (Estrofa est : todasLasEstrofas) {
+			
+			escribirArchivo(miCancion.getNombre()+".mma", "Groove " + est.getEstilo(), true);
+			
+			ArrayList<Compas> todosLosCompases = est.getListaDeCompases();
+		
+			for (Compas com : todosLosCompases) {
+				ArrayList<Acorde> todosLosAcordes = com.getAcordes();
+				compas = " ";
+				for (Acorde ac : todosLosAcordes) {
+					compas = compas + " " + ac.getNombre();
+				}
+				escribirArchivo(miCancion.getNombre()+".mma", linea + compas, true);
+				linea++;
+			}	
+		}
+		System.out.println("Nuevo archivo generado: " + miCancion.getNombre()+".mma");
+		crearMMA("mma " + miCancion.getNombre(), false);
+	}
+
+	//################################################################################
+	/**
+	 * crearMMA
+	 * @param command: comando a ejecutar, incluyendo parametros
+	 * @param flagbackground: valor boolean para determinar si el comando se ejecuta en background (solo en linux)
+	 **/
+	//################################################################################
+	private static boolean crearMMA(String command, boolean flagbackground) {
+		
+		// Definimos la cadena del interprete de comandos del sistema 
+		String commandShell=null; 
+	
+		// Recuperamos el sistema operativo 
+		String osName = System.getProperty ( "os.name" ); 
+	
+		// Cargamos la cadena del interprete de comandos según el sistema operativo y el comando a ejecutar 
+		if ( osName.equals ("Windows XP") ) 
+			commandShell = "cmd.exe /C " + command; 
+		else 
+			if ( osName.equals ("Windows 95") || osName.equals ("Windows 98") ) 
+				commandShell = "start " + command; 
+			else { 
+					// 	En UNIX y LUNUX podemos lanzar el proceso en background sufijandolo con & 
+				if (flagbackground) 
+					commandShell = "" + command +" &" ; 
+				else 
+					commandShell = "" + command ; 
+				} 
+	
+			// Lanzamos el proceso	
+		try { 
+			Process proc = Runtime.getRuntime ().exec (commandShell); 
+			BufferedReader brStdOut = new BufferedReader(new InputStreamReader(proc.getInputStream())); 
+			BufferedReader brStdErr = new BufferedReader(new InputStreamReader(proc.getErrorStream())); 
+			String str=null; 
+			while ((str = brStdOut.readLine())!=null) { 
+				System.out.println (str); 
+			} 
+			brStdOut.close(); 
+			brStdErr.close(); 
+			} catch (IOException eproc) { 
+					//System.out.println ("Error to execute the command : "+eproc); 
+					return false; 
+		} 
+		return true; 
+	}
+
+	
 	//#########################################################################################
 	/**
 	 * analiza una linea y guarda :
