@@ -29,7 +29,7 @@ public class Utiles {
 	protected static final String TEMPO = "Tempo";
 	//VARIBLES
 	public static final String DEFINICION_VARIABLE= "Set";
-	public static final String VARIABLE = "$";
+	public static final String COMIENZO_DE_VARIABLE = "$";
 	//ACORDES
 	public static final String ACORDE_REPETIDO = "/";
 	public static final int UN_ACORDE = 1;
@@ -413,7 +413,22 @@ public class Utiles {
 		
 	}
 	
-	//public static boolean contieneCadena(String )
+	//#########################################################################################
+	/**
+	 * Verifica si la "cadena" contiene el "patron" dentro de ella
+	 *  
+	 * @param cadena
+	 * @param patron
+	 * @return true si la cadena contiene el patron
+	 */
+	//#########################################################################################
+	public static boolean cadenaContienePatron(String cadena,String patron){
+		
+		if(cadena.indexOf(patron)!=-1){
+			return true;
+		}
+		return false;
+	}
 	
 	//#########################################################################################
 	/**
