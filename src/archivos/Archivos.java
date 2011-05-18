@@ -322,17 +322,26 @@ public class Archivos {
 				}
 				this.getCancionAnalizadaConEstilo().add(acordesAux);
 			}else {
+				
+				if (linea.startsWith(Utiles.NUEVO_ESTILO)){
+					throw new ArchivosException("ArchivosException : No contemplamos definiciones de nuevos estilos");
+				}
+				if(Utiles.cadenaContienePatron(linea, Utiles.COMIENZO_DE_VARIABLE)){
+					//ej :
+					//Set Pass 1
+					//Groove $Pass BossaNova BossaNovaSus BossaNova1Sus
+
+					throw new ArchivosException("ArchivosException : No contemplamos variables en definicion de estilos");
+				}
+				
 				//me fijo si esta la palabra repeat en una cadena, ya que nos intersa, y la agrego en el arraylist
-				if(linea.indexOf(Utiles.REPEAT)!=-1){
+				if(Utiles.cadenaContienePatron(linea, Utiles.REPEAT)){
 					this.getCancionAnalizadaConEstilo().add(linea);
 				}
 				if(linea.startsWith(Utiles.ESTILO)){
 					this.getCancionAnalizadaConEstilo().add(linea);
 				}
-				if (linea.startsWith(Utiles.NUEVO_ESTILO)){
-					throw new ArchivosException("ArchivosException : No contemplamos definiciones de nuevos estilos");
-				}
-				
+			
 				
 			}
 		}catch (NoSuchElementException e){
