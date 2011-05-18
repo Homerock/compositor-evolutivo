@@ -53,10 +53,11 @@ public class Compositor {
 	 * @param estiloSeleccionado
 	 * @param duracion
 	 * @param tempo
+	 * @return 
 	 * 
 	 */
 	//################################################################################
-	public void componerCancion(
+	public Cancion componerCancion(
 			MatrizAcordes miMatrizAcordes, 
 			MatrizEstilos miMatrizEstilos, 
 			String tonica, 
@@ -80,7 +81,7 @@ public class Compositor {
 		
 		this.armarEstructuraEstilos(miMatrizEstilos, nuevaCancion);
 		this.cargarAcordesEnEstructura(miMatrizAcordes, nuevaCancion);
-		//this.armarArchivo(nuevaCancion);
+		
 		
 		//PARA VER LA ESTRUCTURA DE LA CANCION
 		//System.out.println(nuevaCancion.toString());
@@ -107,45 +108,10 @@ public class Compositor {
 				System.out.println("----------------------------Fin de estrofa------------------------------\n\n");
 			}
 		}
+		
+		return nuevaCancion;
 	}
-	
-	//################################################################################
-	/**
-	 * genera un archivo de texto con el formato de mma
-	 * @param miCancion
-	 */
-	//################################################################################
-	private void armarArchivo(Cancion miCancion) {
 		
-		String compas = " ";
-		ArrayList<Estrofa> todasLasEstrofas = miCancion.getEstrofas();
-		int linea = 1;
-		
-		Archivos miArchivo = new Archivos();
-		miArchivo.escribirArchivo(miCancion.getNombre()+".mma", "Tempo " + miCancion.getTempo(), false);
-		miArchivo.escribirArchivo(miCancion.getNombre()+".mma", "", true);
-		
-		for (Estrofa est : todasLasEstrofas) {
-			
-			miArchivo.escribirArchivo(miCancion.getNombre()+".mma", "Groove " + est.getEstilo(), true);
-			
-			ArrayList<Compas> todosLosCompases = est.getListaDeCompases();
-		
-			for (Compas com : todosLosCompases) {
-				ArrayList<Acorde> todosLosAcordes = com.getAcordes();
-				compas = " ";
-				for (Acorde ac : todosLosAcordes) {
-					compas = compas + " " + ac.getNombre();
-				}
-				miArchivo.escribirArchivo(miCancion.getNombre()+".mma", linea + compas, true);
-				linea++;
-			}	
-		}
-		System.out.println("Nuevo archivo generado: " + miCancion.getNombre()+".mma");
-		this.crearMMA("mma " + miCancion.getNombre(), false);
-
-	}
-	
 	//################################################################################
 	/**
 	 * reemplaza el otro armarEstructuraEstilos
@@ -500,51 +466,5 @@ public class Compositor {
 	
 		pantalla.actualizarLog(mensaje);
 
-	}
-	
-	//################################################################################
-	/**
-	 * crearMMA
-	 **/
-	//################################################################################
-	private boolean crearMMA(String command, boolean flagbackground) {
-		
-		// Definimos la cadena del interprete de comandos del sistema 
-		String commandShell=null; 
-	
-		// Recuperamos el sistema operativo 
-		String osName = System.getProperty ( "os.name" ); 
-	
-		// Cargamos la cadena del interprete de comandos según el sistema operativo y el comando a ejecutar 
-		if ( osName.equals ("Windows XP") ) 
-			commandShell = "cmd.exe /C " + command; 
-		else 
-			if ( osName.equals ("Windows 95") || osName.equals ("Windows 98") ) 
-				commandShell = "start " + command; 
-			else { 
-					// 	En UNIX y LUNUX podemos lanzar el proceso en background sufijandolo con & 
-				if (flagbackground) 
-					commandShell = "" + command +" &" ; 
-				else 
-					commandShell = "" + command ; 
-				} 
-	
-			// Lanzamos el proceso	
-		try { 
-			Process proc = Runtime.getRuntime ().exec (commandShell); 
-			BufferedReader brStdOut = new BufferedReader(new InputStreamReader(proc.getInputStream())); 
-			BufferedReader brStdErr = new BufferedReader(new InputStreamReader(proc.getErrorStream())); 
-			String str=null; 
-			while ((str = brStdOut.readLine())!=null) { 
-				System.out.println (str); 
-			} 
-			brStdOut.close(); 
-			brStdErr.close(); 
-			} catch (IOException eproc) { 
-					//System.out.println ("Error to execute the command : "+eproc); 
-					return false; 
-		} 
-		return true; 
-	}
-	
+	}	
 }

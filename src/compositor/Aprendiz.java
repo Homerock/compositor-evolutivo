@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import javax.swing.JFileChooser;
+
+import canciones.Cancion;
 import net.java.ao.EntityManager;
 import orm.Acordes;
 import orm.AcordesDTO;
@@ -69,7 +71,7 @@ public class Aprendiz {
 	//#########################################################################################
 	/**
 	 * Recibe por parametros una lista llamada cancion que contiene todas las Acordes
-	 * que componen la cancion, recorre esta lista cargando en la matriz las Acordes
+	 * que componen una cancion, recorre esta lista cargando en la matriz las Acordes
 	 * principales y luego las ocurrencias de estas con las secundarias
 	 * 
 	 * @param cancion
@@ -260,11 +262,9 @@ public class Aprendiz {
 	//#########################################################################################
 	public void iniciar() {
 
-		Archivos miArchivo;
-
 		try {
 			JFileChooser chooser= new JFileChooser();
-			chooser.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
+			chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 			int resultado = chooser.showOpenDialog(null);
 
 			String tipo=chooser.getTypeDescription(chooser.getSelectedFile());
@@ -273,7 +273,6 @@ public class Aprendiz {
 
 			//si se carga un directorio
 			if (tipo.compareTo(DIRECTORIO)==0){
-
 				try{	
 					String path = chooser.getSelectedFile()+"/";
 					String files;
@@ -281,21 +280,9 @@ public class Aprendiz {
 					escribir("Directorio a cargar :"+path);
 					File[] listOfFiles = folder.listFiles();
 					for (int i = 0; i < listOfFiles.length; i++) {
-						miArchivo = new Archivos();
-
 						if (listOfFiles[i].isFile()) {
 							files = listOfFiles[i].getName();
-							escribir("Archivo a leer :"+path+files);
-							try {
-								if (miArchivo.leerArchivo(path+files)){
-									this.procesarArchivo(miArchivo);
-								}
-
-							} catch (EstilosException ee) {
-								System.err.println(ee.getMessage());
-							} catch (ArchivosException ae) {
-								System.err.println(ae.getMessage());
-							}
+							this.cargarArchivoEnMatriz(path+files);
 						}
 					}
 				}catch(NullPointerException e){
@@ -304,17 +291,7 @@ public class Aprendiz {
 			}
 			//si es un archivo
 			if(tipo.compareTo(ARCHIVO)==0){
-				escribir("Archivo a leer :"+chooser.getSelectedFile());
-				miArchivo = new Archivos();
-				try {
-					if (miArchivo.leerArchivo(chooser.getSelectedFile().toString())){
-						this.procesarArchivo(miArchivo);
-					}
-				} catch (EstilosException ee) {
-					System.err.println(ee.getMessage());
-				} catch (ArchivosException ae) {
-					System.err.println(ae.getMessage());
-				}
+				this.cargarArchivoEnMatriz(chooser.getSelectedFile().toString());
 			}
 
 			this.calcularAcumuladoDeMap(this.getMatrizEvolutiva());
@@ -324,6 +301,29 @@ public class Aprendiz {
 		}catch(NullPointerException e1){
 			escribir("Error: Aprendiz.iniciar()");
 		}	
+	}
+	
+	//#########################################################################################
+	/**
+	 * 
+	 * @param nombreCancion
+	 */
+	//#########################################################################################
+	public void cargarArchivoEnMatriz(String nombreCancion) {
+		
+		escribir("Archivo a leer :"+ nombreCancion);
+		Archivos miArchivo = new Archivos();
+		
+		try {
+			if (miArchivo.leerArchivo(nombreCancion)){
+				this.procesarArchivo(miArchivo);
+			}
+		} catch (EstilosException ee) {
+			System.err.println(ee.getMessage());
+		} catch (ArchivosException ae) {
+			System.err.println(ae.getMessage());
+		}
+		
 	}
 
 	//#########################################################################################
@@ -448,17 +448,21 @@ public class Aprendiz {
 			return;
 		}
 
-		//System.out.println("Datos para componer: ");
-		//System.out.println("ESTILO: " + estilo);
-		//System.out.println("TONICA: " + tonica);
-		//System.out.println("DURACION: " + duracion);
-		//System.out.println("TEMPO: " + tempo);
+		System.out.println("Datos para componer: ");
+		System.out.println("ESTILO: " + estilo);
+		System.out.println("TONICA: " + tonica);
+		System.out.println("DURACION: " + duracion);
+		System.out.println("TEMPO: " + tempo);
 
 		//Obtengo la matriz de acordes correspondiente a el estilo principal
 		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(estilo);
 		
 		try {
-			miCompositor.componerCancion(miMatrizAcordes, this.miMatrizEstilos, tonica, estilo, Integer.parseInt(duracion), tempo);
+			Cancion nuevaCancion = miCompositor.componerCancion(miMatrizAcordes, this.miMatrizEstilos, tonica, estilo, Integer.parseInt(duracion), tempo);
+			// genero el archivo .mma que contiene a la nueva cancion 
+			Archivos.generarArchivo(nuevaCancion);
+			// cargo en la matriz la nueva cancion que compuse
+			this.cargarArchivoEnMatriz(nuevaCancion.getNombre());
 		}  catch (CancionException e) {
 			System.err.println(e.getMessage());
 		} catch (NumberFormatException e) {
