@@ -242,7 +242,8 @@ public class Archivos {
 				}
 				if (linea.startsWith(Utiles.NUEVO_ESTILO)){
 					throw new ArchivosException("ArchivosException : No contemplamos definiciones de nuevos estilos");
-				}	
+				}
+				
 				
 			}
 		}catch (NoSuchElementException e){
