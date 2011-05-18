@@ -131,6 +131,10 @@ public class Cancion {
 		return existe;
 	}
 	
+	public Estrofa getEstrofaPorNumero (int num) {
+		
+		return this.getEstrofas().get(num-1);
+	}
 	
 	public Estrofa buscarEstrofaEstilo(String estilo){
 		

@@ -1,6 +1,7 @@
 package canciones;
 
 import java.util.ArrayList;
+
 /**
  * Clase que representa una estrofa
  * 
@@ -8,7 +9,7 @@ import java.util.ArrayList;
  *
  */
 
-public class Estrofa {
+public class Estrofa implements Cloneable{
 	
 
 	/*################################################################################################################
@@ -44,6 +45,25 @@ public class Estrofa {
 		this.listaDeCompases = new ArrayList<Compas>();
 	}
 
+	 public Object clone(){
+	        Estrofa obj=null;
+	        try{
+	            obj=(Estrofa)super.clone();
+	        }catch(CloneNotSupportedException ex){
+	            System.out.println(" no se puede duplicar");
+	        }
+	        //((Estrofa)obj).setListaDeCompases((ArrayList)listaDeCompases.clone());
+	         
+	        ArrayList<Compas> nuevaLista = new ArrayList<Compas>(obj.getListaDeCompases().size());
+	        for (Compas nuevoCompas : obj.getListaDeCompases()) {
+	        	nuevaLista.add((Compas) nuevoCompas.clone());
+	        }
+	      
+	        obj.listaDeCompases = nuevaLista;
+	        
+	        
+	        return obj;
+	    }
 	/*################################################################################################################
 	 ###################						METODOS PUBLICOS				###################################### 
 	 ################################################################################################################# */
@@ -110,7 +130,7 @@ public class Estrofa {
 		this.nroEstrofaGemela = nroEstrofaGemela;
 	}
 
-
+	
 	
 	
 	
