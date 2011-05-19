@@ -11,15 +11,16 @@ import excepciones.CancionException;
 import excepciones.EstilosException;
 import excepciones.ValoresException;
 import grafica.Pantalla;
+
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import javax.swing.JFileChooser;
 
-import canciones.Cancion;
 import net.java.ao.EntityManager;
 import orm.Acordes;
 import orm.AcordesDTO;
@@ -30,7 +31,7 @@ import orm.Tonicas;
 import orm.TonicasDTO;
 import archivos.Archivos;
 import archivos.Estilos;
-import archivos.Utiles;
+import canciones.Cancion;
 
 //#########################################################################################
 /**
@@ -43,7 +44,6 @@ public class Aprendiz {
 
 	private final static String DIRECTORIO = "Directorio";
 	private final static String ARCHIVO = "Archivo genérico";
-	private int contConsultas;
 	private Pantalla pantalla;
 	private EntityManager manager;
 	private ListaValores miListaDeTonicas;
@@ -51,7 +51,6 @@ public class Aprendiz {
 	private ListaValores miListaDeDuraciones;
 	private ListaValores miListaDeEstilosPrincipales;
 	private MatrizEstilos miMatrizEstilos;
-	private String estiloPpal ="";
 	private Map<String, MatrizAcordes> MatrizEvolutiva;
 
 	//#########################################################################################
@@ -272,21 +271,18 @@ public class Aprendiz {
 				return;
 
 			//si se carga un directorio
-			if (tipo.compareTo(DIRECTORIO)==0){
-				try{	
-					String path = chooser.getSelectedFile()+"/";
-					String files;
-					File folder = new File(path);
-					escribir("Directorio a cargar :"+path);
-					File[] listOfFiles = folder.listFiles();
-					for (int i = 0; i < listOfFiles.length; i++) {
-						if (listOfFiles[i].isFile()) {
-							files = listOfFiles[i].getName();
-							this.cargarArchivoEnMatriz(path+files);
-						}
+			if (tipo.compareTo(DIRECTORIO)==0){	
+				String path = chooser.getSelectedFile()+"/";
+				String files;
+				File folder = new File(path);
+				File[] listOfFiles = folder.listFiles();
+				escribir("Directorio a cargar :" + path + " Cant: " + listOfFiles.length);
+				for (int i = 0; i < listOfFiles.length; i++) {
+					if (listOfFiles[i].isFile()) {
+						files = listOfFiles[i].getName();
+						System.out.println(i + " - Antes de cargar: " + path+files);
+						this.cargarArchivoEnMatriz(path+files);
 					}
-				}catch(NullPointerException e){
-					escribir("Error en lectura de directorio");
 				}
 			}
 			//si es un archivo
@@ -295,14 +291,14 @@ public class Aprendiz {
 			}
 
 			this.calcularAcumuladoDeMap(this.getMatrizEvolutiva());
-			this.miMatrizEstilos.calcularAcumulados();
+			this.getMiMatrizEstilos().calcularAcumulados();
 			//this.mostrarDatos();
 
 		}catch(NullPointerException e1){
 			escribir("Error: Aprendiz.iniciar()");
 		}	
 	}
-	
+
 	//#########################################################################################
 	/**
 	 * 
@@ -310,10 +306,10 @@ public class Aprendiz {
 	 */
 	//#########################################################################################
 	public void cargarArchivoEnMatriz(String nombreCancion) {
-		
+
 		escribir("Archivo a leer :"+ nombreCancion);
 		Archivos miArchivo = new Archivos();
-		
+
 		try {
 			if (miArchivo.leerArchivo(nombreCancion)){
 				this.procesarArchivo(miArchivo);
@@ -322,8 +318,45 @@ public class Aprendiz {
 			System.err.println(ee.getMessage());
 		} catch (ArchivosException ae) {
 			System.err.println(ae.getMessage());
+		} catch (ValoresException ve) {
+			System.err.println(ve.getMessage());
+		} catch (NullPointerException npe) {
+			System.out.println("Error en: " + miArchivo.getNombre());
 		}
-		
+	}
+
+	//#########################################################################################
+	/**
+	 * procesarArchivo
+	 * Se encarga de analizar una cancion extraida de un archivo
+	 * carga las matrices de acordes y de estilos, ademas obtiene tonica, tempo y duracion del tema
+	 * y los carga en sus listas correspondientes.
+	 * @param miArchivo
+	 * @throws EstilosException 
+	 * @throws ValoresException 
+	 **/
+	//#########################################################################################
+	private void procesarArchivo(Archivos miArchivo) throws EstilosException, ValoresException {
+
+		ArrayList<String> cancion=new ArrayList<String>();
+		ArrayList<String> cancionConEstilos=new ArrayList<String>();
+
+		cancion = miArchivo.getCancionAnalizada();
+		cancionConEstilos = miArchivo.getCancionAnalizadaConEstilo();//repeats , acordes  y estilos
+		Estilos.guardarEstilosEnMatriz(cancionConEstilos, this.getMiMatrizEstilos());
+		miArchivo.calcularEstiloPrincipal(cancionConEstilos);
+
+		// obtengo la matriz de acordes correspondiente al estilo principal
+		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(miArchivo.getEstiloPpal());
+		this.cargarCancion(cancion, miMatrizAcordes);
+
+		System.out.println(miArchivo.getNombre() + " Tempo: " + miArchivo.getTempo() + " Estilo: " + miArchivo.getEstiloPpal());
+
+		this.getMiListaDeEstilosPrincipales().agregarValor(miArchivo.getEstiloPpal());
+		this.getMiListaDeTonicas().agregarValor(miArchivo.getTonica(), miArchivo.getEstiloPpal());
+		this.getMiListaDeTempos().agregarValor(miArchivo.getTempo(), miArchivo.getEstiloPpal());
+		this.getMiListaDeDuraciones().agregarValor(String.valueOf(miArchivo.getDuracion()), miArchivo.getEstiloPpal());
+		escribir("LISTA DE ACORDES: "+cancion.toString());
 	}
 
 	//#########################################################################################
@@ -391,38 +424,6 @@ public class Aprendiz {
 		this.miListaDeDuraciones.listarValor();
 	}
 
-	//#########################################################################################
-	/**
-	 * procesarArchivo
-	 * Se encarga de analizar una cancion extraida de un archivo
-	 * carga las matrices de acordes y de estilos, ademas obtiene tonica, tempo y duracion del tema
-	 * y los carga en sus listas correspondientes.
-	 * @param miArchivo
-	 * @throws EstilosException 
-	 **/
-	//#########################################################################################
-	private void procesarArchivo(Archivos miArchivo) throws EstilosException {
-
-		ArrayList<String> cancion=new ArrayList<String>();
-		ArrayList<String> cancionConEstilos=new ArrayList<String>();
-
-		cancion = miArchivo.getCancionAnalizada();
-		cancionConEstilos = miArchivo.getCancionAnalizadaConEstilo();//repeats , acordes  y estilos
-		escribir("LISTA DE ACORDES: "+cancion.toString());
-		Estilos.guardarEstilosEnMatriz(cancionConEstilos, this.getMiMatrizEstilos());
-		this.setEstiloPpal(Estilos.deteminarEstiloPrincipal(cancionConEstilos));
-
-		// obtengo la matriz de acordes correspondiente al estilo principal
-		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(this.getEstiloPpal());
-		this.cargarCancion(cancion, miMatrizAcordes);
-
-		//System.out.print(" tema: " + miArchivo.getNombre() + " estiloPpal: " + this.getEstiloPpal());
-		this.miListaDeEstilosPrincipales.agregarValor(this.getEstiloPpal());
-		this.miListaDeTonicas.agregarValor(miArchivo.getTonica(), this.getEstiloPpal());
-		this.miListaDeTempos.agregarValor(miArchivo.getTempo(), this.getEstiloPpal());
-		this.miListaDeDuraciones.agregarValor(String.valueOf(miArchivo.getDuracion()), this.getEstiloPpal());	
-		cancion.clear();
-	}
 
 	//#########################################################################################
 	/**
@@ -434,17 +435,17 @@ public class Aprendiz {
 		Compositor miCompositor = new Compositor();
 		String tempo;
 		String duracion;
-		
+
 		try {
-			tempo = this.miListaDeTempos.obtenerMayorValorPorEstilo(estilo);
+			tempo = this.getMiListaDeTempos().obtenerMayorValorPorEstilo(estilo);
 		} catch (ValoresException e) {
-			e.getMessage();
+			System.err.println(e.getMessage());
 			return;
 		}
 		try {
-			duracion = this.miListaDeDuraciones.obtenerMayorValorPorEstilo(estilo);
+			duracion = this.getMiListaDeDuraciones().obtenerMayorValorPorEstilo(estilo);
 		} catch (ValoresException e) {
-			e.getMessage();
+			System.err.println(e.getMessage());
 			return;
 		}
 
@@ -456,17 +457,23 @@ public class Aprendiz {
 
 		//Obtengo la matriz de acordes correspondiente a el estilo principal
 		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(estilo);
-		
+
 		try {
-			Cancion nuevaCancion = miCompositor.componerCancion(miMatrizAcordes, this.miMatrizEstilos, tonica, estilo, Integer.parseInt(duracion), tempo);
+			Cancion nuevaCancion = miCompositor.componerCancion(miMatrizAcordes, this.getMiMatrizEstilos(), tonica, estilo, Integer.parseInt(duracion), tempo);
 			// genero el archivo .mma que contiene a la nueva cancion 
 			Archivos.generarArchivo(nuevaCancion);
 			// cargo en la matriz la nueva cancion que compuse
 			this.cargarArchivoEnMatriz(nuevaCancion.getNombre());
+			// vuelvo a calcular los acumulados para seguir componiendo
+			this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
+			this.getMiMatrizEstilos().calcularAcumulados();
+			
 		}  catch (CancionException e) {
 			System.err.println(e.getMessage());
+			return;
 		} catch (NumberFormatException e) {
 			System.err.println(e.getMessage());
+			return;
 		}
 	}
 
@@ -488,8 +495,14 @@ public class Aprendiz {
 			miMatriz.vaciarMatriz();
 		}
 
-		OcurrenciasAcordesDTO.EliminarTabla();
-		AcordesDTO.EliminarTabla();
+		this.getMiMatrizEstilos().vaciarMatriz();
+		this.getMiListaDeDuraciones().getLista().clear();
+		this.getMiListaDeEstilosPrincipales().getLista().clear();
+		this.getMiListaDeTempos().getLista().clear();
+		this.getMiListaDeTonicas().getLista().clear();
+
+		//OcurrenciasAcordesDTO.EliminarTabla();
+		//AcordesDTO.EliminarTabla();
 	}
 
 	//#########################################################################################
@@ -535,9 +548,7 @@ public class Aprendiz {
 		for (Valores val : listaValores) {
 			miLista.add(val.getEstilo());
 		}
-
 		return miLista;
-
 	}
 
 	//#########################################################################################
@@ -583,24 +594,6 @@ public class Aprendiz {
 	//#########################################################################################
 	public void setMiListaDeTonicas(ListaValores miListaDeTonicas) {
 		this.miListaDeTonicas = miListaDeTonicas;
-	}
-
-	//#########################################################################################
-	/**
-	 * getContConsultas
-	 **/
-	//#########################################################################################
-	public int getContConsultas() {
-		return contConsultas;
-	}
-
-	//#########################################################################################
-	/**
-	 * setContConsultas
-	 **/
-	//#########################################################################################
-	public void setContConsultas(int contConsultas) {
-		this.contConsultas = contConsultas;
 	}
 
 	//#########################################################################################
@@ -659,24 +652,6 @@ public class Aprendiz {
 
 	//#########################################################################################
 	/**
-	 * getEstiloPpal
-	 **/
-	//#########################################################################################
-	public String getEstiloPpal() {
-		return estiloPpal;
-	}
-
-	//#########################################################################################
-	/**
-	 * setEstiloPpal
-	 **/
-	//#########################################################################################
-	public void setEstiloPpal(String estiloPpal) {
-		this.estiloPpal = estiloPpal;
-	}
-
-	//#########################################################################################
-	/**
 	 * getMiListaDeDuraciones
 	 **/
 	//#########################################################################################
@@ -707,8 +682,7 @@ public class Aprendiz {
 	 * setMiListaDeEstilosPrincipales
 	 **/
 	//#########################################################################################
-	public void setMiListaDeEstilosPrincipales(
-			ListaValores miListaDeEstilosPrincipales) {
+	public void setMiListaDeEstilosPrincipales(ListaValores miListaDeEstilosPrincipales) {
 		this.miListaDeEstilosPrincipales = miListaDeEstilosPrincipales;
 	}
 }

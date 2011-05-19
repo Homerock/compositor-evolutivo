@@ -378,6 +378,11 @@ public class Estilos {
 			}
 		}				
 		String estiloPpal = calcularEstiloPrincipal();//calcula cual es el estilo ppal
+		
+		if (estiloPpal == null) {
+			throw new EstilosException("No se pudo determinar el estilo principal - Archivo mal formado. "+Estilos.class);
+		}
+		
 		return estiloPpal;
 	}
 

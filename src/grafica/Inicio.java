@@ -1,8 +1,7 @@
 package grafica;
 
-import net.java.ao.EntityManager;
 import orm.Conexion;
-
+import net.java.ao.EntityManager;
 import compositor.Aprendiz;
 
 

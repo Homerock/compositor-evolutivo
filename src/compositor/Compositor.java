@@ -4,26 +4,21 @@ import estructura.AcordesFila;
 import estructura.EstilosFila;
 import estructura.MatrizAcordes;
 import estructura.MatrizEstilos;
-import estructura.Valores;
 import excepciones.AcordesException;
-import excepciones.ArchivosException;
 import excepciones.CancionException;
-import excepciones.EstilosException;
 import grafica.Pantalla;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
-import canciones.*;
-
-import archivos.Archivos;
 import archivos.Utiles;
+import canciones.Acorde;
+import canciones.Cancion;
+import canciones.Compas;
+import canciones.Estrofa;
 
 
 /**
