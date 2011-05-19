@@ -31,10 +31,15 @@ public class ListaValores {
 	}
 
 
-	/**---------------------------------------------------------------------------
-	  * 
-	  *---------------------------------------------------------------------------*/
-	public void agregarValor(String valor, String estilo) {
+	/**
+	 * 
+	 * @throws ValoresException 
+	 */
+	public void agregarValor(String valor, String estilo) throws ValoresException {
+		
+		if (valor == null) {
+			throw new ValoresException("El valor a agregar es incorrecto. " + ListaValores.class);
+		}
 		
 		ArrayList<Valores> listaValores = (ArrayList<Valores>) this.getLista();
 		

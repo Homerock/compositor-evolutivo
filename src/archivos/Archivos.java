@@ -18,6 +18,7 @@ import canciones.Compas;
 import canciones.Estrofa;
 
 import excepciones.ArchivosException;
+import excepciones.EstilosException;
 
 //#########################################################################################
 /**
@@ -106,23 +107,17 @@ public class Archivos {
 			try {
 				this.setTonica(this.getCancionAnalizada().get(0));
 			} catch (IndexOutOfBoundsException e) {
-				System.out.println("El formato del archivo es incorrecto - " + nombreArch);
 				reader.close();
-				return false;
+				throw new ArchivosException("Error al obtener la tonica de la canción."+Archivos.class);
 			}
-
 			reader.close();
-
 			return true;//todo ok loco
 
-
 		} catch (FileNotFoundException e) {
-			throw new ArchivosException("El Archivo '"+nombreArch+"' No existe.");
+			throw new ArchivosException("El Archivo '"+nombreArch+"' No existe."+Archivos.class);
 		} catch (IOException e1) {
-			throw new ArchivosException("Error en la lectura de archivo :"+nombreArch);
-			
+			throw new ArchivosException("Error en la lectura de archivo :"+nombreArch + ". "+Archivos.class);
 		}
-
 	}
 
 	//#########################################################################################
@@ -133,6 +128,11 @@ public class Archivos {
 	//#########################################################################################
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+	
+
+	public String getNombre() {
+		return nombre;
 	}
 
 	//#########################################################################################
@@ -324,14 +324,14 @@ public class Archivos {
 			}else {
 				
 				if (linea.startsWith(Utiles.NUEVO_ESTILO)){
-					throw new ArchivosException("ArchivosException : No contemplamos definiciones de nuevos estilos");
+					throw new ArchivosException("No contemplamos definiciones de nuevos estilos. "+Archivos.class);
 				}
 				if(Utiles.cadenaContienePatron(linea, Utiles.COMIENZO_DE_VARIABLE)){
 					//ej :
 					//Set Pass 1
 					//Groove $Pass BossaNova BossaNovaSus BossaNova1Sus
 
-					throw new ArchivosException("ArchivosException : No contemplamos variables en definicion de estilos");
+					throw new ArchivosException("No contemplamos variables en definicion de estilos."+Archivos.class);
 				}
 				
 				//me fijo si esta la palabra repeat en una cadena, ya que nos intersa, y la agrego en el arraylist
@@ -349,6 +349,11 @@ public class Archivos {
 		}
 	}
 
+	public void calcularEstiloPrincipal(ArrayList<String> cancionConEstilos) throws EstilosException {
+		
+		String estilo = Estilos.deteminarEstiloPrincipal(cancionConEstilos);
+		setEstiloPpal(estilo);
+	}
 	
 	//#########################################################################################
 	/**
