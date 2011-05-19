@@ -25,12 +25,12 @@ import canciones.*;
 import archivos.Archivos;
 import archivos.Utiles;
 
-//################################################################################
+
 /**
   * @author Sebastian Pazos , Yamil Gomez
   *
   **/
-//################################################################################
+
 public class Compositor {
 	
 	Pantalla pantalla;
