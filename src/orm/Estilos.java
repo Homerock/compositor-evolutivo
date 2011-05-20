@@ -6,17 +6,30 @@ public interface Estilos extends Entity {
 
 	public String getNombre();
 	public void setNombre(String nombre);
+	//contadores de compases 
+	public int getCantUnCompas();
+	public void setCantUnCompas(int cantUnCompas);
 	
-	public int getCompasesDeDosTiempos();
-	public void setCompasesDeDosTiempos(int compasesDe2Tiempos);
+	public int getCantDosCompases();
+	public void setCantDosCompases(int cantDosCompases);
 	
-	public int getCompasesDeCuatroTiempos();
-	public void setCompasesDeCuatroTiempos(int compasesDe4Tiempos);
+	public int getCantCuatroCompases();
+	public void setCantCuatroCompases(int cantCuatroCompases);
 	
-	public int getCompasesDeSeisTiempos();
-	public void setCompasesDeSeisTiempos(int compasesDe6Tiempos);
+	public int getCantOchoCompases();
+	public void setCantOchoCompases(int cantOchoCompases);
+	//contadores de acordes en un compas
+	public int getUnAcordeEnCompas();
+	public void setUnAcordeEnCompas(int unAcordeEnCompas);
 	
-	public int getCompasesDeOchoTiempos();
-	public void setCompasesDeOchoTiempos(int compasesDe8Tiempos);
+	public int getDosAcordesEnCompas();
+	public void setDosAcordesEnCompas(int dosAcordesEnCompas);
+	
+	public int getTresAcordesEnCompas();
+	public void TresAcordesEnCompas(int tresAcordesEnCompas);
+	
+	public int getCuatroAcordesEnCompas();
+	public int setCuatroAcordesEnCompas(int cuatroAcordesEnCompas);
+	
 	
 }

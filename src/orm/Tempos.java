@@ -4,8 +4,8 @@ import net.java.ao.Entity;
 
 public interface Tempos extends Entity {
 
-	public int getTempo();
-	public void setTempo(int tempo);
+	public String getTempo();
+	public void setTempo(String tempo);
 	
 	public int getCantidad();
 	public void setCantidad(int cantidad);
