@@ -129,9 +129,9 @@ public class Aprendiz {
 
 			try {
 				if (AcordesDTO.existe(this.manager, nombreAPpal)) {
-					AcordesDTO.Actualizar(this.manager, nombreAPpal, acordePpal.getValorAcumuladoFila());
+					AcordesDTO.actualizar(this.manager, nombreAPpal, acordePpal.getValorAcumuladoFila());
 				} else {
-					AcordesDTO.Insertar(this.manager, nombreAPpal, acordePpal.getValorAcumuladoFila());
+					AcordesDTO.insertar(this.manager, nombreAPpal, acordePpal.getValorAcumuladoFila());
 				}
 
 				//ahora vamos a cargar las ocurrencias 
@@ -143,7 +143,7 @@ public class Aprendiz {
 					escribir(nombreASec + " " + va.getValor());//metodo para el log de la interfaz
 
 					if (!AcordesDTO.existe(this.manager, nombreASec)) {
-						AcordesDTO.Insertar(this.manager, nombreASec, 0);
+						AcordesDTO.insertar(this.manager, nombreASec, 0);
 					}
 					actualizarBDOcurrencias(nombreAPpal, nombreASec, va.getValor(), estiloPpal);
 				}
