@@ -9,6 +9,7 @@ import estructura.Valores;
 import excepciones.ArchivosException;
 import excepciones.CancionException;
 import excepciones.EstilosException;
+import excepciones.ORMException;
 import excepciones.ValoresException;
 import grafica.Pantalla;
 
@@ -147,10 +148,16 @@ public class Aprendiz {
 					}
 					actualizarBDOcurrencias(nombreAPpal, nombreASec, va.getValor(), estiloPpal);
 				}
+		
 			} catch (SQLException e1) {
 				System.out.println("Error en actualizar base");
 				e1.printStackTrace();
+				
+			} catch (ORMException e2) {
+				System.err.println(e2.getMessage());
 			}
+			
+			
 			t1=System.currentTimeMillis();
 			escribir("tiempo : "+ (t1-t0)/1000 + " segundos ");
 		}	
@@ -211,6 +218,8 @@ public class Aprendiz {
 		} catch (SQLException e) {
 			System.out.println("Error en actualizar ocurrencias");
 			e.printStackTrace();
+		} catch (ORMException e) {
+			System.err.println(e.getMessage());
 		}
 	}
 
