@@ -5,9 +5,13 @@ import java.util.HashMap;
 import java.util.Map;
 import net.java.ao.EntityManager;
 import net.java.ao.Query;
+import org.postgresql.util.PSQLException;
+import excepciones.ORMException;
+
 //################################################################################################################
 /**
- * Clase que tiene los metodos para el manejo de la persistencia en la base de datos
+ * Clase que tiene los metodos para el manejo de la persistencia en la base de datos.
+ * 
  * 
  * @author SEBASTIAN PAZOS - YAMIL GOMEZ
  *
@@ -23,13 +27,54 @@ public class AcordesDTO {
 	 * @param nombre del acorde
 	 * @param cantidad de apariciones
 	 * @throws SQLException
+	 * @throws ORMException 
 	 */
 	//################################################################################################################
-	public static void insertar(EntityManager manager, String nombre, int cant) throws SQLException {
+	public static void insertar(EntityManager manager, String acorde, int cant) throws SQLException, ORMException {
+		
+		if(acorde ==null || acorde.trim().length()==0){
+			throw new ORMException("El Acorde a Insertar esta vacio .");
+		}
+		
 		Map <String,Object> parametros = new HashMap<String, Object>();
-		parametros.put("nombre", nombre);
-		parametros.put("cantapariciones", cant);
-		manager.create(Acordes.class, parametros);
+		try{
+			parametros.put("nombre", acorde);
+			parametros.put("cantapariciones", cant);
+			manager.create(Acordes.class, parametros);
+			
+		}catch(PSQLException e){
+			throw new ORMException("El Acorde a Insertar '"+acorde+"' , ya existe .");
+		}
+		return;
+	}
+	
+	
+	//################################################################################################################
+	/**
+	 *  Inserta un acorde en la base de datos. No se permite repetir los acordes.
+	 *  con cantidad de apariciones en cero.
+	 * 
+	 * @param manager
+	 * @param acorde
+	 * @throws SQLException
+	 * @throws ORMException
+	 * 
+	 *///################################################################################################################
+	
+	public static void insertar(EntityManager manager, String acorde) throws SQLException, ORMException {
+		
+		if(acorde ==null || acorde.trim().length()==0){
+			throw new ORMException("El Acorde a Insertar esta vacio .");
+		}
+		
+		Map <String,Object> parametros = new HashMap<String, Object>();
+		try{
+			parametros.put("nombre", acorde);
+			manager.create(Acordes.class, parametros);
+			
+		}catch(PSQLException e){
+			throw new ORMException("El Acorde a Insertar '"+acorde+"' , ya existe .");
+		}
 		return;
 	}
 	//################################################################################################################
@@ -45,7 +90,6 @@ public class AcordesDTO {
 		Acordes[] ac = manager.find(Acordes.class, Query.select().where("nombre like '" + nombre + "'"));
 		manager.delete(ac);
 		
-		
 	}
 	
 	//################################################################################################################
@@ -56,12 +100,19 @@ public class AcordesDTO {
 	 * @param nombre
 	 * @param contador
 	 * @throws SQLException
+	 * @throws ORMException 
 	 */
 	//################################################################################################################
-	public static void actualizar(EntityManager manager, String acorde, int contador) throws SQLException{
-		Acordes[] ac = manager.find(Acordes.class, Query.select().where("nombre like '" + acorde + "'"));
-		ac[0].setCantApariciones(contador);
-		ac[0].save();
+	public static void actualizar(EntityManager manager, String acorde, int contador) throws SQLException, ORMException{
+		try{
+			
+			Acordes[] ac = manager.find(Acordes.class, Query.select().where("nombre like '" + acorde + "'"));
+			ac[0].setCantApariciones(contador);
+			ac[0].save();
+			
+		}catch(ArrayIndexOutOfBoundsException e){
+			throw new ORMException("No existe el Acorde '"+acorde+"' a actualizar.");
+		}
 	}
 	
 	//################################################################################################################
@@ -88,12 +139,16 @@ public class AcordesDTO {
 	 * @param nombre acorde
 	 * @return lista de acordes
 	 * @throws SQLException
+	 * @throws ORMException 
 	 */
 	//################################################################################################################
-	public static Acordes buscar(EntityManager manager, String nombre) throws SQLException{
-		Acordes[] ac = manager.find(Acordes.class, Query.select().where("nombre like '" + nombre + "'"));
-		return ac[0];
-		
+	public static Acordes buscar(EntityManager manager, String acorde) throws SQLException, ORMException{
+		try{
+			Acordes[] ac = manager.find(Acordes.class, Query.select().where("nombre like '" + acorde + "'"));
+			return ac[0];
+		}catch(ArrayIndexOutOfBoundsException e){
+			throw new ORMException("No existe el Acorde '"+acorde+"' .");
+		}
 	}
 	
 	

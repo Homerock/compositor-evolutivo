@@ -1,6 +1,7 @@
 package orm;
 
-import net.java.ao.*;
+import net.java.ao.Entity;
+import net.java.ao.OneToMany;
 
 public interface Acordes extends Entity {
 	
