@@ -26,10 +26,10 @@ public interface Estilos extends Entity {
 	public void setDosAcordesEnCompas(int dosAcordesEnCompas);
 	
 	public int getTresAcordesEnCompas();
-	public void TresAcordesEnCompas(int tresAcordesEnCompas);
+	public void setTresAcordesEnCompas(int tresAcordesEnCompas);
 	
 	public int getCuatroAcordesEnCompas();
-	public int setCuatroAcordesEnCompas(int cuatroAcordesEnCompas);
+	public void setCuatroAcordesEnCompas(int cuatroAcordesEnCompas);
 	
 	
 }
