@@ -57,10 +57,11 @@ alter table duracion add constraint duracion_unique_key unique(duracion,estilosI
 
 create table ocurrenciasEstilos(
 	id integer not null PRIMARY KEY DEFAULT nextval('ocurrenciasestilos_id_seq'),
-	estiloPrincipalID integer default null references estilos(id),
-	estiloSecundarioID integer default null references estilos(id),
+	estiloPrincipalID integer not null references estilos(id),
+	estiloSecundarioID integer not null references estilos(id),
 	cantidad integer default 0
 );
+alter table ocurrenciasEstilos add constraint ocurrenciasEstilos_unique_key unique(estiloPrincipalID,estiloSecundarioID);
 
 create table tempos(
 	id integer not null PRIMARY KEY DEFAULT nextval('tempos_id_seq'),
