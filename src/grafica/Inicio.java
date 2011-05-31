@@ -1,5 +1,6 @@
 package grafica;
 
+import archivos.Reconocedor;
 import orm.Conexion;
 import net.java.ao.EntityManager;
 import compositor.Aprendiz;
@@ -17,17 +18,14 @@ public class Inicio {
 	public static void main(String args[]){
 		
 			EntityManager manager = Conexion.getConexionPsql();
-			try {
-				Aprendiz aprendiz = new Aprendiz();
-				//System.out.println("Objeto Aprendiz: "+aprendiz);
-				//aprendiz.levantarBase(manager);
-				//new Pantalla(aprendiz);
-				Interfaz grafica = new Interfaz(aprendiz);
-				while(true);
-			} catch (NullPointerException e) {
-				System.out.println(e.getMessage());
-			}
 			
+			Aprendiz aprendiz = new Aprendiz();
+			Reconocedor.cargarTablasAcordes();
+			//System.out.println("Objeto Aprendiz: "+aprendiz);
+			//aprendiz.levantarBase(manager);
+			//new Pantalla(aprendiz);
+			Interfaz grafica = new Interfaz(aprendiz);
+			while(true);
 	}
 	
 }

@@ -5,6 +5,8 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import archivos.Reconocedor;
+
 import compositor.Aprendiz;
 
 import sun.security.action.GetLongAction;
@@ -77,27 +79,9 @@ public class Interfaz implements ItemListener{
 	private JTextField cantCompasesAvanzadoText;
 	private JTextField tempoAvanzadoText;
 	
-	
-	public Interfaz() {
-		
-		framePrincipal = new JFrame("Homerock");
-		menuPrincipal = new JMenuBar();
-		opcion1 = new JMenu("Archivo");
-		opcion2 = new JMenu("Base de datos");
-		opcion3 = new JMenu("Log");
-		opcion4 = new JMenu("Ayuda");
-		subOpcion1_1 = new JMenuItem("Cargar (Aprender)");
-		subOpcion1_2 = new JMenuItem("Salir");
-		subOpcion2_1 = new JMenuItem("Actualizar");
-		subOpcion2_2 = new JMenuItem("Limpiar");
-		subOpcion3_1 = new JMenuItem("Ver log");
-		subOpcion4_1 = new JMenuItem("Acerca de...");
-		pestania = new JTabbedPane(TABS_POSICION);
-	}
-	
 	public Interfaz(Aprendiz miAprendiz) {
 		
-		framePrincipal = new JFrame("Homerock");
+		framePrincipal = new JFrame("Homerock -1.0");
 		menuPrincipal = new JMenuBar();
 		opcion1 = new JMenu("Archivo");
 		opcion2 = new JMenu("Base de datos");
@@ -110,11 +94,9 @@ public class Interfaz implements ItemListener{
 		subOpcion3_1 = new JMenuItem("Ver log");
 		subOpcion4_1 = new JMenuItem("Acerca de...");
 		pestania = new JTabbedPane(TABS_POSICION);
-		System.out.println("Objeto Aprendiz: "+miAprendiz);
 		aprendiz = miAprendiz;
 		aprendiz.setInterfaz(this);
 		crearFrame();
-		
 	}
 	
 	public void crearFrame() {
@@ -244,7 +226,7 @@ public class Interfaz implements ItemListener{
 	private void armarPanelEditar() {
 	
 		panelEditar = new JPanel();
-		label2 = new JLabel("VER/EDITAR");
+		label2 = new JLabel("VER - EDITAR");
 		panelEditar.add(label2);
 	}
 	
@@ -285,8 +267,10 @@ public class Interfaz implements ItemListener{
 		ArrayList<String> lista = aprendiz.getComboEstilos();
 		
 		jComboEstiloBasico.removeAllItems();
-		for (String estilo : lista) {
+		for (String estilo : lista) { 
 			Interfaz.this.jComboEstiloBasico.addItem(estilo);
+			Interfaz.this.jComboEstiloIntermedio.addItem(estilo);
+			Interfaz.this.jComboEstiloAvanzado.addItem(estilo);
 		}
 	}
 	
@@ -296,18 +280,14 @@ public class Interfaz implements ItemListener{
 		public void actionPerformed(ActionEvent e) {
 			
 			if (e.getActionCommand() == SALIR) {
-				JOptionPane acercaDe = new JOptionPane(this);
-				int resultado = acercaDe.showConfirmDialog(framePrincipal, "Desea salir?","Salir", SI_NO_OPCION);
-				acercaDe.setVisible(true);
+				int resultado = JOptionPane.showConfirmDialog(framePrincipal, "Desea salir?","Salir", SI_NO_OPCION);
 				if (resultado == OPCION_SI) {
 					System.exit(0);
 				}
 			}
 			
 			if (e.getActionCommand() == ACERCA_DE) {
-				JOptionPane acercaDe = new JOptionPane(this);
-				acercaDe.showConfirmDialog(framePrincipal, "Homerock llego... nada será igual","Acerca de...", OK_ACEPTAR);
-				acercaDe.setVisible(true);
+				JOptionPane.showConfirmDialog(framePrincipal, "Homerock llego... nada será igual","Acerca de...", OK_ACEPTAR);
 			}
 			
 			if (e.getActionCommand() == APRENDER) {
@@ -323,15 +303,51 @@ public class Interfaz implements ItemListener{
 					System.out.println("basico");
 					String tonica = Interfaz.this.tonicaBasicoText.getText();
 					String estilo = (String) Interfaz.this.jComboEstiloBasico.getSelectedItem();
+					if (tonica.trim().equals("") || estilo == null) {
+						JOptionPane.showConfirmDialog(framePrincipal, "Falta ingresar datos","Componer", OK_ACEPTAR);
+						return;
+					}
+					if (!Reconocedor.esAcordeValido(tonica)) {
+						JOptionPane.showConfirmDialog(framePrincipal, "El acorde de tonica es incorrecto","Componer", OK_ACEPTAR);
+						return;
+					}
 					aprendiz.componer(tonica, estilo);	//lanus campeon - lunes 30-05 18:21Hs
 				}
 				
 				if (tipoComposicion.equals(TIPO_INTERMEDIO)){
 					System.out.println("Intermedio");
+					String tonica = Interfaz.this.tonicaIntermedioText.getText();
+					String estilo = (String) Interfaz.this.jComboEstiloIntermedio.getSelectedItem();
+					String tempo = Interfaz.this.tempoIntermedioText.getText();
+					String cantCompases = Interfaz.this.cantCompasesIntermedioText.getText();
+					if (tonica.trim().equals("") || estilo == null || tempo.trim().equals("") || cantCompases.trim().equals("")) {
+						JOptionPane.showConfirmDialog(framePrincipal, "Falta ingresar datos","Componer", OK_ACEPTAR);
+						return;
+					}
+					if (!Reconocedor.esAcordeValido(tonica)) {
+						JOptionPane.showConfirmDialog(framePrincipal, "El acorde de tonica es incorrecto","Componer", OK_ACEPTAR);
+						return;
+					}
+					aprendiz.componer(tonica, estilo, tempo, cantCompases);
 				}
 
 				if (tipoComposicion.equals(TIPO_AVANZADO)){
-					System.out.println("avan");
+					System.out.println("avanzada");
+					String tonica = Interfaz.this.tonicaAvanzadoText.getText();
+					String estilo = (String) Interfaz.this.jComboEstiloAvanzado.getSelectedItem();
+					String tempo = Interfaz.this.tempoAvanzadoText.getText();
+					String cantCompases = Interfaz.this.cantCompasesAvanzadoText.getText();
+					// FALTA LA ESTRUCTURA
+					//********************
+					if (tonica.trim().equals("") || estilo == null || tempo.trim().equals("") || cantCompases.trim().equals("")) {
+						JOptionPane.showConfirmDialog(framePrincipal, "Falta ingresar datos","Componer", OK_ACEPTAR);
+						return;
+					}
+					if (!Reconocedor.esAcordeValido(tonica)) {
+						JOptionPane.showConfirmDialog(framePrincipal, "El acorde de tonica es incorrecto","Componer", OK_ACEPTAR);
+						return;
+					}
+					aprendiz.componer(tonica, estilo, tempo, cantCompases);
 				}	
 			}
 		}
@@ -375,10 +391,10 @@ public class Interfaz implements ItemListener{
 		}
 	}
 	
-	public static void main(String arg[]) {
+	/*public static void main(String arg[]) {
 		Interfaz miInterfaz = new Interfaz();
 		miInterfaz.crearFrame();
-	}
+	}*/
 	
 }
 
