@@ -209,14 +209,15 @@ public class Aprendiz {
 			acordePpal = AcordesDTO.buscar(this.manager, nombreAPpal);
 
 			Acordes acordeSec = AcordesDTO.buscar(this.manager, nombreASec);
+			//ehh es extremo(arreglar).
+			
+			//if (OcurrenciasAcordesDTO.existe(this.manager, acordePpal, acordeSec)) {
+			//	OcurrenciasAcordesDTO.actualizar(this.manager, acordePpal, acordeSec, cantidad);
 
-			if (OcurrenciasAcordesDTO.existe(this.manager, acordePpal, acordeSec)) {
-				OcurrenciasAcordesDTO.Actualizar(this.manager, acordePpal, acordeSec, cantidad);
-
-			} else {
-				orm.Estilos est = EstilosDTO.buscar(this.manager, estiloPpal);
-				OcurrenciasAcordesDTO.Insertar(this.manager, acordePpal, acordeSec, cantidad, est);
-			}	
+			//} else {
+				//orm.Estilos est = EstilosDTO.buscar(this.manager, estiloPpal);
+			//	OcurrenciasAcordesDTO.Insertar(this.manager, acordePpal, acordeSec, cantidad, est);
+		//	}	
 
 		} catch (SQLException e) {
 			System.out.println("Error en actualizar ocurrencias");
