@@ -11,6 +11,7 @@ import excepciones.CancionException;
 import excepciones.EstilosException;
 import excepciones.ORMException;
 import excepciones.ValoresException;
+import grafica.Interfaz;
 import grafica.Pantalla;
 
 import java.io.File;
@@ -46,6 +47,7 @@ public class Aprendiz {
 	private final static String DIRECTORIO = "Directorio";
 	private final static String ARCHIVO = "Archivo genérico";
 	private Pantalla pantalla;
+	private Interfaz interfaz;
 	private EntityManager manager;
 	private ListaValores miListaDeTonicas;
 	private ListaValores miListaDeTempos;
@@ -60,6 +62,7 @@ public class Aprendiz {
 	 **/
 	//#########################################################################################
 	public Aprendiz(){	
+		
 		this.setMatrizEvolutiva(new HashMap<String, MatrizAcordes>());
 		this.setMiMatrizEstilos(new MatrizEstilos());
 		this.setMiListaDeTonicas(new ListaValores());
@@ -126,7 +129,7 @@ public class Aprendiz {
 			Map.Entry e = (Map.Entry)it.next();
 			acordePpal = (AcordesFila) e.getValue();
 			nombreAPpal = (String) e.getKey();
-			escribir(" ---- Acorde ppal :"+ nombreAPpal +" ---- Total :" + acordePpal.getValorAcumuladoFila());
+			System.out.println(" ---- Acorde ppal :"+ nombreAPpal +" ---- Total :" + acordePpal.getValorAcumuladoFila());
 
 			try {
 				if (AcordesDTO.existe(this.manager, nombreAPpal)) {
@@ -141,7 +144,7 @@ public class Aprendiz {
 				for(ValorAcordes va : listaOc) {
 
 					nombreASec = va.getAcordeSecundario();
-					escribir(nombreASec + " " + va.getValor());//metodo para el log de la interfaz
+					System.out.println(nombreASec + " " + va.getValor());//metodo para el log de la interfaz
 
 					if (!AcordesDTO.existe(this.manager, nombreASec)) {
 						AcordesDTO.insertar(this.manager, nombreASec, 0);
@@ -159,7 +162,7 @@ public class Aprendiz {
 			
 			
 			t1=System.currentTimeMillis();
-			escribir("tiempo : "+ (t1-t0)/1000 + " segundos ");
+			System.out.println("tiempo : "+ (t1-t0)/1000 + " segundos ");
 		}	
 
 		/*Iterator itTonicas = mapTonicas.entrySet().iterator();
@@ -285,7 +288,7 @@ public class Aprendiz {
 				String files;
 				File folder = new File(path);
 				File[] listOfFiles = folder.listFiles();
-				escribir("Directorio a cargar :" + path + " Cant: " + listOfFiles.length);
+				System.out.println("Directorio a cargar :" + path + " Cant: " + listOfFiles.length);
 				for (int i = 0; i < listOfFiles.length; i++) {
 					if (listOfFiles[i].isFile()) {
 						files = listOfFiles[i].getName();
@@ -304,7 +307,7 @@ public class Aprendiz {
 			//this.mostrarDatos();
 
 		}catch(NullPointerException e1){
-			escribir("Error: Aprendiz.iniciar()");
+			System.out.println("Error: Aprendiz.iniciar()");
 		}	
 	}
 
@@ -316,7 +319,7 @@ public class Aprendiz {
 	//#########################################################################################
 	public void cargarArchivoEnMatriz(String nombreCancion) {
 
-		escribir("Archivo a leer :"+ nombreCancion);
+		System.out.println("Archivo a leer :"+ nombreCancion);
 		Archivos miArchivo = new Archivos();
 
 		try {
@@ -324,11 +327,11 @@ public class Aprendiz {
 				this.procesarArchivo(miArchivo);
 			}
 		} catch (EstilosException ee) {
-			System.err.println(ee.getMessage());
+			System.err.println(ee.getMessage() + " " + Estilos.class);
 		} catch (ArchivosException ae) {
-			System.err.println(ae.getMessage());
+			System.err.println(ae.getMessage() + " " + Archivos.class);
 		} catch (ValoresException ve) {
-			System.err.println(ve.getMessage());
+			System.err.println(ve.getMessage() + " " + Valores.class);
 		} catch (NullPointerException npe) {
 			System.out.println("Error en: " + miArchivo.getNombre());
 		}
@@ -355,17 +358,17 @@ public class Aprendiz {
 		Estilos.guardarEstilosEnMatriz(cancionConEstilos, this.getMiMatrizEstilos());
 		miArchivo.calcularEstiloPrincipal(cancionConEstilos);
 
-		// obtengo la matriz de acordes correspondiente al estilo principal
-		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(miArchivo.getEstiloPpal());
-		this.cargarCancion(cancion, miMatrizAcordes);
-
 		System.out.println(miArchivo.getNombre() + " Tempo: " + miArchivo.getTempo() + " Estilo: " + miArchivo.getEstiloPpal());
-
 		this.getMiListaDeEstilosPrincipales().agregarValor(miArchivo.getEstiloPpal());
 		this.getMiListaDeTonicas().agregarValor(miArchivo.getTonica(), miArchivo.getEstiloPpal());
 		this.getMiListaDeTempos().agregarValor(miArchivo.getTempo(), miArchivo.getEstiloPpal());
 		this.getMiListaDeDuraciones().agregarValor(String.valueOf(miArchivo.getDuracion()), miArchivo.getEstiloPpal());
-		escribir("LISTA DE ACORDES: "+cancion.toString());
+		
+		// obtengo la matriz de acordes correspondiente al estilo principal
+		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(miArchivo.getEstiloPpal());
+		this.cargarCancion(cancion, miMatrizAcordes);
+		
+		System.out.println("LISTA DE ACORDES: "+cancion.toString());
 	}
 
 	//#########################################################################################
@@ -472,7 +475,7 @@ public class Aprendiz {
 			// genero el archivo .mma que contiene a la nueva cancion 
 			Archivos.generarArchivo(nuevaCancion);
 			// cargo en la matriz la nueva cancion que compuse
-			this.cargarArchivoEnMatriz(nuevaCancion.getNombre());
+			this.cargarArchivoEnMatriz(nuevaCancion.getNombre()+".mma");
 			// vuelvo a calcular los acumulados para seguir componiendo
 			this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
 			this.getMiMatrizEstilos().calcularAcumulados();
@@ -565,8 +568,17 @@ public class Aprendiz {
 	 * setInterfaz
 	 **/
 	//#########################################################################################
-	public void setInterfaz(Pantalla pantalla) {
-		this.pantalla = pantalla;
+	public void setInterfaz(Pantalla interfaz) {
+		this.pantalla = interfaz;
+	}
+	
+	//#########################################################################################
+	/**
+	 * setInterfaz
+	 **/
+	//#########################################################################################
+	public void setInterfaz(Interfaz interfaz) {
+		this.interfaz = interfaz;
 	}
 
 	//#########################################################################################
