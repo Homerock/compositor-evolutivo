@@ -80,7 +80,7 @@ public class Compositor {
 		
 		//PARA VER LA ESTRUCTURA DE LA CANCION
 		//System.out.println(nuevaCancion.toString());
-		// FALTA ARMAR UN ARCHIVO DE TEXTO Y CREAR EL MIDI
+
 		if (DEBUG) {
 			ArrayList<Estrofa> todasLasEstrofas = nuevaCancion.getEstrofas();
 			System.out.println("CANCION: " + nuevaCancion.getNombre());
