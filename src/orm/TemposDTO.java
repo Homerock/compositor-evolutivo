@@ -19,13 +19,13 @@ import excepciones.ORMException;
  * 
  * @author SEBASTIAN PAZOS - YAMIL GOMEZ
  *
- *///################################################################################################################
+ *///#############################################################################################################
 
 public class TemposDTO {
 	
 	//################################################################################################################
 	/**
-	 * Inserta un tempo en la base de datos, para un estilo determinado. No se permite repetir los tempos.
+	 * Inserta un tempo en la base de datos, para un estilo determinado. No se permite repetir los tempos asociado a un estilo.
 	 * 
 	 * @param manager
 	 * @param tempo
@@ -156,6 +156,21 @@ public class TemposDTO {
 		return tempos;
 	}
 	
-	
+	//################################################################################################################
+	/**
+	 * Selecciona todos los tempos de la base de datos, de un estilo determinado.
+	 * 
+	 * @param manager
+	 * @return lista de tempos
+	 * @throws SQLException
+	 * 
+	 *///################################################################################################################
+	public static Tempos[] seleccionarTodos(EntityManager manager,Estilos estilo) throws SQLException{
+		
+		Tempos[] tempos = manager.find(Tempos.class,Query.select().where(" estilosid = '"+estilo.getID()+"' "));
+		return tempos;
+			
+		
+	}
 	
 }
