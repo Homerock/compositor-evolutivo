@@ -38,19 +38,21 @@ alter table estilos add constraint estilos_unique_key unique(nombre);
 
 create table ocurrenciasAcordes(
 	id integer not null PRIMARY KEY DEFAULT nextval('ocurrenciasacordes_id_seq'),
-	acordePrincipalID integer default null references acordes(id),
-	acordeSecundarioID integer default null references acordes(id),
+	acordePrincipalID integer not null references acordes(id),
+	acordeSecundarioID integer not null references acordes(id),
 	cantidad integer default 0,
-	estilosID integer default null references estilos(id)
+	estilosID integer not null references estilos(id)
 );
+
+alter table ocurrenciasAcordes add constraint ocurrenciasAcordes_unique_key unique (acordePrincipalID,acordeSecundarioID,estilosID);
 
 create table duracion(
 	id integer not null PRIMARY KEY DEFAULT nextval('duracion_id_seq'),
 	duracion integer default 0,
 	cantidad integer default 0,
-	estilosID integer default null references estilos(id)
+	estilosID integer not null references estilos(id)
 );
-alter table duracion add constraint duracion_unique_key unique(duracion);
+alter table duracion add constraint duracion_unique_key unique(duracion,estilosID);
 
 
 create table ocurrenciasEstilos(
@@ -64,17 +66,17 @@ create table tempos(
 	id integer not null PRIMARY KEY DEFAULT nextval('tempos_id_seq'),
 	tempo text not null,
 	cantidad integer default 0,
-	estilosID integer default null references estilos(id)
+	estilosID integer not null references estilos(id)
 );
-alter table tempos add constraint tempos_unique_key unique(tempo);
+alter table tempos add constraint tempos_unique_key unique(tempo,estilosID);
 
 
 create table tonicas(
 	id integer not null PRIMARY KEY DEFAULT nextval('tonicas_id_seq'),
 	acordeID integer default null references acordes(id),
 	cantidad integer default 0,
-	estilosID integer default null references estilos(id)
+	estilosID integer not null references estilos(id)
 );
-
+alter table tonicas add constraint tonicas_unique_key unique(acordeID,estilosID);
 
 commit;

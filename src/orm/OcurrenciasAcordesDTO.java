@@ -2,87 +2,200 @@ package orm;
 
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import net.java.ao.EntityManager;
 import net.java.ao.Query;
 
+import org.postgresql.util.PSQLException;
+
+import excepciones.ORMException;
+
+
+//################################################################################################################
+/**
+* Clase que tiene los metodos para el manejo de la persistencia en la base de datos.
+* 
+* 
+* @author SEBASTIAN PAZOS - YAMIL GOMEZ
+*
+*///################################################################################################################
 public class OcurrenciasAcordesDTO {
-
-	public static void Insertar (EntityManager manager, Acordes Ppal, Acordes Sec, int cant, Estilos estiloPpal) throws SQLException   
-	{
-		
-		Map <String,Object> parametros = new HashMap<String, Object>();
-		parametros.put("acordeprincipalid", Ppal.getID());
-		parametros.put("acordesecundarioid", Sec.getID());
-		parametros.put("cantidad", cant);
-		parametros.put("estiloid", estiloPpal.getID());
-		
-		OcurrenciasAcordes oa = manager.create(OcurrenciasAcordes.class, parametros);
-		
-	}
 	
-	public static void Eliminar (OcurrenciasAcordes c)
-	{
-		
-	}
-	
-	public static void EliminarTabla ()
-	{
+	//################################################################################################################
+	/**
+	 * Inserta la ocurrencia de acordePrincipal ,acordeSecundario , estilo con una cantidad determinada.
+	 * No se puede repetir  la ocurrencia de acordePrincipal ,acordeSecundario , para un estilo.
+	 *  
+	 * @param manager
+	 * @param acordePrincipal
+	 * @param acordeSecundario
+	 * @param estilo
+	 * @param cant
+	 * @throws SQLException
+	 * @throws ORMException
+	 * 
+	 *///################################################################################################################
+	public static void insertar (EntityManager manager, Acordes acordePrincipal, Acordes acordeSecundario,  Estilos estilo,int cant) throws SQLException, ORMException   {
+		try{
+			Map <String,Object> parametros = new HashMap<String, Object>();
+			parametros.put("acordeprincipalid", acordePrincipal.getID());
+			parametros.put("acordesecundarioid", acordeSecundario.getID());
+			parametros.put("cantidad", cant);
+			parametros.put("estilosid", estilo.getID());
+			manager.create(OcurrenciasAcordes.class, parametros);
 			
-	}
-
-	public static void Actualizar (EntityManager manager, Acordes Ppal, Acordes Sec, int contador) throws SQLException
-	{
-		int cant;
+			return;
+			
+		}catch(PSQLException e){
+			throw new ORMException("La ocurrencia de acordes a Insertar '"+acordePrincipal.getNombre()+"' - '"+acordeSecundario.getNombre()+"' con el estilo "+estilo.getNombre()+" , ya existe.");
+			
+		}
 		
-		OcurrenciasAcordes[] oa = manager.find(OcurrenciasAcordes.class, Query.select().where("acordePrincipalID = '" + Ppal.getID() + "' and acordeSecundarioID = '" + Sec.getID() + "'"));
-		cant = oa[0].getCantidad();
-		oa[0].setCantidad(cant + contador);
-		oa[0].save();
-	}
-	
-	public static OcurrenciasAcordes[] seleccionarTodos(EntityManager manager) throws SQLException
-	{
-		
-		OcurrenciasAcordes[] listaOcurrencias=null;
-				
-		listaOcurrencias = manager.find(OcurrenciasAcordes.class);
-				
-		return listaOcurrencias;
 		
 	}
 	
-	public static List listar (String id)
-	{        
+	//################################################################################################################
+	/**
+	 *Elimina la ocurrencia de acordePrincipal ,acordeSecundario , para un estilo.
+	 * 
+	 * @param manager
+	 * @param acordePrincipal
+	 * @param acordeSecundario
+	 * @param estilo
+	 * @throws SQLException
+	 * 
+	 *///################################################################################################################
+	public static void eliminar (EntityManager manager, Acordes acordePrincipal, Acordes acordeSecundario,  Estilos estilo) throws SQLException {
 		
-		List result = null;
+		OcurrenciasAcordes[] oa = manager.find(OcurrenciasAcordes.class, Query.select().where(
+								"  acordeprincipalid = '" + acordePrincipal.getID() +
+								"' and acordesecundarioid = '"+ acordeSecundario.getID() +
+								"' and estilosid  = '"+estilo.getID()+"' "));
+		manager.delete(oa);
+		
+		return;
 	
-		return result;
 	}
 	
-	public static OcurrenciasAcordes buscar(EntityManager manager, Acordes Ppal, Acordes Sec) throws SQLException
-	{
+	//################################################################################################################
+	/**
+	 * Actualiza la cantida para la ocurrencia de acordePrincipal ,acordeSecundario , estilo.
+	 * 
+	 * @param manager
+	 * @param acordePrincipal
+	 * @param acordeSecundario
+	 * @param estilo
+	 * @param cant
+	 * @throws SQLException
+	 * @throws ORMException
+	 * 
+	 *///################################################################################################################
+	public static void actualizar (EntityManager manager, Acordes acordePrincipal, Acordes acordeSecundario,  Estilos estilo,int cant) throws SQLException, ORMException {
 		
-		OcurrenciasAcordes[] oa = manager.find(OcurrenciasAcordes.class, Query.select().where("acordePrincipalID = '" + Ppal.getID() + "' and acordeSecundarioID = '" + Sec.getID() + "'"));
-		
-		return oa[0];
-		
+		try{
+			OcurrenciasAcordes[] oa = manager.find(OcurrenciasAcordes.class, Query.select().where(
+									"  acordeprincipalid = '" + acordePrincipal.getID() +
+									"' and acordesecundarioid = '"+ acordeSecundario.getID() +
+									"' and estilosid  = '"+estilo.getID()+"' "));
+			oa[0].setCantidad(cant);
+			oa[0].save();
+			return;
+		}catch(Exception e){
+			throw new ORMException("La ocurrencia de acordes a actualizar '"+acordePrincipal.getNombre()+"' - '"+acordeSecundario.getNombre()+"' con el estilo "+estilo.getNombre()+" , NO existe.");
+		}
 	}
 	
-	public static boolean existe(EntityManager manager, Acordes Ppal, Acordes Sec) throws SQLException
-	{
-		
+	//################################################################################################################
+	/**
+	 * Verifica si existe la ocurrencia de acordePrincipal ,acordeSecundario , estilo.
+	 * 
+	 * @param manager
+	 * @param acordePrincipal
+	 * @param acordeSecundario
+	 * @param estilo
+	 * @return
+	 * @throws SQLException
+	 * @throws ORMException
+	 * 
+	 */	//################################################################################################################
+	public static boolean existe(EntityManager manager,
+			Acordes acordePrincipal, 
+			Acordes acordeSecundario,  
+			Estilos estilo) throws SQLException, ORMException {
+	
 		boolean existe = false;
 		
-		OcurrenciasAcordes[] oa = manager.find(OcurrenciasAcordes.class, Query.select().where("acordePrincipalID = '" + Ppal.getID() + "' and acordeSecundarioID = '" + Sec.getID() + "'"));
+		OcurrenciasAcordes[] oa = manager.find(OcurrenciasAcordes.class, Query.select().where(
+													"  acordeprincipalid = '" + acordePrincipal.getID() +
+													"' and acordesecundarioid = '"+ acordeSecundario.getID() +
+													"' and estilosid  = '"+estilo.getID()+"' "));
 		if (oa.length > 0) {
 			existe = true;
 		}
-		
 		return existe;
+	}
+	
+	//################################################################################################################
+	/**
+	 * Busca la ocurrencia de acordePrincipal ,acordeSecundario , estilo.
+	 * 
+	 * @param manager
+	 * @param acordePrincipal
+	 * @param acordeSecundario
+	 * @param estilo
+	 * @return OcurrenciasAcordes o ORMException si no existe. 
+	 * @throws SQLException
+	 * @throws ORMException
+	 * 
+	 *///################################################################################################################
+	public static OcurrenciasAcordes buscar(EntityManager manager,
+			Acordes acordePrincipal, 
+			Acordes acordeSecundario,  
+			Estilos estilo) throws SQLException, ORMException {
+
+		try{
+		
+			OcurrenciasAcordes[] oa = manager.find(OcurrenciasAcordes.class, Query.select().where(
+					"  acordeprincipalid = '" + acordePrincipal.getID() +
+					"' and acordesecundarioid = '"+ acordeSecundario.getID() +
+					"' and estilosid  = '"+estilo.getID()+"' "));
+			
+			return oa[0];
+			
+		}catch(ArrayIndexOutOfBoundsException e){
+			throw new ORMException("No existe la ocurrencia de acordes '"+acordePrincipal.getNombre()+"' - '"+acordeSecundario.getNombre()+"' con el estilo "+estilo.getNombre()+" .");
+		}
 		
 	}
+	
+	//################################################################################################################
+	/**
+	 * selecciona todas las ocurrencias acordes
+	 * 
+	 * @param manager
+	 * @return
+	 * @throws SQLException
+	 * 
+	 *///################################################################################################################
+	public static OcurrenciasAcordes[] seleccionarTodos(EntityManager manager) throws SQLException{
+		OcurrenciasAcordes[] listaOcurrencias = manager.find(OcurrenciasAcordes.class);
+		return listaOcurrencias;
+	}
+	//################################################################################################################
+	/**
+	 * selecciona todas las ocurrencias acordes de un estilo .
+	 * 
+	 * @param manager
+	 * @return
+	 * @throws SQLException
+	 * 
+	 *///################################################################################################################
+	public static OcurrenciasAcordes[] seleccionarTodos(EntityManager manager,Estilos estilo) throws SQLException{
+		
+		OcurrenciasAcordes[] listaOcurrencias = manager.find(OcurrenciasAcordes.class, Query.select().where("  estilosid  = '"+estilo.getID()+"' "));
+		return listaOcurrencias;
+	}
+	
 	
 }
