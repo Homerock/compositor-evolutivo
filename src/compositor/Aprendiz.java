@@ -437,11 +437,15 @@ public class Aprendiz {
 		this.miListaDeDuraciones.listarValor();
 	}
 
-
 	//#########################################################################################
 	/**
-	 * componer
-	 **/
+	 * Compone una cancion dado un estilo y una tonica
+	 * en base al estilo obtiene el tempo y la duracion de la cancion
+	 * genera el archivo de salida
+	 * y cargar (aprende) la nueva cancion en la memoria 
+	 * @param tonica
+	 * @param estilo
+	 */
 	//#########################################################################################
 	public void componer(String tonica, String estilo) {
 
@@ -461,12 +465,6 @@ public class Aprendiz {
 			System.err.println(e.getMessage());
 			return;
 		}
-
-		System.out.println("Datos para componer: ");
-		System.out.println("ESTILO: " + estilo);
-		System.out.println("TONICA: " + tonica);
-		System.out.println("DURACION: " + duracion);
-		System.out.println("TEMPO: " + tempo);
 
 		//Obtengo la matriz de acordes correspondiente a el estilo principal
 		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(estilo);
@@ -489,6 +487,44 @@ public class Aprendiz {
 			return;
 		}
 	}
+	
+	//#########################################################################################
+	/**
+	 * Compone una cancion dado un estilo, una tonica, tempo y duracion
+	 * genera el archivo de salida
+	 * y cargar (aprende) la nueva cancion en la memoria 
+	 * @param tonica
+	 * @param estilo
+	 * @param tempo
+	 * @param duracion
+	 */
+	//#########################################################################################
+	public void componer(String tonica, String estilo, String tempo, String duracion) {
+
+		Compositor miCompositor = new Compositor();
+		
+		//Obtengo la matriz de acordes correspondiente a el estilo principal
+		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(estilo);
+
+		try {
+			Cancion nuevaCancion = miCompositor.componerCancion(miMatrizAcordes, this.getMiMatrizEstilos(), tonica, estilo, Integer.parseInt(duracion), tempo);
+			// genero el archivo .mma que contiene a la nueva cancion 
+			Archivos.generarArchivo(nuevaCancion);
+			// cargo en la matriz la nueva cancion que compuse
+			this.cargarArchivoEnMatriz(nuevaCancion.getNombre()+".mma");
+			// vuelvo a calcular los acumulados para seguir componiendo
+			this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
+			this.getMiMatrizEstilos().calcularAcumulados();
+			
+		}  catch (CancionException e) {
+			System.err.println(e.getMessage());
+			return;
+		} catch (NumberFormatException e) {
+			System.err.println(e.getMessage());
+			return;
+		}
+	}
+
 
 	//#########################################################################################
 	/**
