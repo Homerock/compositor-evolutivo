@@ -21,7 +21,7 @@ import excepciones.ORMException;
 *///################################################################################################################
 
 public class EstilosDTO {
-
+	//################################################################################################################
 	/**
 	 * Inserta un estilo en la base de datos. No se permite repetir el estilo.
 	 * 
@@ -37,7 +37,8 @@ public class EstilosDTO {
 	 * @param cuatroAcordesEnCompas
 	 * @throws SQLException
 	 * @throws ORMException
-	 */
+	 * 
+	 *///################################################################################################################
 	public static void insertar(
 			EntityManager manager, 
 			String estilo, 
@@ -174,6 +175,28 @@ public class EstilosDTO {
 		
 	//################################################################################################################
 	/**
+	 *  verifica si existe un estilo en la base datos.
+	 *  
+	 * @param manager
+	 * @param estilo
+	 * @return verdadero o falso. si existe o no.
+	 * @throws SQLException
+	 * 
+	 *///################################################################################################################
+	public static boolean existe(EntityManager manager,String estilo) throws SQLException
+	{
+		boolean existe = false;
+		
+		Estilos[] e1 = manager.find(Estilos.class,Query.select().where(" nombre like '"+estilo+"' "));
+		if (e1.length > 0){
+			existe=true;
+		}
+		
+		return existe;
+	}	
+	
+	//################################################################################################################
+	/**
 	 * Busca un estilo en la base de datos.
 	 * 			SELECT * FROM estilos where nombre like 'nombre'; 
 	 * 
@@ -196,27 +219,7 @@ public class EstilosDTO {
 		}
 		
 	}
-	//################################################################################################################
-	/**
-	 *  verifica si existe un estilo en la base datos.
-	 *  
-	 * @param manager
-	 * @param estilo
-	 * @return verdadero o falso. si existe o no.
-	 * @throws SQLException
-	 * 
-	 *///################################################################################################################
-	public static boolean existe(EntityManager manager,String estilo) throws SQLException
-	{
-		boolean existe = false;
-		
-		Estilos[] e1 = manager.find(Estilos.class,Query.select().where(" nombre like '"+estilo+"' "));
-		if (e1.length > 0){
-			existe=true;
-		}
-		
-		return existe;
-	}
+
 	//################################################################################################################
 	/**
 	 * Selecciona todos los estilos de la base de datos.

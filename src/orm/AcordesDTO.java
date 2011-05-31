@@ -117,18 +117,22 @@ public class AcordesDTO {
 	
 	//################################################################################################################
 	/**
-	 * retorna todos los acordes de la base (select * from Acordes) 
+	 * Verifica si exite un acorde en la base de datos
 	 * 
-	 * @return Lista con todos los acordes
-	 * @throws SQLException 
+	 * @param manager
+	 * @param nombre del acorde
+	 * @return true or false.
+	 * @throws SQLException
 	 */
 	//################################################################################################################
-	public static Acordes[] seleccionarTodos(EntityManager manager) throws SQLException{
-		Acordes[] acordes = null;		
-		acordes = manager.find(Acordes.class);
-		return acordes;
+	public static boolean existe(EntityManager manager, String nombre) throws SQLException{
+		boolean existe = false;
+			Acordes[] ac = manager.find(Acordes.class, Query.select().where("nombre like '" + nombre + "'"));
+			if (ac.length > 0) {
+				existe = true;
+			}
+		return existe;
 	}
-	
 	
 	//################################################################################################################
 	/**
@@ -151,24 +155,20 @@ public class AcordesDTO {
 		}
 	}
 	
-	
 	//################################################################################################################
 	/**
-	 * Verifica si exite un acorde en la base de datos
+	 * retorna todos los acordes de la base (select * from Acordes) 
 	 * 
-	 * @param manager
-	 * @param nombre del acorde
-	 * @return true or false.
-	 * @throws SQLException
+	 * @return Lista con todos los acordes
+	 * @throws SQLException 
 	 */
 	//################################################################################################################
-	public static boolean existe(EntityManager manager, String nombre) throws SQLException{
-		boolean existe = false;
-			Acordes[] ac = manager.find(Acordes.class, Query.select().where("nombre like '" + nombre + "'"));
-			if (ac.length > 0) {
-				existe = true;
-			}
-		return existe;
+	public static Acordes[] seleccionarTodos(EntityManager manager) throws SQLException{
+		Acordes[] acordes = null;		
+		acordes = manager.find(Acordes.class);
+		return acordes;
 	}
+	
+	
 
 }

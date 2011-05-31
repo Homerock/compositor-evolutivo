@@ -12,8 +12,6 @@ public interface OcurrenciasAcordes extends Entity {
 	public Acordes getAcordeSecundario();
 	public void setAcordeSecundario(Acordes acordeSecundario);
 	
-
-	
 	public int getCantidad();
 	public void setCantidad(int cantidad);
 	
