@@ -305,7 +305,7 @@ public class Aprendiz {
 
 			this.calcularAcumuladoDeMap(this.getMatrizEvolutiva());
 			this.getMiMatrizEstilos().calcularAcumulados();
-			//this.mostrarDatos();
+			this.mostrarDatos();
 
 		}catch(NullPointerException e1){
 			System.out.println("Error: Aprendiz.iniciar()");
