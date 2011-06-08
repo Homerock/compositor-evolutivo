@@ -1,4 +1,4 @@
-package compositor;
+package nucleo;
 
 import estructura.AcordesFila;
 import estructura.ListaValores;
@@ -31,7 +31,7 @@ import orm.OcurrenciasAcordes;
 import orm.OcurrenciasAcordesDTO;
 import orm.Tonicas;
 import orm.TonicasDTO;
-import archivos.Archivos;
+import archivos.ArchivosOLD;
 import archivos.Estilos;
 import canciones.Cancion;
 
@@ -46,7 +46,7 @@ public class Aprendiz {
 
 	private final static String DIRECTORIO = "Directorio";
 	private final static String ARCHIVO = "Archivo genérico";
-	private Pantalla pantalla;
+	
 	private Interfaz interfaz;
 	private EntityManager manager;
 	private ListaValores miListaDeTonicas;
@@ -73,8 +73,8 @@ public class Aprendiz {
 
 	//#########################################################################################
 	/**
-	 * Recibe por parametros una lista llamada cancion que contiene todas las Acordes
-	 * que componen una cancion, recorre esta lista cargando en la matriz las Acordes
+	 * Recibe por parametros una lista llamada cancion que contiene todas los Acordes
+	 * que componen una cancion, recorre esta lista cargando en la matriz los Acordes
 	 * principales y luego las ocurrencias de estas con las secundarias
 	 * 
 	 * @param cancion
@@ -321,16 +321,16 @@ public class Aprendiz {
 	public void cargarArchivoEnMatriz(String nombreCancion) {
 
 		System.out.println("Archivo a leer :"+ nombreCancion);
-		Archivos miArchivo = new Archivos();
+		ArchivosOLD miArchivo = new ArchivosOLD();
 
 		try {
-			if (miArchivo.leerArchivo(nombreCancion)){
-				this.procesarArchivo(miArchivo);
-			}
+			miArchivo.procesarArchivo(nombreCancion);
+			this.procesarArchivo(miArchivo);
+			
 		} catch (EstilosException ee) {
 			System.err.println(ee.getMessage() + " " + Estilos.class);
 		} catch (ArchivosException ae) {
-			System.err.println(ae.getMessage() + " " + Archivos.class);
+			System.err.println(ae.getMessage() + " " + ArchivosOLD.class);
 		} catch (ValoresException ve) {
 			System.err.println(ve.getMessage() + " " + Valores.class);
 		} catch (NullPointerException npe) {
@@ -349,7 +349,7 @@ public class Aprendiz {
 	 * @throws ValoresException 
 	 **/
 	//#########################################################################################
-	private void procesarArchivo(Archivos miArchivo) throws EstilosException, ValoresException {
+	private void procesarArchivo(ArchivosOLD miArchivo) throws EstilosException, ValoresException {
 
 		ArrayList<String> cancion=new ArrayList<String>();
 		ArrayList<String> cancionConEstilos=new ArrayList<String>();
@@ -374,7 +374,9 @@ public class Aprendiz {
 
 	//#########################################################################################
 	/**
-	 * calcularAcumuladoDeMap
+	 * 
+	 * calcula Acumulado De cada matriz de acordes 
+	 * 
 	 * @param mapMatriz
 	 **/
 	//#########################################################################################
@@ -449,7 +451,7 @@ public class Aprendiz {
 	//#########################################################################################
 	public void componer(String tonica, String estilo) {
 
-		Compositor miCompositor = new Compositor();
+		Composicion miCompositor = new Composicion();
 		String tempo;
 		String duracion;
 
@@ -472,7 +474,7 @@ public class Aprendiz {
 		try {
 			Cancion nuevaCancion = miCompositor.componerCancion(miMatrizAcordes, this.getMiMatrizEstilos(), tonica, estilo, Integer.parseInt(duracion), tempo);
 			// genero el archivo .mma que contiene a la nueva cancion 
-			Archivos.generarArchivo(nuevaCancion);
+			ArchivosOLD.generarArchivo(nuevaCancion);
 			// cargo en la matriz la nueva cancion que compuse
 			this.cargarArchivoEnMatriz(nuevaCancion.getNombre()+".mma");
 			// vuelvo a calcular los acumulados para seguir componiendo
@@ -501,7 +503,7 @@ public class Aprendiz {
 	//#########################################################################################
 	public void componer(String tonica, String estilo, String tempo, String duracion) {
 
-		Compositor miCompositor = new Compositor();
+		Composicion miCompositor = new Composicion();
 		
 		//Obtengo la matriz de acordes correspondiente a el estilo principal
 		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(estilo);
@@ -509,7 +511,7 @@ public class Aprendiz {
 		try {
 			Cancion nuevaCancion = miCompositor.componerCancion(miMatrizAcordes, this.getMiMatrizEstilos(), tonica, estilo, Integer.parseInt(duracion), tempo);
 			// genero el archivo .mma que contiene a la nueva cancion 
-			Archivos.generarArchivo(nuevaCancion);
+			ArchivosOLD.generarArchivo(nuevaCancion);
 			// cargo en la matriz la nueva cancion que compuse
 			this.cargarArchivoEnMatriz(nuevaCancion.getNombre()+".mma");
 			// vuelvo a calcular los acumulados para seguir componiendo
@@ -574,15 +576,7 @@ public class Aprendiz {
 		System.exit(0);
 	}
 
-	//#########################################################################################
-	/**
-	 * escribir
-	 **/
-	//#########################################################################################
-	public void escribir(String mensaje) {
-
-		this.pantalla.actualizarLog(mensaje + "\n");
-	}
+	
 
 	//#########################################################################################
 	/**
@@ -600,14 +594,7 @@ public class Aprendiz {
 		return miLista;
 	}
 
-	//#########################################################################################
-	/**
-	 * setInterfaz
-	 **/
-	//#########################################################################################
-	public void setInterfaz(Pantalla interfaz) {
-		this.pantalla = interfaz;
-	}
+
 	
 	//#########################################################################################
 	/**

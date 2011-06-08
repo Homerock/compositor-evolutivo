@@ -5,9 +5,10 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import nucleo.Aprendiz;
+
 import archivos.Reconocedor;
 
-import compositor.Aprendiz;
 
 import sun.security.action.GetLongAction;
 
