@@ -1,24 +1,21 @@
-package compositor;
-
-import estructura.AcordesFila;
-import estructura.EstilosFila;
-import estructura.MatrizAcordes;
-import estructura.MatrizEstilos;
-import excepciones.AcordesException;
-import excepciones.CancionException;
-import grafica.Pantalla;
+package nucleo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
-
 import archivos.Utiles;
 import canciones.Acorde;
 import canciones.Cancion;
 import canciones.Compas;
 import canciones.Estrofa;
+import estructura.AcordesFila;
+import estructura.EstilosFila;
+import estructura.MatrizAcordes;
+import estructura.MatrizEstilos;
+import excepciones.AcordesException;
+import excepciones.CancionException;
 
 
 /**
@@ -26,22 +23,20 @@ import canciones.Estrofa;
   *
   **/
 
-public class Compositor {
-	
-	Pantalla pantalla;
+public class Composicion {
 	
 	//################################################################################
 	/**
 	  * Constructor
 	  **/
 	//################################################################################
-	public Compositor(){
+	public Composicion(){
 		
 	}
 		
 	//################################################################################
 	/**
-	 * reemplaza a componer
+	 * 
 	 * @param miMatrizAcordes
 	 * @param miMatrizEstilos
 	 * @param tonica
@@ -78,9 +73,7 @@ public class Compositor {
 		this.cargarAcordesEnEstructura(miMatrizAcordes, nuevaCancion);
 		
 		
-		//PARA VER LA ESTRUCTURA DE LA CANCION
-		//System.out.println(nuevaCancion.toString());
-
+		// ese bardo es solo un debug
 		if (DEBUG) {
 			ArrayList<Estrofa> todasLasEstrofas = nuevaCancion.getEstrofas();
 			System.out.println("CANCION: " + nuevaCancion.getNombre());
@@ -102,7 +95,7 @@ public class Compositor {
 				}	
 				System.out.println("----------------------------Fin de estrofa------------------------------\n\n");
 			}
-		}
+		}// fin DEBUG
 		
 		return nuevaCancion;
 	}
@@ -140,6 +133,7 @@ public class Compositor {
 			miEstiloFila = miMatrizEstilos.getMisEstilos().get(estilo);
 			// busco si ya existe la estrofa con este estilo
 			if (nuevaCancion.existeEstrofaEstilo(estilo)) {
+				
 				miEstrofa = nuevaCancion.buscarEstrofaEstilo(estilo);
 				estrofaGemela = (Estrofa) miEstrofa.clone();
 				estrofaGemela.setEsEstrofaGemela(true);
@@ -224,29 +218,6 @@ public class Compositor {
 	
 	//################################################################################
 	/**
-	 * 
-	 * @param miCompas
-	 * @return
-	 */
-	//################################################################################
-	public ArrayList<Acorde> copiarAcordesDeCompas(Compas miCompas) {
-		
-		ArrayList<Acorde> listaAcordes = miCompas.getAcordes();
-		ArrayList<Acorde> listaNuevosAcordes = new ArrayList<Acorde>();
-		Acorde miAcorde;
-		int cantidad = miCompas.getCantidadAcordes();
-		String nombre;
-		
-		for (int i = 0; i < cantidad; i++) {
-			nombre = listaAcordes.get(i).getNombre();
-			miAcorde = new Acorde(nombre);
-			listaNuevosAcordes.add(miAcorde);
-		}
-		return listaNuevosAcordes;
-	}
-	
-	//################################################################################
-	/**
 	 * cargo la primer estrofa con la tonica
 	 */
 	//################################################################################
@@ -310,11 +281,11 @@ public class Compositor {
 		int cantidad;
 		
 		if (acordeAnterior == null || acordeAnterior.getNombre().trim().length() == 0) {
-			throw new CancionException("Error en la composición - Falta el acorde anterior - " + Compositor.class);
+			throw new CancionException("Error en la composición - Falta el acorde anterior - " + Composicion.class);
 		}
 		
 		if (miCompas.getCantidadAcordes() < Utiles.MINIMO_ACORDES || miCompas.getCantidadAcordes() > Utiles.MAXIMO_ACORDES) {
-			throw new CancionException("Error en la composición - No se pueden generar " + miCompas.getCantidadAcordes() + " acordes. - " + Compositor.class);
+			throw new CancionException("Error en la composición - No se pueden generar " + miCompas.getCantidadAcordes() + " acordes. - " + Composicion.class);
 		}
 		
 		cantidad = miCompas.getCantidadAcordes();
@@ -353,7 +324,7 @@ public class Compositor {
 			acordePpal = miMatrizAcordes.getMisAcordes().get(acordeAnterior.getNombre());
 			max = acordePpal.getValorAcumuladoFila();
 		} catch (NullPointerException e) {
-			throw new AcordesException("No se pudo generar el siguiente acorde " + Compositor.class);
+			throw new AcordesException("No se pudo generar el siguiente acorde " + Composicion.class);
 		}
 		
 		proxAcorde.setNombre(acordePpal.buscarAcorde(rnd.nextInt(max+1)));
@@ -412,7 +383,7 @@ public class Compositor {
 	 * @return valor
 	 */
 	//################################################################################
-	public int calcularCantidadCompases(EstilosFila miEstiloFila) {
+	private int calcularCantidadCompases(EstilosFila miEstiloFila) {
 		
 		Random rnd= new Random();
 		int miRandom;
@@ -451,15 +422,5 @@ public class Compositor {
 		
 	}
 	
-	//################################################################################
-	/**
-	 * escribir
-	 * Muestra un mensaje en el log de la pantalla principal
-	 **/
-	//################################################################################
-	private void escribir(String mensaje) {
-	
-		pantalla.actualizarLog(mensaje);
 
-	}	
 }

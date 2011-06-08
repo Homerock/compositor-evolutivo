@@ -22,6 +22,13 @@ public class Reconocedor {
 	private static Set<String> alteraciones = new HashSet<String>();
 	private static Map<String, String> tablaCifrados = new HashMap<String, String>();
 	
+	static {
+		cargarAcordes();
+		cargarAcordesAmericanos();
+		cargarModalidades();
+		cargarSostenidos();
+		cargarTablaCifrados();
+	}
 	//#########################################################################################
 	/**
 	 * 
@@ -364,14 +371,14 @@ public class Reconocedor {
 	 * 
 	 */
 	//#########################################################################################
-	public static void cargarTablasAcordes() {
+	/*public static void cargarTablasAcordes() {
 		
 		cargarAcordes();
 		cargarAcordesAmericanos();
 		cargarModalidades();
 		cargarSostenidos();
 		cargarTablaCifrados();
-	}
+	}*/
 	
 	//#########################################################################################
 	/**
@@ -381,7 +388,7 @@ public class Reconocedor {
 	//#########################################################################################
 	public static void main(String args[]){
 		
-		cargarTablasAcordes();
+		
 		 
 		String[] lista = {"La","La/Do#","C/G", "Solb7","DOS","Dm9","Dm","Rem","RE","Re","Gsus2","A#","La#","A#7","Solbm"};
 		

@@ -3,7 +3,7 @@ package grafica;
 import archivos.Reconocedor;
 import orm.Conexion;
 import net.java.ao.EntityManager;
-import compositor.Aprendiz;
+import nucleo.Aprendiz;
 
 
 //########################################################################
@@ -20,7 +20,7 @@ public class Inicio {
 			EntityManager manager = Conexion.getConexionPsql();
 			
 			Aprendiz aprendiz = new Aprendiz();
-			Reconocedor.cargarTablasAcordes();
+			//Reconocedor.cargarTablasAcordes();
 			//System.out.println("Objeto Aprendiz: "+aprendiz);
 			//aprendiz.levantarBase(manager);
 			//new Pantalla(aprendiz);

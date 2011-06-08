@@ -26,7 +26,7 @@ public class Utiles {
 	protected static final String REPEAT_ENDING = "RepeatEnding";
 	protected static final String REPEAT_END = "RepeatEnd";
 	//TEMPO
-	protected static final String TEMPO = "Tempo";
+	public static final String TEMPO = "Tempo";
 	//VARIBLES
 	public static final String DEFINICION_VARIABLE= "Set";
 	public static final String COMIENZO_DE_VARIABLE = "$";
@@ -81,7 +81,7 @@ public class Utiles {
 		String valor="";
 
 		String Traza="\n";
-		Reconocedor.cargarTablasAcordes();
+	//	Reconocedor.cargarTablasAcordes();
 		try {
 			while(pos< cancion.size()){
 				valor =cancion.get(pos);
@@ -187,11 +187,12 @@ public class Utiles {
 	//#########################################################################################
 	/**
 	 * obtenerDuracion
-	 * Obtiene la duracion de una cancion (cantidad de compases) analizando la lista cancionConEstilos
+	 * Obtiene la duracion de una cancion (cantidad de compases) analizando la lista cancionConEstilos (con repeats)
 	 * @param cancion con estilos
 	 * @return la duracion de la cancion
 	 **/
 	//#########################################################################################
+	/*
 	public static int obtenerDuracion(ArrayList<String> cancion){
 
 		ArrayList<Integer> arrayRepeat=new ArrayList<Integer>();
@@ -206,8 +207,10 @@ public class Utiles {
 		String valor="";
 
 		try {
+			
 			while(pos< cancion.size()){
 				valor =cancion.get(pos);
+				
 				if (!valor.startsWith(REPEAT) && !valor.startsWith(ESTILO)) {
 					cont = cont+1;
 				}
@@ -282,6 +285,31 @@ public class Utiles {
 		}
 		return cont;
 	}
+*/
+	
+	public static int obtenerDuracion(ArrayList<String> cancionSinRepeats){
+		int contador=0;
+		
+		for(String linea: cancionSinRepeats ){
+			
+			if (	!Utiles.cadenaContienePatron(linea,ESTILO)  &&
+					!Utiles.cadenaContienePatron(linea,TEMPO)  ) {
+				contador ++;
+			}
+		}
+		return contador;
+	}
+	
+	public static boolean cadenaContieneNumero(String linea) {
+		
+		StringTokenizer tokens = new StringTokenizer(linea);
+		String primerToken =tokens.nextToken();
+		if (Utiles.isNumeric(primerToken)){
+			return true;
+		}
+		return false;
+		
+	}
 
 	//#########################################################################################
 	/**
@@ -345,11 +373,11 @@ public class Utiles {
 
 	//#########################################################################################
 	/**
-	 * dada una linea y un separador (token) devuelve el valor siguiente al separador
+	 * dada una linea y un separador (token) devuelve el suiguiente token al separador.
 	 * 
-	 * @param linea
-	 * @param token
-	 * @return
+	 * @param linea :"1 acorde1 / "
+	 * @param token : " "
+	 * @return siguiente token : "acorde1"
 	 */
 	//#########################################################################################
 	public static String obtenerDatos(String linea, String token){
@@ -393,7 +421,8 @@ public class Utiles {
 	//#########################################################################################
 	public static int calculaCantAcordesPorCompas(String linea) {
 		int cant=0;
-		linea = linea.trim();
+		//linea = linea.trim();
+		linea = quitarNumeroDeCadena(linea).trim();
 		
 		String[] tokens = linea.split(" ");
 		
@@ -412,7 +441,32 @@ public class Utiles {
 		return cant;
 		
 	}
-	
+	//#########################################################################################
+	/**
+	 * Quita el numero (al principio) de una cadena , si no tuviera devuelve la misma cadena.
+	 * 	
+	 * @param cadena :"1 Acorde1 acorde 2"
+	 * @return cadena sin numero al principio "Acorde1 acorde 2"
+	 * 
+	 *///######################################################################################
+	public static String quitarNumeroDeCadena(String cadena){
+		String aux="";
+		StringTokenizer tokens = new StringTokenizer(cadena);
+		String primerToken =tokens.nextToken();
+		
+		if (isNumeric(primerToken)){
+			while (tokens.hasMoreTokens()){//algo en el otro
+				String tok = tokens.nextToken();
+				aux = aux + " " + tok;
+			}
+			aux = aux.trim();	
+		}else{
+			aux = cadena;
+		}
+		
+		return aux;
+		
+	}
 	//#########################################################################################
 	/**
 	 * Verifica si la "cadena" contiene el "patron" dentro de ella

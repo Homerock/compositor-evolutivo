@@ -16,7 +16,8 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import compositor.Aprendiz;
+import nucleo.Aprendiz;
+
 
 public class Pantalla extends JFrame {
 
@@ -49,7 +50,7 @@ public class Pantalla extends JFrame {
 		super();
 		this.setGtk();
 		this.aprendiz = aprendiz;
-		aprendiz.setInterfaz(this);
+		//aprendiz.setInterfaz(this);
 		initialize();
 	}
 
