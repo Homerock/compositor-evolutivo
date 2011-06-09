@@ -5,8 +5,6 @@ import java.util.StringTokenizer;
 
 import canciones.Acorde;
 import canciones.CancionAprendida;
-
-import archivos.ArchivosOLD;
 import archivos.Archivos;
 import archivos.Estilos;
 import archivos.Reconocedor;

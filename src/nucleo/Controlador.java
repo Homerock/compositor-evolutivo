@@ -5,12 +5,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import javax.swing.JFileChooser;
 
-import archivos.ArchivosOLD;
+import archivos.Archivos;
 import archivos.Estilos;
-
 import canciones.Cancion;
 import canciones.CancionAprendida;
 
@@ -23,7 +21,6 @@ import excepciones.ArchivosException;
 import excepciones.CancionException;
 import excepciones.EstilosException;
 import excepciones.ValoresException;
-import grafica.Interfaz;
 import utiles.*;
 
 public class Controlador {
@@ -289,7 +286,7 @@ public class Controlador {
 		try {
 			Cancion nuevaCancion = miCompositor.componerCancion(miMatrizAcordes, this.getMiMatrizEstilos(), tonica, estilo, Integer.parseInt(duracion), tempo);
 			// genero el archivo .mma que contiene a la nueva cancion 
-			ArchivosOLD.generarArchivo(nuevaCancion);
+			Archivos.generarArchivo(nuevaCancion);
 			// cargo en la matriz la nueva cancion que compuse
 			Aprendizaje.aprenderCancion(nuevaCancion.getNombre()+Constantes.EXTENSION_ARCHIVO);
 			// vuelvo a calcular los acumulados para seguir componiendo
@@ -336,7 +333,7 @@ public class Controlador {
 		try {
 			Cancion nuevaCancion = miCompositor.componerCancion(miMatrizAcordes, this.getMiMatrizEstilos(), tonica, estilo, Integer.parseInt(duracion), tempo);
 			// genero el archivo .mma que contiene a la nueva cancion 
-			ArchivosOLD.generarArchivo(nuevaCancion);
+			Archivos.generarArchivo(nuevaCancion);
 			// cargo en la matriz la nueva cancion que compuse
 			Aprendizaje.aprenderCancion(nuevaCancion.getNombre()+ Constantes.EXTENSION_ARCHIVO);
 			// vuelvo a calcular los acumulados para seguir componiendo

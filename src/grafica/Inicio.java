@@ -3,7 +3,6 @@ package grafica;
 import archivos.Reconocedor;
 import orm.Conexion;
 import net.java.ao.EntityManager;
-import nucleo.Aprendiz;
 import nucleo.Controlador;
 
 
