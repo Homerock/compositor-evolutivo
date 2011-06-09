@@ -8,14 +8,17 @@ import java.util.Map;
 
 import javax.swing.JFileChooser;
 
+import archivos.ArchivosOLD;
 import archivos.Estilos;
 
+import canciones.Cancion;
 import canciones.CancionAprendida;
 
 import net.java.ao.EntityManager;
 import estructura.ListaValores;
 import estructura.MatrizAcordes;
 import estructura.MatrizEstilos;
+import estructura.Valores;
 import excepciones.ArchivosException;
 import excepciones.CancionException;
 import excepciones.EstilosException;
@@ -25,8 +28,6 @@ import utiles.*;
 
 public class Controlador {
 	
-	
-	private Interfaz interfaz;
 	private EntityManager manager;
 	private ListaValores miListaDeTonicas;
 	private ListaValores miListaDeTempos;
@@ -35,10 +36,13 @@ public class Controlador {
 	private MatrizEstilos miMatrizEstilos;
 	private Map<String, MatrizAcordes> MatrizEvolutiva;
 	
+	//#########################################################################################
 	/**
 	 * constructor
 	 */
+	//#########################################################################################
 	public Controlador(){
+		
 		this.setMatrizEvolutiva(new HashMap<String, MatrizAcordes>());
 		this.setMiMatrizEstilos(new MatrizEstilos());
 		this.setMiListaDeTonicas(new ListaValores());
@@ -48,7 +52,11 @@ public class Controlador {
 		
 	}
 	
-	
+	//#########################################################################################
+	/**
+	 * 
+	 */
+	//#########################################################################################
 	public void aprender() {
 		
 		CancionAprendida cancionAprendida = null;
@@ -106,7 +114,6 @@ public class Controlador {
 					} catch (CancionException e) {
 						System.err.println(e.getMessage());
 					}
-				
 			}
 			// calcular acumulados
 			this.calcularAcumuladoDeMap(this.getMatrizEvolutiva());
@@ -247,12 +254,131 @@ public class Controlador {
 		this.miListaDeDuraciones.listarValor();
 	}
 
-	private Interfaz getInterfaz() {
-		return interfaz;
+	//#########################################################################################
+	/**
+	 * 
+	 * @param tonica
+	 * @param estilo
+	 * @throws ArchivosException 
+	 * @throws ValoresException 
+	 * @throws EstilosException 
+	 */
+	//#########################################################################################
+	public void componer(String tonica, String estilo) {
+		
+		Composicion miCompositor = new Composicion();
+		String tempo;
+		String duracion;
+
+		try {
+			tempo = this.getMiListaDeTempos().obtenerMayorValorPorEstilo(estilo);
+		} catch (ValoresException e) {
+			System.err.println(e.getMessage());
+			return;
+		}
+		try {
+			duracion = this.getMiListaDeDuraciones().obtenerMayorValorPorEstilo(estilo);
+		} catch (ValoresException e) {
+			System.err.println(e.getMessage());
+			return;
+		}
+
+		//Obtengo la matriz de acordes correspondiente a el estilo principal
+		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(estilo);
+
+		try {
+			Cancion nuevaCancion = miCompositor.componerCancion(miMatrizAcordes, this.getMiMatrizEstilos(), tonica, estilo, Integer.parseInt(duracion), tempo);
+			// genero el archivo .mma que contiene a la nueva cancion 
+			ArchivosOLD.generarArchivo(nuevaCancion);
+			// cargo en la matriz la nueva cancion que compuse
+			Aprendizaje.aprenderCancion(nuevaCancion.getNombre()+Constantes.EXTENSION_ARCHIVO);
+			// vuelvo a calcular los acumulados para seguir componiendo
+			this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
+			this.getMiMatrizEstilos().calcularAcumulados();
+			
+		}  catch (CancionException e) {
+			System.err.println(e.getMessage());
+			return;
+		} catch (NumberFormatException e) {
+			System.err.println(e.getMessage());
+			return;
+		} catch (EstilosException e) {
+			System.err.println(e.getMessage());
+			return;
+		} catch (ValoresException e) {
+			System.err.println(e.getMessage());
+			return;
+		} catch (ArchivosException e) {
+			System.err.println(e.getMessage());
+			return;
+		}		
 	}
-	private void setInterfaz(Interfaz interfaz) {
-		this.interfaz = interfaz;
+	
+	//#########################################################################################
+	/**
+	 * 
+	 * @param tonica
+	 * @param estilo
+	 * @param tempo
+	 * @param duracion
+	 * @throws ArchivosException 
+	 * @throws ValoresException 
+	 * @throws EstilosException 
+	 */
+	//#########################################################################################
+	public void componer(String tonica, String estilo, String tempo, String duracion) {
+		
+		Composicion miCompositor = new Composicion();
+		
+		//Obtengo la matriz de acordes correspondiente a el estilo principal
+		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(estilo);
+
+		try {
+			Cancion nuevaCancion = miCompositor.componerCancion(miMatrizAcordes, this.getMiMatrizEstilos(), tonica, estilo, Integer.parseInt(duracion), tempo);
+			// genero el archivo .mma que contiene a la nueva cancion 
+			ArchivosOLD.generarArchivo(nuevaCancion);
+			// cargo en la matriz la nueva cancion que compuse
+			Aprendizaje.aprenderCancion(nuevaCancion.getNombre()+ Constantes.EXTENSION_ARCHIVO);
+			// vuelvo a calcular los acumulados para seguir componiendo
+			this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
+			this.getMiMatrizEstilos().calcularAcumulados();
+			
+		}  catch (CancionException e) {
+			System.err.println(e.getMessage());
+			return;
+		} catch (NumberFormatException e) {
+			System.err.println(e.getMessage());
+			return;
+		} catch (EstilosException e) {
+			System.err.println(e.getMessage());
+			return;
+		} catch (ValoresException e) {
+			System.err.println(e.getMessage());
+			return;
+		} catch (ArchivosException e) {
+			System.err.println(e.getMessage());
+			return;
+		}
 	}
+	
+	//#########################################################################################
+	/**
+	 * getComboEstilos
+	 **/
+	//#########################################################################################
+	public ArrayList<String> getComboEstilos() {
+
+		ArrayList<Valores> listaValores = this.getMiListaDeEstilosPrincipales().getLista();
+		ArrayList<String> miLista = new ArrayList<String>();
+
+		for (Valores val : listaValores) {
+			miLista.add(val.getEstilo());
+		}
+		return miLista;
+	}
+	
+	//#########################################################################################
+	
 	private EntityManager getManager() {
 		return manager;
 	}
@@ -296,12 +422,4 @@ public class Controlador {
 	private void setMatrizEvolutiva(Map<String, MatrizAcordes> matrizEvolutiva) {
 		MatrizEvolutiva = matrizEvolutiva;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 }

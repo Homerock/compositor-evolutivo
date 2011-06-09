@@ -2,16 +2,10 @@ package grafica;
 
 
 import java.awt.*;
-
 import javax.swing.*;
-
-import nucleo.Aprendiz;
-
+import nucleo.Controlador;
 import archivos.Reconocedor;
-
-
 import sun.security.action.GetLongAction;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -44,7 +38,7 @@ public class Interfaz implements ItemListener{
 	private static final String LABEL_TEMPO = "Tempo: ";
 	private static final String LABEL_TIPO_CANCION = "Tipo de Canción: ";
 	
-	private Aprendiz aprendiz;
+	private Controlador controlador;
 	
 	private JFrame framePrincipal;
 	private JMenuBar menuPrincipal;
@@ -80,7 +74,7 @@ public class Interfaz implements ItemListener{
 	private JTextField cantCompasesAvanzadoText;
 	private JTextField tempoAvanzadoText;
 	
-	public Interfaz(Aprendiz miAprendiz) {
+	public Interfaz(Controlador miControlador) {
 		
 		framePrincipal = new JFrame("Homerock -1.0");
 		menuPrincipal = new JMenuBar();
@@ -95,8 +89,7 @@ public class Interfaz implements ItemListener{
 		subOpcion3_1 = new JMenuItem("Ver log");
 		subOpcion4_1 = new JMenuItem("Acerca de...");
 		pestania = new JTabbedPane(TABS_POSICION);
-		aprendiz = miAprendiz;
-		aprendiz.setInterfaz(this);
+		controlador = miControlador;
 		crearFrame();
 	}
 	
@@ -265,7 +258,7 @@ public class Interfaz implements ItemListener{
 	}
 	
 	private void cargarCombo() {
-		ArrayList<String> lista = aprendiz.getComboEstilos();
+		ArrayList<String> lista = controlador.getComboEstilos();
 		
 		jComboEstiloBasico.removeAllItems();
 		for (String estilo : lista) { 
@@ -293,7 +286,7 @@ public class Interfaz implements ItemListener{
 			
 			if (e.getActionCommand() == APRENDER) {
 				
-				aprendiz.iniciar();
+				controlador.aprender();
 				cargarCombo();
 			}
 			
@@ -312,7 +305,7 @@ public class Interfaz implements ItemListener{
 						JOptionPane.showConfirmDialog(framePrincipal, "El acorde de tonica es incorrecto","Componer", OK_ACEPTAR);
 						return;
 					}
-					aprendiz.componer(tonica, estilo);	//lanus campeon - lunes 30-05 18:21Hs
+					controlador.componer(tonica, estilo);	//lanus campeon - lunes 30-05 18:21Hs
 				}
 				
 				if (tipoComposicion.equals(TIPO_INTERMEDIO)){
@@ -329,7 +322,7 @@ public class Interfaz implements ItemListener{
 						JOptionPane.showConfirmDialog(framePrincipal, "El acorde de tonica es incorrecto","Componer", OK_ACEPTAR);
 						return;
 					}
-					aprendiz.componer(tonica, estilo, tempo, cantCompases);
+					controlador.componer(tonica, estilo, tempo, cantCompases);
 				}
 
 				if (tipoComposicion.equals(TIPO_AVANZADO)){
@@ -348,7 +341,7 @@ public class Interfaz implements ItemListener{
 						JOptionPane.showConfirmDialog(framePrincipal, "El acorde de tonica es incorrecto","Componer", OK_ACEPTAR);
 						return;
 					}
-					aprendiz.componer(tonica, estilo, tempo, cantCompases);
+					controlador.componer(tonica, estilo, tempo, cantCompases);
 				}	
 			}
 		}

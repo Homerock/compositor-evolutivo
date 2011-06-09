@@ -4,6 +4,7 @@ import archivos.Reconocedor;
 import orm.Conexion;
 import net.java.ao.EntityManager;
 import nucleo.Aprendiz;
+import nucleo.Controlador;
 
 
 //########################################################################
@@ -19,12 +20,12 @@ public class Inicio {
 		
 			EntityManager manager = Conexion.getConexionPsql();
 			
-			Aprendiz aprendiz = new Aprendiz();
+			Controlador controlador = new Controlador();
 			//Reconocedor.cargarTablasAcordes();
 			//System.out.println("Objeto Aprendiz: "+aprendiz);
 			//aprendiz.levantarBase(manager);
 			//new Pantalla(aprendiz);
-			Interfaz grafica = new Interfaz(aprendiz);
+			Interfaz grafica = new Interfaz(controlador);
 			while(true);
 	}
 	
