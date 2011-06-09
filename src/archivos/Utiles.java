@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
+import utiles.*;
 
 public class Utiles {
 
@@ -12,32 +13,6 @@ public class Utiles {
  ###################						CONSTANTES						###################################### 
  ################################################################################################################# */
 	
-	protected static final String COMENTARIO = "//";
-	protected static final String CADENAVACIA="";
-	//ESTILOS
-	public static final String ESTILO = "Groove";//para definir un estilo debe estar definido asi "Groove miEstilo"
-	protected static final String NUEVO_ESTILO ="DefGroove";
-	protected static final String VAR_ULTIMO_ESTILO ="$_LastGroove";
-	public static final String END_ESTILO ="End";
-	public static final String INTRO_ESTILO ="Intro";
-	protected static final String SIN_ESTILO = "sinEstilo";
-	//REPEATS
-	protected static final String REPEAT = "Repeat";
-	protected static final String REPEAT_ENDING = "RepeatEnding";
-	protected static final String REPEAT_END = "RepeatEnd";
-	//TEMPO
-	public static final String TEMPO = "Tempo";
-	//VARIBLES
-	public static final String DEFINICION_VARIABLE= "Set";
-	public static final String COMIENZO_DE_VARIABLE = "$";
-	//ACORDES
-	public static final String ACORDE_REPETIDO = "/";
-	public static final int UN_ACORDE = 1;
-	public static final int DOS_ACORDE = 2;
-	public static final int TRES_ACORDE = 3;
-	public static final int CUATRO_ACORDE = 4;
-	public static final int MINIMO_ACORDES = 1;	// cantidad minima de acorde por compas
-	public static final int MAXIMO_ACORDES = 4; // cantidad maxima de acordes por compas
 
 	private static String[] notasPpales= {"A","B","C","D","E","F","G"};
 	private static ArrayList<String> notasPosibles=new ArrayList(Arrays.asList(notasPpales));
@@ -85,7 +60,7 @@ public class Utiles {
 		try {
 			while(pos< cancion.size()){
 				valor =cancion.get(pos);
-				if (!valor.startsWith(REPEAT)) {
+				if (!valor.startsWith(Constantes.REPEAT)) {
 
 					if (soloAcordes) {
 						//if (esNotaValida(valor)) { //Metodo anterior a usar el reconocedor
@@ -98,7 +73,7 @@ public class Utiles {
 				}
 
 				//si es repeat ending
-				if (valor.indexOf(REPEAT_ENDING)!=-1){
+				if (valor.indexOf(Constantes.REPEAT_ENDING)!=-1){
 
 					if (!arrayRepeatEnding.contains(pos)) {
 						arrayRepeatEnding.add(pos);
@@ -124,7 +99,7 @@ public class Utiles {
 
 				}else {
 					// si es repeatEnd
-					if(valor.indexOf(REPEAT_END)!=-1){
+					if(valor.indexOf(Constantes.REPEAT_END)!=-1){
 
 						if (!arrayRepeatEnd.contains(pos)) {
 							arrayRepeatEnd.add(pos);
@@ -163,7 +138,7 @@ public class Utiles {
 						}
 					}else {
 						//si es Repeat
-						if (valor.indexOf(REPEAT)!=-1){
+						if (valor.indexOf(Constantes.REPEAT)!=-1){
 							if (!arrayRepeat.contains(pos)) {
 								arrayRepeat.add(pos);
 								Traza+= "array repeats :"+arrayRepeat.toString()+"\n";
@@ -292,8 +267,8 @@ public class Utiles {
 		
 		for(String linea: cancionSinRepeats ){
 			
-			if (	!Utiles.cadenaContienePatron(linea,ESTILO)  &&
-					!Utiles.cadenaContienePatron(linea,TEMPO)  ) {
+			if (	!Utiles.cadenaContienePatron(linea,Constantes.ESTILO)  &&
+					!Utiles.cadenaContienePatron(linea,Constantes.TEMPO)  ) {
 				contador ++;
 			}
 		}
@@ -364,10 +339,10 @@ public class Utiles {
 	//#########################################################################################
 	public static String quitarComentarios(String linea){
 
-		if(linea.startsWith(COMENTARIO)){
-			return CADENAVACIA;
+		if(linea.startsWith(Constantes.COMENTARIO)){
+			return Constantes.CADENAVACIA;
 		}
-		String[] campos = linea.split(COMENTARIO);	
+		String[] campos = linea.split(Constantes.COMENTARIO);	
 		return campos[0];
 	}
 
@@ -403,7 +378,7 @@ public class Utiles {
 		
 		//EJEMPLO : "Set MainPlus Groove Swing1Plus"
 		
-		if(linea.trim().startsWith(DEFINICION_VARIABLE) && linea.indexOf(ESTILO)!=-1){
+		if(linea.trim().startsWith(Constantes.DEFINICION_VARIABLE) && linea.indexOf(Constantes.ESTILO)!=-1){
 			return true;
 		}
 		return false;
@@ -428,7 +403,7 @@ public class Utiles {
 		
 		if(tokens.length>0){
 			// si empieza con "/"
-			if(tokens[0].equals(ACORDE_REPETIDO)){
+			if(tokens[0].equals(Constantes.ACORDE_REPETIDO)){
 				cant++;
 			}
 			

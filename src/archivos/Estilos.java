@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import utiles.Constantes;
+
 import estructura.EstilosFila;
 import estructura.MatrizEstilos;
 import excepciones.EstilosException;
@@ -51,7 +53,7 @@ public class Estilos {
 				
 				miGroove=getMisEstilosOrdenados().get(i);
 				//me fijo que el groove no tenga en "End"
-				if(miGroove.indexOf(Utiles.END_ESTILO)==-1){
+				if(miGroove.indexOf(Constantes.END_ESTILO)==-1){
 					
 					int valor = getMisEstilos().get(miGroove);
 					if (valor > cant) {
@@ -118,7 +120,7 @@ public class Estilos {
 			valor = cancionAnalizadaConEstilos.get(j);//obtengo la linea
 			
 			//si la linea es la que determina el estilo 
-			if (valor.startsWith(Utiles.ESTILO)){
+			if (valor.startsWith(Constantes.ESTILO)){
 				miListaEstilos.add(Utiles.obtenerDatos(valor," "));//obtenemos el nombre del groove
 				if (!grooveUltimo.isEmpty()){					
 					grooveAnteUltimo= grooveUltimo;
@@ -127,14 +129,14 @@ public class Estilos {
 				grooveUltimo=Utiles.obtenerDatos(valor, " ");//guardo el nombre del groove
 				
 				try {
-						if(grooveUltimo.indexOf(Utiles.VAR_ULTIMO_ESTILO)!=-1){
+						if(grooveUltimo.indexOf(Constantes.VAR_ULTIMO_ESTILO)!=-1){
 							ultimoIndiceLista = miListaEstilos.size() - 1;
 							grooveUltimo =  miListaEstilos.get(ultimoIndiceLista-2);// el anteultimo groove
 							miListaEstilos.set(ultimoIndiceLista, grooveUltimo);
 							if(DEBUG)
 								System.out.println("reeemplazamos :"+valor +" por:Groove "+grooveUltimo);
 							
-							valor = Utiles.ESTILO+grooveUltimo;
+							valor = Constantes.ESTILO+grooveUltimo;
 						}
 				} catch (ArrayIndexOutOfBoundsException e) {
 					
@@ -206,7 +208,7 @@ public class Estilos {
 			valor = cancionAnalizadaConEstilos.get(i);
 
 			//si la linea es la que determina el estilo 
-			if (valor.startsWith(Utiles.ESTILO)){
+			if (valor.startsWith(Constantes.ESTILO)){
 
 				miListaEstilos.add(Utiles.obtenerDatos(valor," "));//obtenemos el nombre del groove
 				if (!grooveUltimo.isEmpty()){
@@ -332,7 +334,7 @@ public class Estilos {
 			valor = cancionAnalizadaConEstilos.get(j);
 
 			//si la linea es la que determina el estilo 
-			if (valor.startsWith(Utiles.ESTILO)){
+			if (valor.startsWith(Constantes.ESTILO)){
 
 				String estilo = Utiles.obtenerDatos(valor," ");
 				if (estilo.length() != 0) {

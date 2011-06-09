@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
+import utiles.Constantes;
+
 import canciones.Acorde;
 import canciones.Cancion;
 import canciones.Compas;
@@ -97,10 +99,10 @@ public class Archivos {
 				cancion.add(linea); // carga el compas completo
 			}else {
 				
-				if (linea.startsWith(Utiles.NUEVO_ESTILO)){
+				if (linea.startsWith(Constantes.NUEVO_ESTILO)){
 					throw new ArchivosException("No contemplamos definiciones de nuevos estilos. "+Archivos.class);
 				}
-				if(Utiles.cadenaContienePatron(linea, Utiles.COMIENZO_DE_VARIABLE)){
+				if(Utiles.cadenaContienePatron(linea, Constantes.COMIENZO_DE_VARIABLE)){
 					//ej :
 					//Set Pass 1
 					//Groove $Pass BossaNova BossaNovaSus BossaNova1Sus
@@ -109,14 +111,14 @@ public class Archivos {
 				}
 				
 				//me fijo si esta la palabra repeat en una cadena, ya que nos intersa, y la agrego en el arraylist
-				if(Utiles.cadenaContienePatron(linea, Utiles.REPEAT)){
+				if(Utiles.cadenaContienePatron(linea, Constantes.REPEAT)){
 					cancion.add(linea);// carga si es un repeat
 				}
-				if(linea.startsWith(Utiles.ESTILO)){
+				if(linea.startsWith(Constantes.ESTILO)){
 					cancion.add(linea); // carga si es un estilo
 				}
 				
-				if(linea.indexOf(Utiles.TEMPO)!=-1){
+				if(linea.indexOf(Constantes.TEMPO)!=-1){
 					cancion.add(linea);// si define tempo	
 				}
 			

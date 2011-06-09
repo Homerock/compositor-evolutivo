@@ -3,6 +3,8 @@ package nucleo;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import utiles.Constantes;
+
 import canciones.Acorde;
 import canciones.CancionAprendida;
 import archivos.Archivos;
@@ -61,7 +63,7 @@ public class Aprendizaje {
 		String tempo ="";
 		
 		for(String linea : cancion){
-			if( Utiles.cadenaContienePatron(linea, Utiles.TEMPO)){
+			if( Utiles.cadenaContienePatron(linea, Constantes.TEMPO)){
 				tempo =Utiles.obtenerDatos(linea, " ");
 				break;
 			}
@@ -81,8 +83,8 @@ public class Aprendizaje {
 		
 		for (String linea : cancionSinRepeats) {
 			
-			if (	!Utiles.cadenaContienePatron(linea,Utiles.ESTILO)  &&
-					!Utiles.cadenaContienePatron(linea,Utiles.TEMPO)  ) {
+			if (	!Utiles.cadenaContienePatron(linea,Constantes.ESTILO)  &&
+					!Utiles.cadenaContienePatron(linea,Constantes.TEMPO)  ) {
 				
 				tokens = new StringTokenizer(linea);
 				String primerToken =tokens.nextToken();
