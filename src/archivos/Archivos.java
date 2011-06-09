@@ -1,13 +1,21 @@
 package archivos;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
+
+import canciones.Acorde;
+import canciones.Cancion;
+import canciones.Compas;
+import canciones.Estrofa;
 
 import excepciones.ArchivosException;
 
@@ -90,14 +98,14 @@ public class Archivos {
 			}else {
 				
 				if (linea.startsWith(Utiles.NUEVO_ESTILO)){
-					throw new ArchivosException("No contemplamos definiciones de nuevos estilos. "+ArchivosOLD.class);
+					throw new ArchivosException("No contemplamos definiciones de nuevos estilos. "+Archivos.class);
 				}
 				if(Utiles.cadenaContienePatron(linea, Utiles.COMIENZO_DE_VARIABLE)){
 					//ej :
 					//Set Pass 1
 					//Groove $Pass BossaNova BossaNovaSus BossaNova1Sus
 
-					throw new ArchivosException("No contemplamos variables en definicion de estilos."+ArchivosOLD.class);
+					throw new ArchivosException("No contemplamos variables en definicion de estilos."+Archivos.class);
 				}
 				
 				//me fijo si esta la palabra repeat en una cadena, ya que nos intersa, y la agrego en el arraylist
@@ -117,6 +125,127 @@ public class Archivos {
 		}catch (NoSuchElementException e){
 			//util para las lineas vacias y con espacios en blanco
 		}
+	}
+
+	//################################################################################
+	/**
+	 * genera un archivo de texto con el formato de mma, de acuerdo a los datos de un objeto cancion
+	 * pasado por parametro.
+	 * @param miCancion
+	 */
+	//################################################################################
+	public static void generarArchivo(Cancion miCancion) {
+		
+		String compas = " ";
+		ArrayList<Estrofa> todasLasEstrofas = miCancion.getEstrofas();
+		int linea = 1;
+		
+		// preguntar si el nombre de la cancion ya existe en el directorio, si existe agregarle un numero
+		// ejemplo: rock_Am_1 volver a preguntar a ver si este tambien existe
+		
+		escribirArchivo(miCancion.getNombre()+".mma", "Tempo " + miCancion.getTempo(), false);
+		escribirArchivo(miCancion.getNombre()+".mma", "", true);
+		
+		for (Estrofa est : todasLasEstrofas) {
+			
+			escribirArchivo(miCancion.getNombre()+".mma", "Groove " + est.getEstilo(), true);
+			
+			ArrayList<Compas> todosLosCompases = est.getListaDeCompases();
+		
+			for (Compas com : todosLosCompases) {
+				ArrayList<Acorde> todosLosAcordes = com.getAcordes();
+				compas = " ";
+				for (Acorde ac : todosLosAcordes) {
+					compas = compas + " " + ac.getNombre();
+				}
+				escribirArchivo(miCancion.getNombre()+".mma", linea + compas, true);
+				linea++;
+			}	
+		}
+		System.out.println("Nuevo archivo generado: " + miCancion.getNombre()+".mma");
+		crearMMA("mma " + miCancion.getNombre(), false);
+	}
+
+	//#########################################################################################
+	/**
+	 * Escribe en un archivo con el nombre dado
+	 * el contenido especificado
+	 * la variable agregar indica si se debe agregar el contenido o crear uno nuevo 
+	 * 
+	 * 
+	 * @param nombre
+	 * @param contenido
+	 * @param agregar : true agrega una nueva linea , false crea uno nuevo o sobreescribe el que esta
+	 **/
+	//#########################################################################################
+	private static void escribirArchivo(String nombre, String contenido, boolean agregar) {
+
+		FileOutputStream archivo = null;
+		BufferedOutputStream buffer = null;
+		byte entrada[] = new byte [100];
+		ArrayList<String> lista = new ArrayList<String>(5);
+
+		try {
+			archivo = new FileOutputStream(nombre, agregar);
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
+			buffer = new BufferedOutputStream(archivo);
+			buffer.write(contenido.getBytes());
+			buffer.write("\n".getBytes());
+			buffer.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	//################################################################################
+	/**
+	 * crearMMA
+	 * @param command: comando a ejecutar, incluyendo parametros
+	 * @param flagbackground: valor boolean para determinar si el comando se ejecuta en background (solo en linux)
+	 **/
+	//################################################################################
+	private static boolean crearMMA(String command, boolean flagbackground) {
+		
+		// Definimos la cadena del interprete de comandos del sistema 
+		String commandShell=null; 
+	
+		// Recuperamos el sistema operativo 
+		String osName = System.getProperty ( "os.name" ); 
+	
+		// Cargamos la cadena del interprete de comandos según el sistema operativo y el comando a ejecutar 
+		if ( osName.equals ("Windows XP") ) 
+			commandShell = "cmd.exe /C " + command; 
+		else 
+			if ( osName.equals ("Windows 95") || osName.equals ("Windows 98") ) 
+				commandShell = "start " + command; 
+			else { 
+					// 	En UNIX y LUNUX podemos lanzar el proceso en background sufijandolo con & 
+				if (flagbackground) 
+					commandShell = "" + command +" &" ; 
+				else 
+					commandShell = "" + command ; 
+				} 
+	
+			// Lanzamos el proceso	
+		try { 
+			Process proc = Runtime.getRuntime ().exec (commandShell); 
+			BufferedReader brStdOut = new BufferedReader(new InputStreamReader(proc.getInputStream())); 
+			BufferedReader brStdErr = new BufferedReader(new InputStreamReader(proc.getErrorStream())); 
+			String str=null; 
+			while ((str = brStdOut.readLine())!=null) { 
+				System.out.println (str); 
+			} 
+			brStdOut.close(); 
+			brStdErr.close(); 
+			} catch (IOException eproc) { 
+					//System.out.println ("Error to execute the command : "+eproc); 
+					return false; 
+		} 
+		return true; 
 	}
 
 }
