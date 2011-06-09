@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import utiles.Constantes;
+
 import archivos.Utiles;
 
 import excepciones.EstilosException;
@@ -190,13 +192,13 @@ public class MatrizEstilos {
 			cant = Utiles.calculaCantAcordesPorCompas(acordes);
 		
 			switch (cant) {
-				case Utiles.UN_ACORDE: miEstiloFila.incrementarUnAcordeEnCompas();
+				case Constantes.UN_ACORDE: miEstiloFila.incrementarUnAcordeEnCompas();
 										break;
-				case Utiles.DOS_ACORDE: miEstiloFila.incrementarDosAcordeEnCompas();
+				case Constantes.DOS_ACORDE: miEstiloFila.incrementarDosAcordeEnCompas();
 										break;
-				case Utiles.TRES_ACORDE: miEstiloFila.incrementarTresAcordeEnCompas();
+				case Constantes.TRES_ACORDE: miEstiloFila.incrementarTresAcordeEnCompas();
 										break;
-				case Utiles.CUATRO_ACORDE: miEstiloFila.incrementarCuatroAcordeEnCompas();
+				case Constantes.CUATRO_ACORDE: miEstiloFila.incrementarCuatroAcordeEnCompas();
 										break;
 			}
 		}

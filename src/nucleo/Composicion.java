@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
+
+import utiles.Constantes;
 import archivos.Utiles;
 import canciones.Acorde;
 import canciones.Cancion;
@@ -114,8 +116,8 @@ public class Composicion {
 		Map<String, EstilosFila> mapEstilo = miMatrizEstilos.getMisEstilos();
 		
 		if (estiloInicial.indexOf("Intro") == -1) {
-			if (mapEstilo.containsKey(estiloInicial+Utiles.INTRO_ESTILO)) {
-				estiloInicial = estiloInicial+Utiles.INTRO_ESTILO;		// obtengo el estilo inicial para comenzar a armar la estructura de estilos
+			if (mapEstilo.containsKey(estiloInicial+Constantes.INTRO_ESTILO)) {
+				estiloInicial = estiloInicial+Constantes.INTRO_ESTILO;		// obtengo el estilo inicial para comenzar a armar la estructura de estilos
 			} 
 		}
 		
@@ -159,7 +161,7 @@ public class Composicion {
 			estilo = miEstiloFila.buscarEstilo(rnd.nextInt(semilla+1));
 			
 			// si encontramos el End terminamos de armar la estructura
-			if ((estilo.indexOf(Utiles.END_ESTILO) != -1) || (estilo.indexOf(Utiles.INTRO_ESTILO) != -1)) {
+			if ((estilo.indexOf(Constantes.END_ESTILO) != -1) || (estilo.indexOf(Constantes.INTRO_ESTILO) != -1)) {
 				System.out.println("CORTE POR ENCONTRAR: " + estilo);
 				break;
 			}
@@ -284,7 +286,7 @@ public class Composicion {
 			throw new CancionException("Error en la composición - Falta el acorde anterior - " + Composicion.class);
 		}
 		
-		if (miCompas.getCantidadAcordes() < Utiles.MINIMO_ACORDES || miCompas.getCantidadAcordes() > Utiles.MAXIMO_ACORDES) {
+		if (miCompas.getCantidadAcordes() < Constantes.MINIMO_ACORDES || miCompas.getCantidadAcordes() > Constantes.MAXIMO_ACORDES) {
 			throw new CancionException("Error en la composición - No se pueden generar " + miCompas.getCantidadAcordes() + " acordes. - " + Composicion.class);
 		}
 		
