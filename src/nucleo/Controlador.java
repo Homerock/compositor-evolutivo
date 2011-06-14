@@ -9,6 +9,7 @@ import javax.swing.JFileChooser;
 
 import archivos.Archivos;
 import archivos.Estilos;
+import canciones.Acorde;
 import canciones.Cancion;
 import canciones.CancionAprendida;
 
@@ -326,7 +327,6 @@ public class Controlador {
 	public void componer(String tonica, String estilo, String tempo, String duracion) {
 		
 		Composicion miCompositor = new Composicion();
-		
 		//Obtengo la matriz de acordes correspondiente a el estilo principal
 		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(estilo);
 
@@ -356,6 +356,66 @@ public class Controlador {
 			System.err.println(e.getMessage());
 			return;
 		}
+	}
+	
+	//#########################################################################################
+	/**
+	 * 
+	 * @param tonica
+	 * @param estilo
+	 * @param tempo
+	 * @param duracion
+	 * @param estructura
+	 */
+	//#########################################################################################
+	public void componerConEstructruras(String tonica, String estilo, String tempo, int estructura) {
+		
+		Composicion miCompositor = new Composicion();
+		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(estilo);
+		Acorde acorde = new Acorde(tonica);
+		Cancion nuevaCancion = new Cancion("NuevaCancion",tempo,acorde,estilo);
+		
+		int cantCompasesIntro; 
+		int cantCompasesEstrofaA; 
+		int cantCompasesEstrofaB; 
+		int cantCompasesEstrofaC;
+		int cantCompasesEnd;
+		
+		switch(estructura) {
+			case Constantes.ESTRUCTURA_A: 	
+				cantCompasesIntro = 2;
+				cantCompasesEstrofaA = 4;
+				cantCompasesEstrofaB = 8;
+				cantCompasesEnd = 1;
+				miCompositor.armarEstructuraA(miMatrizEstilos, nuevaCancion, cantCompasesIntro, cantCompasesEstrofaA, cantCompasesEstrofaB, cantCompasesEnd);
+				break;
+			case Constantes.ESTRUCTURA_B:
+				cantCompasesIntro = 2;
+				cantCompasesEstrofaA = 4;
+				cantCompasesEstrofaB = 8;
+				cantCompasesEstrofaC = 6;
+				cantCompasesEnd = 1;
+				miCompositor.armarEstructuraB(miMatrizEstilos, nuevaCancion, cantCompasesIntro, cantCompasesEstrofaA, cantCompasesEstrofaB, cantCompasesEstrofaC, cantCompasesEnd);
+				break;
+			case Constantes.ESTRUCTURA_C: 
+				cantCompasesIntro = 2;
+				cantCompasesEstrofaA = 4;
+				cantCompasesEstrofaB = 8;
+				cantCompasesEnd = 1;
+				miCompositor.armarEstructuraC(miMatrizEstilos, nuevaCancion, cantCompasesIntro, cantCompasesEstrofaA, cantCompasesEstrofaB, cantCompasesEnd);
+				break;
+			
+		}
+		
+		
+		try {
+			miCompositor.cargarAcordesEnEstructura(miMatrizAcordes, nuevaCancion);
+		} catch (CancionException e) {
+			
+			e.printStackTrace();
+		}
+		System.out.println(nuevaCancion.toString());
+		
 	}
 	
 	//#########################################################################################
