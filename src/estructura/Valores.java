@@ -8,9 +8,11 @@ package estructura;
   *---------------------------------------------------------------------------*/
 public class Valores {
 	
-	private String valor;
+	private String valor;//cadena que lo identifica
 	private String estilo;
 	private int cantidad;
+	
+	boolean modificado; // para optimizacion de la base de dato
 	
 	
 	/**---------------------------------------------------------------------------
@@ -20,6 +22,8 @@ public class Valores {
 		this.valor="";
 		this.estilo="";
 		this.cantidad=0;
+		modificado = false;
+		
 		return;
 	}
 	
@@ -33,6 +37,7 @@ public class Valores {
 		this.valor=valor;
 		this.estilo= estilo;
 		this.cantidad=cant;
+		modificado = false;
 		return;
 	}
 
@@ -46,6 +51,8 @@ public class Valores {
 		this.valor="";
 		this.estilo= estilo;
 		this.cantidad=cant;
+		
+		modificado = false;
 		return;
 	}
 	

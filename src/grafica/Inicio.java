@@ -1,8 +1,5 @@
 package grafica;
 
-import archivos.Reconocedor;
-import orm.Conexion;
-import net.java.ao.EntityManager;
 import nucleo.Controlador;
 
 
@@ -17,7 +14,7 @@ public class Inicio {
 
 	public static void main(String args[]){
 		
-			EntityManager manager = Conexion.getConexionPsql();
+			//EntityManager manager = Conexion.getConexionPsql();
 			
 			Controlador controlador = new Controlador();
 			//Reconocedor.cargarTablasAcordes();
