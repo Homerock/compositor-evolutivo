@@ -373,7 +373,7 @@ public class Controlador {
 		Composicion miCompositor = new Composicion();
 		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(estilo);
 		Acorde acorde = new Acorde(tonica);
-		Cancion nuevaCancion = new Cancion("NuevaCancion",tempo,acorde,estilo);
+		Cancion nuevaCancion = new Cancion(estilo+"_"+tonica,tempo,acorde,estilo);
 		
 		int cantCompasesIntro; 
 		int cantCompasesEstrofaA; 
@@ -410,9 +410,28 @@ public class Controlador {
 		
 		try {
 			miCompositor.cargarAcordesEnEstructura(miMatrizAcordes, nuevaCancion);
-		} catch (CancionException e) {
+			Archivos.generarArchivo(nuevaCancion);
+			// cargo en la matriz la nueva cancion que compuse
+			Aprendizaje.aprenderCancion(nuevaCancion.getNombre()+ Constantes.EXTENSION_ARCHIVO);
+			// vuelvo a calcular los acumulados para seguir componiendo
+			this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
+			this.getMiMatrizEstilos().calcularAcumulados();
 			
-			e.printStackTrace();
+		}  catch (CancionException e) {
+			System.err.println(e.getMessage());
+			return;
+		} catch (NumberFormatException e) {
+			System.err.println(e.getMessage());
+			return;
+		} catch (EstilosException e) {
+			System.err.println(e.getMessage());
+			return;
+		} catch (ValoresException e) {
+			System.err.println(e.getMessage());
+			return;
+		} catch (ArchivosException e) {
+			System.err.println(e.getMessage());
+			return;
 		}
 		System.out.println(nuevaCancion.toString());
 		
