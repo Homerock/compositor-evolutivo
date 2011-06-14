@@ -69,10 +69,14 @@ public class ListaValores {
 		listaValores.add(new Valores(estilo,1));
 		return;	
 	}
-
-	/**---------------------------------------------------------------------------
-	  * 
-	  *---------------------------------------------------------------------------*/
+	
+	/**
+	 * Agrega un valor (cadena que lo identifica) a la lista, con la cantidad y el estilo pasado por parametros.
+	 * 
+	 * @param valor
+	 * @param cantidad
+	 * @param estilo
+	 */
 	public void agregarValor(String valor, int cantidad, String estilo) {
 		
 		ArrayList<Valores> listaValores = this.getLista();
@@ -82,7 +86,7 @@ public class ListaValores {
 	}
 	
 	/**---------------------------------------------------------------------------
-	  * 
+	  * BORRAR  
 	  *---------------------------------------------------------------------------*/
 	public void listarValor() {
 		
@@ -94,6 +98,29 @@ public class ListaValores {
 		}
 		System.out.println("-------------------------------------------------------");
 	}
+	
+	
+	
+	
+	/**
+	 * toString
+	 */
+	public String toString() {
+		
+		ArrayList<Valores> listaValores = this.getLista();
+		if(listaValores.size()==0){
+			return "";
+		}
+		String salida = "------------------------------------------------------- \n";
+		for (Valores va : listaValores) {
+			salida += "---- Valor: "+va.getValor()+" ---- Total: "+ va.getCantidad()+" ---- estilo: "+ va.getEstilo()+ "\n";	
+		}
+		salida+="-------------------------------------------------------\n";
+		
+		return salida;
+	}
+	
+	
 	
 	/**---------------------------------------------------------------------------
 	  * 

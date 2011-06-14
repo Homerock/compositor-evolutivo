@@ -32,7 +32,8 @@ create table estilos(
 	unacordeencompas integer default 0,
 	dosacordesencompas integer default 0,
 	tresacordesencompas integer default 0,
-	cuatroacordesencompas integer default 0
+	cuatroacordesencompas integer default 0,
+	esprincipal boolean default false
 );
 alter table estilos add constraint estilos_unique_key unique(nombre);
 

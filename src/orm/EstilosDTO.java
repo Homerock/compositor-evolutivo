@@ -151,7 +151,8 @@ public class EstilosDTO {
 			int unAcordeEnCompas,
 			int dosAcordesEnCompas,
 			int tresAcordesEnCompas,
-			int cuatroAcordesEnCompas
+			int cuatroAcordesEnCompas,
+			boolean esPrincipal
 			) throws SQLException, ORMException {
 		
 	
@@ -166,6 +167,7 @@ public class EstilosDTO {
 			e[0].setDosAcordesEnCompas(dosAcordesEnCompas);
 			e[0].setTresAcordesEnCompas(tresAcordesEnCompas);
 			e[0].setCuatroAcordesEnCompas(cuatroAcordesEnCompas);
+			e[0].setEsPrincipal(esPrincipal);
 			e[0].save();
 			
 		}catch(ArrayIndexOutOfBoundsException e){
@@ -234,6 +236,16 @@ public class EstilosDTO {
 		Estilos[] estilos = null;
 		estilos= manager.find(Estilos.class);
 		return estilos;
+	}
+	
+	
+	
+	public static Estilos[] seleccionarTodosPrincipales(EntityManager manager) throws SQLException {
+				
+		Estilos[] e1 = manager.find(Estilos.class,Query.select().where(" esprincipal "));
+		return e1;
+			
+		
 	}
 	
 }
