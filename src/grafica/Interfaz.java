@@ -337,7 +337,7 @@ public class Interfaz implements ItemListener{
 					String tonica = Interfaz.this.tonicaAvanzadoText.getText();
 					String estilo = (String) Interfaz.this.jComboEstiloAvanzado.getSelectedItem();
 					String tempo = Interfaz.this.tempoAvanzadoText.getText();
-					String estructura = (String) Interfaz.this.jComboEstiloAvanzado.getSelectedItem();
+					int estructura = (Integer) Interfaz.this.jComboEstructuraAvanzado.getSelectedItem();
 					
 					if (tonica.trim().equals("") || estilo == null || tempo.trim().equals("")) {
 						JOptionPane.showConfirmDialog(framePrincipal, "Falta ingresar datos","Componer", OK_ACEPTAR);
@@ -347,7 +347,8 @@ public class Interfaz implements ItemListener{
 						JOptionPane.showConfirmDialog(framePrincipal, "El acorde de tonica es incorrecto","Componer", OK_ACEPTAR);
 						return;
 					}
-					controlador.componerConEstructruras(tonica, estilo, tempo, Integer.parseInt(estructura));
+					System.out.println(estructura);
+					controlador.componerConEstructruras(tonica, estilo, tempo, estructura);
 				}	
 			}
 		}
