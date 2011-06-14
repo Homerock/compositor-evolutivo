@@ -53,6 +53,22 @@ public class Cancion {
 		this.setEstrofas(new ArrayList<Estrofa>());
 	}
 	
+	/**
+	 * Crea un nuevo objeto cancion.
+	 * 
+	 * @param nombre
+	 * @param tempo
+	 * @param tonica
+	 * @param estiloPrincipal
+	 */
+	public Cancion(String nombre,String tempo,Acorde tonica,String estiloPrincipal){
+		this.setNombre(nombre);
+		this.setTempo(tempo);
+		this.setDuracion(0);
+		this.setTonica(tonica);
+		this.setEstiloPrincipal(estiloPrincipal);
+		this.setEstrofas(new ArrayList<Estrofa>());
+	}
 	
 
 	/*################################################################################################################

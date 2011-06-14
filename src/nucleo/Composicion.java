@@ -104,6 +104,364 @@ public class Composicion {
 		
 	//################################################################################
 	/**
+	 * dado un estilo, se busca dentro de la cancion si ya existe una estrofa para este estilo
+	 * si existe la clona y genera otra con la misma esctructura
+	 * @param nuevaCancion
+	 * @param estilo
+	 * @param numEstrofa
+	 */
+	//################################################################################
+	private void clonarEstrofa(Cancion nuevaCancion, String estilo, int numEstrofa) {
+		
+		Estrofa miEstrofa, estrofaGemela;
+		
+		miEstrofa = nuevaCancion.buscarEstrofaEstilo(estilo);
+		estrofaGemela = (Estrofa) miEstrofa.clone();
+		estrofaGemela.setEsEstrofaGemela(true);
+		estrofaGemela.setNumeroEstrofa(numEstrofa);
+		estrofaGemela.setNroEstrofaGemela(miEstrofa.getNumeroEstrofa());
+		nuevaCancion.agregarEstrofa(estrofaGemela);
+		
+	}
+	
+	//################################################################################
+	/**
+	 * Armamos Intro - A - A - B - A - A - B - End
+	 * @param miMatrizEstilos
+	 * @param nuevaCancion
+	 * @param cantCompasesIntro
+	 * @param cantCompasesEstrofaA
+	 * @param cantCompasesEstrofaB
+	 * @param cantCompasesEnd
+	 */
+	//################################################################################
+	public void armarEstructuraA(MatrizEstilos miMatrizEstilos, Cancion nuevaCancion, int cantCompasesIntro, 
+			int cantCompasesEstrofaA, int cantCompasesEstrofaB, int cantCompasesEnd) {
+		
+		Estrofa miEstrofa;
+		int cantAcordes;
+		int semilla;
+		int numEstrofa = 0;
+		Random rnd = new Random();
+		EstilosFila miEstiloFila;
+		String estiloInicial = nuevaCancion.getEstiloPrincipal();
+		Map<String, EstilosFila> mapEstilo = miMatrizEstilos.getMisEstilos();
+		
+		
+		if (estiloInicial.indexOf(Constantes.INTRO_ESTILO) == -1) {
+			if (mapEstilo.containsKey(estiloInicial+Constantes.INTRO_ESTILO)) {
+				numEstrofa++;
+				String estiloIntro = estiloInicial+Constantes.INTRO_ESTILO;		// obtengo el estilo inicial para comenzar a armar la estructura de estilos
+				miEstiloFila = miMatrizEstilos.getMisEstilos().get(estiloIntro);
+				//CARGO LA INTRO
+				miEstrofa = new Estrofa(numEstrofa,estiloIntro,cantCompasesIntro);
+				for (int i = 0; i < cantCompasesIntro; i++) {
+					cantAcordes = this.calcularCantidadAcordesUnCompas(miEstiloFila);
+					Compas miCompas = new Compas(cantAcordes);
+					miEstrofa.agregarCompas(miCompas);
+				}
+				nuevaCancion.agregarEstrofa(miEstrofa);
+			} 
+		}
+		
+		// CARGO ESTROFA A
+		numEstrofa++;
+		miEstiloFila = miMatrizEstilos.getMisEstilos().get(estiloInicial);
+		miEstrofa = new Estrofa(numEstrofa,estiloInicial,cantCompasesEstrofaA);
+		for (int i = 0; i < cantCompasesEstrofaA; i++) {
+			cantAcordes = this.calcularCantidadAcordesUnCompas(miEstiloFila);
+			Compas miCompas = new Compas(cantAcordes);
+			miEstrofa.agregarCompas(miCompas);
+		}
+		nuevaCancion.agregarEstrofa(miEstrofa);
+		
+		// CARGO ESTROFA A otra vez
+		numEstrofa++;
+		clonarEstrofa(nuevaCancion, estiloInicial, numEstrofa);
+		
+		
+		String estiloB;
+		semilla = miEstiloFila.getContador();
+		do {
+			estiloB = miEstiloFila.buscarEstilo(rnd.nextInt(semilla+1));	
+		} while(Utiles.cadenaContienePatron(estiloB, Constantes.END_ESTILO) || Utiles.cadenaContienePatron(estiloB, Constantes.FILL_ESTILO)
+				|| estiloB.equalsIgnoreCase(estiloInicial));
+		
+		// CARGO ESTROFA B
+		numEstrofa++;
+		miEstiloFila = miMatrizEstilos.getMisEstilos().get(estiloB);
+		miEstrofa = new Estrofa(numEstrofa,estiloB,cantCompasesEstrofaB);
+		for (int i = 0; i < cantCompasesEstrofaB; i++) {
+			cantAcordes = this.calcularCantidadAcordesUnCompas(miEstiloFila);
+			Compas miCompas = new Compas(cantAcordes);
+			miEstrofa.agregarCompas(miCompas);
+		}
+		nuevaCancion.agregarEstrofa(miEstrofa);
+		
+		// CARGO ESTROFA A otra vez
+		numEstrofa++;
+		clonarEstrofa(nuevaCancion, estiloInicial, numEstrofa);
+		
+		// CARGO ESTROFA A otra vez
+		numEstrofa++;
+		clonarEstrofa(nuevaCancion, estiloInicial, numEstrofa);
+		
+		// CARGO ESTROFA B otra vez
+		numEstrofa++;
+		clonarEstrofa(nuevaCancion, estiloB, numEstrofa);
+		
+		// BUSCO Y SI EXISTE CARGO EL FINAL
+		if (mapEstilo.containsKey(estiloInicial+Constantes.END_ESTILO)) {
+			numEstrofa++;
+			String estiloEnd = estiloInicial+Constantes.END_ESTILO;
+			miEstrofa = new Estrofa(numEstrofa,estiloEnd,cantCompasesEnd);
+			for (int i = 0; i < cantCompasesEnd; i++) {
+				cantAcordes = this.calcularCantidadAcordesUnCompas(miEstiloFila);
+				Compas miCompas = new Compas(cantAcordes);
+				miEstrofa.agregarCompas(miCompas);
+			}
+			nuevaCancion.agregarEstrofa(miEstrofa);
+		}
+	}
+	
+	//################################################################################
+	/**
+	 * Armamos Intro - A - B - C - Fill - A - B - C - End
+	 * @param miMatrizEstilos
+	 * @param nuevaCancion
+	 * @param cantCompasesIntro
+	 * @param cantCompasesEstrofaA
+	 * @param cantCompasesEstrofaB
+	 * @param cantCompasesEstrofaC
+	 * @param cantCompasesEnd
+	 */
+	//################################################################################
+	public void armarEstructuraB(MatrizEstilos miMatrizEstilos, Cancion nuevaCancion, int cantCompasesIntro, 
+			int cantCompasesEstrofaA, int cantCompasesEstrofaB, int cantCompasesEstrofaC, int cantCompasesEnd) {
+		
+		Estrofa miEstrofa;
+		int cantCompasesFill = 1;
+		int cantAcordes;
+		int semilla;
+		int numEstrofa = 0;
+		Random rnd = new Random();
+		EstilosFila miEstiloFila;
+		String estiloInicial = nuevaCancion.getEstiloPrincipal();
+		Map<String, EstilosFila> mapEstilo = miMatrizEstilos.getMisEstilos();
+		
+		if (estiloInicial.indexOf(Constantes.INTRO_ESTILO) == -1) {
+			if (mapEstilo.containsKey(estiloInicial+Constantes.INTRO_ESTILO)) {
+				numEstrofa++;
+				String estiloIntro = estiloInicial+Constantes.INTRO_ESTILO;		// obtengo el estilo inicial para comenzar a armar la estructura de estilos
+				miEstiloFila = miMatrizEstilos.getMisEstilos().get(estiloIntro);
+				//CARGO LA INTRO
+				miEstrofa = new Estrofa(numEstrofa,estiloIntro,cantCompasesIntro);
+				for (int i = 0; i < cantCompasesIntro; i++) {
+					cantAcordes = this.calcularCantidadAcordesUnCompas(miEstiloFila);
+					Compas miCompas = new Compas(cantAcordes);
+					miEstrofa.agregarCompas(miCompas);
+				}
+				nuevaCancion.agregarEstrofa(miEstrofa);
+			} 
+		}
+		
+		// CARGO ESTROFA A
+		numEstrofa++;
+		miEstiloFila = miMatrizEstilos.getMisEstilos().get(estiloInicial);
+		miEstrofa = new Estrofa(numEstrofa,estiloInicial,cantCompasesEstrofaA);
+		for (int i = 0; i < cantCompasesEstrofaA; i++) {
+			cantAcordes = this.calcularCantidadAcordesUnCompas(miEstiloFila);
+			Compas miCompas = new Compas(cantAcordes);
+			miEstrofa.agregarCompas(miCompas);
+		}
+		nuevaCancion.agregarEstrofa(miEstrofa);
+		
+		String estiloB;
+		semilla = miEstiloFila.getContador();
+		do {
+			estiloB = miEstiloFila.buscarEstilo(rnd.nextInt(semilla+1));
+		} while(Utiles.cadenaContienePatron(estiloB, Constantes.END_ESTILO) || Utiles.cadenaContienePatron(estiloB, Constantes.FILL_ESTILO) 
+				|| estiloB.equalsIgnoreCase(estiloInicial));
+		
+		// CARGO ESTROFA B
+		numEstrofa++;
+		miEstiloFila = miMatrizEstilos.getMisEstilos().get(estiloB);
+		miEstrofa = new Estrofa(numEstrofa,estiloB,cantCompasesEstrofaB);
+		for (int i = 0; i < cantCompasesEstrofaB; i++) {
+			cantAcordes = this.calcularCantidadAcordesUnCompas(miEstiloFila);
+			Compas miCompas = new Compas(cantAcordes);
+			miEstrofa.agregarCompas(miCompas);
+		}
+		nuevaCancion.agregarEstrofa(miEstrofa);
+		
+		String estiloC;
+		semilla = miEstiloFila.getContador();
+		do {
+			estiloC = miEstiloFila.buscarEstilo(rnd.nextInt(semilla+1));	
+		} while(Utiles.cadenaContienePatron(estiloC, Constantes.END_ESTILO) || Utiles.cadenaContienePatron(estiloC, Constantes.FILL_ESTILO)
+				);
+		
+		// CARGO ESTROFA C
+		numEstrofa++;
+		miEstiloFila = miMatrizEstilos.getMisEstilos().get(estiloC);
+		miEstrofa = new Estrofa(numEstrofa,estiloC,cantCompasesEstrofaC);
+		for (int i = 0; i < cantCompasesEstrofaC; i++) {
+			cantAcordes = this.calcularCantidadAcordesUnCompas(miEstiloFila);
+			Compas miCompas = new Compas(cantAcordes);
+			miEstrofa.agregarCompas(miCompas);
+		}
+		nuevaCancion.agregarEstrofa(miEstrofa);
+		
+		// BUSCO UN FILL, SI EXISTE LO CARGO
+		if (mapEstilo.containsKey(estiloInicial+Constantes.FILL_ESTILO)) {
+			numEstrofa++;
+			String estiloFill = estiloInicial+Constantes.FILL_ESTILO;		
+			miEstiloFila = miMatrizEstilos.getMisEstilos().get(estiloFill);
+			//CARGO EL FILL
+			miEstrofa = new Estrofa(numEstrofa,estiloFill,cantCompasesFill);
+			for (int i = 0; i < cantCompasesFill; i++) {
+				cantAcordes = this.calcularCantidadAcordesUnCompas(miEstiloFila);
+				Compas miCompas = new Compas(cantAcordes);
+				miEstrofa.agregarCompas(miCompas);
+			}
+			nuevaCancion.agregarEstrofa(miEstrofa);
+		} 
+		
+		// CLONAMOS A
+		numEstrofa++;
+		clonarEstrofa(nuevaCancion, estiloInicial, numEstrofa);
+		
+		// CLONAMOS B
+		numEstrofa++;
+		clonarEstrofa(nuevaCancion, estiloB, numEstrofa);
+		
+		// CLONAMOS C
+		numEstrofa++;
+		clonarEstrofa(nuevaCancion, estiloC, numEstrofa);
+		
+		// BUSCO Y SI EXISTE CARGO EL FINAL
+		if (mapEstilo.containsKey(estiloInicial+Constantes.END_ESTILO)) {
+			numEstrofa++;
+			String estiloEnd = estiloInicial+Constantes.END_ESTILO;
+			miEstrofa = new Estrofa(numEstrofa,estiloEnd,cantCompasesEnd);
+			for (int i = 0; i < cantCompasesEnd; i++) {
+				cantAcordes = this.calcularCantidadAcordesUnCompas(miEstiloFila);
+				Compas miCompas = new Compas(cantAcordes);
+				miEstrofa.agregarCompas(miCompas);
+			}
+			nuevaCancion.agregarEstrofa(miEstrofa);
+		}
+	}
+	
+	
+	
+	//################################################################################
+	/**
+	 * Armamos Intro - A - B - B - A - B - B' - A - End
+	 * @param miMatrizEstilos
+	 * @param nuevaCancion
+	 * @param cantCompasesIntro
+	 * @param cantCompasesEstrofaA
+	 * @param cantCompasesEstrofaB
+	 * @param cantCompasesEnd
+	 */
+	//################################################################################
+	public void armarEstructuraC(MatrizEstilos miMatrizEstilos, Cancion nuevaCancion, int cantCompasesIntro, 
+			int cantCompasesEstrofaA, int cantCompasesEstrofaB, int cantCompasesEnd) {
+		
+		Estrofa miEstrofa;
+		int cantAcordes;
+		int semilla;
+		int numEstrofa = 0;
+		Random rnd = new Random();
+		EstilosFila miEstiloFila;
+		String estiloInicial = nuevaCancion.getEstiloPrincipal();
+		Map<String, EstilosFila> mapEstilo = miMatrizEstilos.getMisEstilos();
+		
+		
+		if (estiloInicial.indexOf(Constantes.INTRO_ESTILO) == -1) {
+			if (mapEstilo.containsKey(estiloInicial+Constantes.INTRO_ESTILO)) {
+				numEstrofa++;
+				String estiloIntro = estiloInicial+Constantes.INTRO_ESTILO;		// obtengo el estilo inicial para comenzar a armar la estructura de estilos
+				miEstiloFila = miMatrizEstilos.getMisEstilos().get(estiloIntro);
+				//CARGO LA INTRO
+				miEstrofa = new Estrofa(numEstrofa,estiloIntro,cantCompasesIntro);
+				for (int i = 0; i < cantCompasesIntro; i++) {
+					cantAcordes = this.calcularCantidadAcordesUnCompas(miEstiloFila);
+					Compas miCompas = new Compas(cantAcordes);
+					miEstrofa.agregarCompas(miCompas);
+				}
+				nuevaCancion.agregarEstrofa(miEstrofa);
+			} 
+		}
+		
+		// CARGO ESTROFA A
+		numEstrofa++;
+		miEstiloFila = miMatrizEstilos.getMisEstilos().get(estiloInicial);
+		miEstrofa = new Estrofa(numEstrofa,estiloInicial,cantCompasesEstrofaA);
+		for (int i = 0; i < cantCompasesEstrofaA; i++) {
+			cantAcordes = this.calcularCantidadAcordesUnCompas(miEstiloFila);
+			Compas miCompas = new Compas(cantAcordes);
+			miEstrofa.agregarCompas(miCompas);
+		}
+		nuevaCancion.agregarEstrofa(miEstrofa);
+		
+		String estiloB;
+		semilla = miEstiloFila.getContador();
+		do {
+			estiloB = miEstiloFila.buscarEstilo(rnd.nextInt(semilla+1));
+		} while(Utiles.cadenaContienePatron(estiloB, Constantes.END_ESTILO) || Utiles.cadenaContienePatron(estiloB, Constantes.FILL_ESTILO) 
+				|| estiloB.equalsIgnoreCase(estiloInicial));
+		
+		// CARGO ESTROFA B
+		numEstrofa++;
+		miEstiloFila = miMatrizEstilos.getMisEstilos().get(estiloB);
+		miEstrofa = new Estrofa(numEstrofa,estiloB,cantCompasesEstrofaB);
+		for (int i = 0; i < cantCompasesEstrofaB; i++) {
+			cantAcordes = this.calcularCantidadAcordesUnCompas(miEstiloFila);
+			Compas miCompas = new Compas(cantAcordes);
+			miEstrofa.agregarCompas(miCompas);
+		}
+		nuevaCancion.agregarEstrofa(miEstrofa);
+		
+		// CLONAMOS B
+		numEstrofa++;
+		clonarEstrofa(nuevaCancion, estiloB, numEstrofa);
+		
+		// CLONAMOS A
+		numEstrofa++;
+		clonarEstrofa(nuevaCancion, estiloInicial, numEstrofa);
+		
+		// CLONAMOS B
+		numEstrofa++;
+		clonarEstrofa(nuevaCancion, estiloB, numEstrofa);
+		
+		// CLONAMOS B
+		numEstrofa++;
+		clonarEstrofa(nuevaCancion, estiloB, numEstrofa);
+		
+		// CLONAMOS A
+		numEstrofa++;
+		clonarEstrofa(nuevaCancion, estiloInicial, numEstrofa);
+		
+		// BUSCO Y SI EXISTE CARGO EL FINAL
+		if (mapEstilo.containsKey(estiloInicial+Constantes.END_ESTILO)) {
+			numEstrofa++;
+			String estiloEnd = estiloInicial+Constantes.END_ESTILO;
+			miEstrofa = new Estrofa(numEstrofa,estiloEnd,cantCompasesEnd);
+			for (int i = 0; i < cantCompasesEnd; i++) {
+				cantAcordes = this.calcularCantidadAcordesUnCompas(miEstiloFila);
+				Compas miCompas = new Compas(cantAcordes);
+				miEstrofa.agregarCompas(miCompas);
+			}
+			nuevaCancion.agregarEstrofa(miEstrofa);
+		}
+	}
+	
+	
+	
+	//################################################################################
+	/**
 	 * reemplaza el otro armarEstructuraEstilos
 	 * @param miMatrizEstilos
 	 * @param nuevaCancion
@@ -177,7 +535,7 @@ public class Composicion {
 	 * @throws CancionException 
 	 */
 	//################################################################################
-	private void cargarAcordesEnEstructura(MatrizAcordes miMatrizAcordes, Cancion nuevaCancion) throws CancionException {
+	public void cargarAcordesEnEstructura(MatrizAcordes miMatrizAcordes, Cancion nuevaCancion) throws CancionException {
 		
 		
 		Acorde acordeAnterior = nuevaCancion.getTonica();

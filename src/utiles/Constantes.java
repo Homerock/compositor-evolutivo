@@ -14,6 +14,7 @@ public interface Constantes {
 	public static final String VAR_ULTIMO_ESTILO ="$_LastGroove";
 	public static final String END_ESTILO ="End";
 	public static final String INTRO_ESTILO ="Intro";
+	public static final String FILL_ESTILO ="Fill";
 	public static final String SIN_ESTILO = "sinEstilo";
 	//REPEATS
 	public static final String REPEAT = "Repeat";
@@ -33,5 +34,9 @@ public interface Constantes {
 	public static final int MINIMO_ACORDES = 1;	// cantidad minima de acorde por compas
 	public static final int MAXIMO_ACORDES = 4; // cantidad maxima de acordes por compas
 
+	//COMPOSICION
+	public static final int ESTRUCTURA_A = 1;
+	public static final int ESTRUCTURA_B = 2;
+	public static final int ESTRUCTURA_C = 3;
 
 }

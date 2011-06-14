@@ -6,6 +6,8 @@ import javax.swing.*;
 import nucleo.Controlador;
 import archivos.Reconocedor;
 import sun.security.action.GetLongAction;
+import utiles.Constantes;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -65,14 +67,16 @@ public class Interfaz implements ItemListener{
 	private JComboBox jComboEstiloBasico;
 	private JComboBox jComboEstiloIntermedio;
 	private JComboBox jComboEstiloAvanzado;
+	private JComboBox jComboEstructuraAvanzado;
 	//input de text
 	private JTextField tonicaBasicoText;
 	private JTextField tonicaIntermedioText;
 	private JTextField tonicaAvanzadoText;
 	private JTextField cantCompasesIntermedioText;
 	private JTextField tempoIntermedioText;
-	private JTextField cantCompasesAvanzadoText;
 	private JTextField tempoAvanzadoText;
+	
+	
 	
 	public Interfaz(Controlador miControlador) {
 		
@@ -170,13 +174,16 @@ public class Interfaz implements ItemListener{
 		panelAvanzado.add(new JLabel(LABEL_ESTILO));
 		jComboEstiloAvanzado = new JComboBox();
 		panelAvanzado.add(jComboEstiloAvanzado);
-		panelAvanzado.add(new JLabel(LABEL_CANT_COMPASES));
-		cantCompasesAvanzadoText = new JTextField("",3);
-		panelAvanzado.add(cantCompasesAvanzadoText);
 		panelAvanzado.add(new JLabel(LABEL_TEMPO));
 		tempoAvanzadoText = new JTextField("",3);
 		panelAvanzado.add(tempoAvanzadoText);
 		panelAvanzado.add(new JLabel(LABEL_TIPO_CANCION));
+		jComboEstructuraAvanzado = new JComboBox();
+		Interfaz.this.jComboEstructuraAvanzado.addItem(Constantes.ESTRUCTURA_A);
+		Interfaz.this.jComboEstructuraAvanzado.addItem(Constantes.ESTRUCTURA_B);
+		Interfaz.this.jComboEstructuraAvanzado.addItem(Constantes.ESTRUCTURA_C);
+		panelAvanzado.add(jComboEstructuraAvanzado);
+		
 		
 		card.setLayout(new CardLayout());
 		card.add(TIPO_BASICO,panelBasico);
@@ -305,7 +312,7 @@ public class Interfaz implements ItemListener{
 						JOptionPane.showConfirmDialog(framePrincipal, "El acorde de tonica es incorrecto","Componer", OK_ACEPTAR);
 						return;
 					}
-					controlador.componer(tonica, estilo);	//lanus campeon - lunes 30-05 18:21Hs
+					controlador.componer(tonica, estilo);
 				}
 				
 				if (tipoComposicion.equals(TIPO_INTERMEDIO)){
@@ -330,10 +337,9 @@ public class Interfaz implements ItemListener{
 					String tonica = Interfaz.this.tonicaAvanzadoText.getText();
 					String estilo = (String) Interfaz.this.jComboEstiloAvanzado.getSelectedItem();
 					String tempo = Interfaz.this.tempoAvanzadoText.getText();
-					String cantCompases = Interfaz.this.cantCompasesAvanzadoText.getText();
-					// FALTA LA ESTRUCTURA
-					//********************
-					if (tonica.trim().equals("") || estilo == null || tempo.trim().equals("") || cantCompases.trim().equals("")) {
+					String estructura = (String) Interfaz.this.jComboEstiloAvanzado.getSelectedItem();
+					
+					if (tonica.trim().equals("") || estilo == null || tempo.trim().equals("")) {
 						JOptionPane.showConfirmDialog(framePrincipal, "Falta ingresar datos","Componer", OK_ACEPTAR);
 						return;
 					}
@@ -341,7 +347,7 @@ public class Interfaz implements ItemListener{
 						JOptionPane.showConfirmDialog(framePrincipal, "El acorde de tonica es incorrecto","Componer", OK_ACEPTAR);
 						return;
 					}
-					controlador.componer(tonica, estilo, tempo, cantCompases);
+					controlador.componerConEstructruras(tonica, estilo, tempo, Integer.parseInt(estructura));
 				}	
 			}
 		}

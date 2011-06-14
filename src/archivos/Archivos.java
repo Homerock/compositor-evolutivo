@@ -145,12 +145,12 @@ public class Archivos {
 		// preguntar si el nombre de la cancion ya existe en el directorio, si existe agregarle un numero
 		// ejemplo: rock_Am_1 volver a preguntar a ver si este tambien existe
 		
-		escribirArchivo(miCancion.getNombre()+".mma", "Tempo " + miCancion.getTempo(), false);
-		escribirArchivo(miCancion.getNombre()+".mma", "", true);
+		escribirArchivo(miCancion.getNombre()+Constantes.EXTENSION_ARCHIVO, "Tempo " + miCancion.getTempo(), false);
+		escribirArchivo(miCancion.getNombre()+Constantes.EXTENSION_ARCHIVO, "", true);
 		
 		for (Estrofa est : todasLasEstrofas) {
 			
-			escribirArchivo(miCancion.getNombre()+".mma", "Groove " + est.getEstilo(), true);
+			escribirArchivo(miCancion.getNombre()+Constantes.EXTENSION_ARCHIVO, "Groove " + est.getEstilo(), true);
 			
 			ArrayList<Compas> todosLosCompases = est.getListaDeCompases();
 		
@@ -160,11 +160,11 @@ public class Archivos {
 				for (Acorde ac : todosLosAcordes) {
 					compas = compas + " " + ac.getNombre();
 				}
-				escribirArchivo(miCancion.getNombre()+".mma", linea + compas, true);
+				escribirArchivo(miCancion.getNombre()+Constantes.EXTENSION_ARCHIVO, linea + compas, true);
 				linea++;
 			}	
 		}
-		System.out.println("Nuevo archivo generado: " + miCancion.getNombre()+".mma");
+		System.out.println("Nuevo archivo generado: " + miCancion.getNombre()+Constantes.EXTENSION_ARCHIVO);
 		crearMMA("mma " + miCancion.getNombre(), false);
 	}
 
