@@ -34,6 +34,12 @@ public interface Constantes {
 	public static final int MINIMO_ACORDES = 1;	// cantidad minima de acorde por compas
 	public static final int MAXIMO_ACORDES = 4; // cantidad maxima de acordes por compas
 
+	//CONSTANTES A UTILIZAR en MATRIZ ESTILOS
+	public static final int UN_COMPAS = 1;
+	public static final int DOS_COMPASES = 2;
+	public static final int CUATRO_COMPASES = 4;
+	public static final int OCHO_COMPASES = 8;
+	public static final int PAR = 2;
 	//COMPOSICION
 	public static final int ESTRUCTURA_A = 1;
 	public static final int ESTRUCTURA_B = 2;

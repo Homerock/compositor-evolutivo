@@ -12,23 +12,27 @@ import java.util.Random;
  *
  */
 public class EstilosFila {
-	
-	private String nombreEstilo;
-	private Map <String,ValorEstilos> mapEstilos;
-	private int contador; 
-	
+
+	//propios del estilo
+	private String nombreEstilo;	
 	private int cantUnCompas;
 	private int cantDosCompases;
 	private int cantCuatroCompases;
 	private int cantOchoCompases;
-	
-	
 	//contadores de acordes por compas
 	private int unAcordeEnCompas;
 	private int dosAcordesEnCompas;
 	private int tresAcordesEnCompas;
 	private int cuatroAcordesEnCompas;
-
+	
+	// para optimizacion de la base de datos	
+	private boolean modificado ;
+	
+	// para contabilizar las apariciones de los estilos secundarios
+	private Map <String,ValorEstilos> mapEstilos;
+	private int contador; //se setea en calcular acumulados
+	
+	 
 
 	/**---------------------------------------------------------------------------
 	  * Constructor de Estilos Fila 
@@ -48,6 +52,7 @@ public class EstilosFila {
 		this.dosAcordesEnCompas = 0;
 		this.tresAcordesEnCompas = 0;
 		this.cuatroAcordesEnCompas = 0;
+		this.setModificado(false);
 	}
 	/**------------------------------------------------------------------------
 	 * Constructor de Estilos Fila
@@ -63,9 +68,38 @@ public class EstilosFila {
 	 	this.setCantDosCompases(0);
 	 	this.setCantCuatroCompases(0);
 	 	this.setCantOchoCompases(0);
+	 	this.setModificado(false);
 	}
 	
 
+	
+	public EstilosFila(
+			String nombre,
+			int cantUnCompas,
+			int cantDosCompases,
+			int cantCuatroCompases,
+			int cantOchoCompases,
+			int unAcordeEnCompas ,
+			int dosAcordesEnCompas ,
+			int tresAcordesEnCompas,
+			int cuatroAcordesEnCompas
+			){
+		
+		this.setContador(0);
+		this.mapEstilos=new HashMap<String, ValorEstilos> ();
+		
+		this.setNombreEstilo(nombre);
+		this.setCantUnCompas(cantUnCompas);
+	 	this.setCantDosCompases(cantDosCompases);
+	 	this.setCantCuatroCompases(cantCuatroCompases);
+	 	this.setCantOchoCompases(cantOchoCompases);
+	 	
+	 	this.setUnAcordeEnCompas(unAcordeEnCompas);
+		this.setDosAcordesEnCompas(dosAcordesEnCompas);
+		this.setTresAcordesEnCompas(tresAcordesEnCompas);
+		this.setCuatroAcordesEnCompas(cuatroAcordesEnCompas);
+		this.setModificado(false);
+	}
 	/**
 	 *  Agrega en estilo al map con valor 1
 	 *  
@@ -359,8 +393,12 @@ public class EstilosFila {
 		this.cuatroAcordesEnCompas++;
 	}
 	
-	
-	
+	public boolean isModificado() {
+		return modificado;
+	}
+	public void setModificado(boolean modificado) {
+		this.modificado = modificado;
+	}
 	public String toString(){
 		
 		

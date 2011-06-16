@@ -49,7 +49,7 @@ public class ListaValores {
 				return;
 			}
 		}
-		listaValores.add(new Valores(valor,estilo,1));
+		listaValores.add(new Valores(valor,estilo,1,true));
 		return;	
 	}
 	

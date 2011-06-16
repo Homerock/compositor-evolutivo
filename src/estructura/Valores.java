@@ -12,7 +12,7 @@ public class Valores {
 	private String estilo;
 	private int cantidad;
 	
-	boolean modificado; // para optimizacion de la base de dato
+	private boolean modificado; // para optimizacion de la base de dato
 	
 	
 	/**---------------------------------------------------------------------------
@@ -22,7 +22,7 @@ public class Valores {
 		this.valor="";
 		this.estilo="";
 		this.cantidad=0;
-		modificado = false;
+		this.setModificado(false);
 		
 		return;
 	}
@@ -37,7 +37,21 @@ public class Valores {
 		this.valor=valor;
 		this.estilo= estilo;
 		this.cantidad=cant;
-		modificado = false;
+		this.setModificado(false);
+		return;
+	}
+	
+	/**---------------------------------------------------------------------------
+	  * Constructor 
+	  * 
+	  * @param val
+	  * @param valAc
+	  *---------------------------------------------------------------------------*/
+	public Valores(String valor, String estilo, int cant,boolean modificado){
+		this.valor=valor;
+		this.estilo= estilo;
+		this.cantidad=cant;
+		this.setModificado(modificado);
 		return;
 	}
 
@@ -51,8 +65,8 @@ public class Valores {
 		this.valor="";
 		this.estilo= estilo;
 		this.cantidad=cant;
+		this.setModificado(false);
 		
-		modificado = false;
 		return;
 	}
 	
@@ -102,6 +116,7 @@ public class Valores {
 	 *
 	 *---------------------------------------------------------------------------*/
 	public void incrementarCantidad() {
+		this.setModificado(true);
 		
 		int cant;
 		
@@ -109,6 +124,16 @@ public class Valores {
 		this.setCantidad(cant+1);
 	}
 		
+	
+	
+	public boolean isModificado() {
+		return modificado;
+	}
+
+	public void setModificado(boolean modificado) {
+		this.modificado = modificado;
+	}
+
 	/* ---------------------------------------------------------------------------
 	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
