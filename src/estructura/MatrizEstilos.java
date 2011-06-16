@@ -19,14 +19,6 @@ public class MatrizEstilos {
 	
 	private Map <String,EstilosFila> misEstilos;
 	
-	
-	
-	//CONSTANTES A UTILIZAR
-	private static final int UN_COMPAS = 1;
-	private static final int DOS_COMPASES = 2;
-	private static final int CUATRO_COMPASES = 4;
-	private static final int OCHO_COMPASES = 8;
-	private static final int PAR = 2;
 	private static boolean DEBUG = false;
 	
 		
@@ -89,6 +81,13 @@ public class MatrizEstilos {
 		return;
 	}
 	
+	
+	public void agregarEstilo(String EstiloPpal, EstilosFila estilosFila){
+		Map<String, EstilosFila> mapEstilos = this.getMisEstilos();
+		mapEstilos.put(EstiloPpal,estilosFila);
+		return;
+	}
+	
 	/**---------------------------------------------------------------------------
 	  * verifica si existe una Estilo ppal devolviendo verdadero
 	  * en caso contrario falso 
@@ -143,24 +142,24 @@ public class MatrizEstilos {
 			return;
 		}
 		
-		if(compas % PAR ==0){
+		if(compas % Constantes.PAR ==0){
 			// es un numero par
 			
-			if(compas % OCHO_COMPASES ==0){
-				miEstiloFila.incCantOchoCompases(compas/OCHO_COMPASES);
+			if(compas % Constantes.OCHO_COMPASES ==0){
+				miEstiloFila.incCantOchoCompases(compas/Constantes.OCHO_COMPASES);
 				
 				if(DEBUG)
-					System.out.println(" hay "+compas/OCHO_COMPASES+" de 8 ");
+					System.out.println(" hay "+compas/Constantes.OCHO_COMPASES+" de 8 ");
 			}else  
-					if(compas % CUATRO_COMPASES ==0){
-						miEstiloFila.incCantCuatroCompases(compas/CUATRO_COMPASES);
+					if(compas % Constantes.CUATRO_COMPASES ==0){
+						miEstiloFila.incCantCuatroCompases(compas/Constantes.CUATRO_COMPASES);
 						if(DEBUG)
-							System.out.println("hay "+compas/CUATRO_COMPASES+" de 4");
+							System.out.println("hay "+compas/Constantes.CUATRO_COMPASES+" de 4");
 					}else 
-						if(compas % DOS_COMPASES ==0){
-							miEstiloFila.incCantDosCompases(compas/DOS_COMPASES);
+						if(compas % Constantes.DOS_COMPASES ==0){
+							miEstiloFila.incCantDosCompases(compas/Constantes.DOS_COMPASES);
 							if(DEBUG)
-								System.out.println("hay "+compas/DOS_COMPASES+" de 2 ");	
+								System.out.println("hay "+compas/Constantes.DOS_COMPASES+" de 2 ");	
 						}
 			
 		}else{

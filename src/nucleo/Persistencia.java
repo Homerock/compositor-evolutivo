@@ -8,7 +8,9 @@ import java.util.Properties;
 
 import orm.*;
 
+import estructura.EstilosFila;
 import estructura.ListaValores;
+import estructura.MatrizEstilos;
 import excepciones.PersistenciaException;
 
 import net.java.ao.EntityManager;
@@ -96,6 +98,60 @@ public class Persistencia {
 		}
 	} 
 	
+	/**
+	 * guarda todos los estilos de la base de datos en la matriz, 
+	 * pero no las ocurrencias.
+	 * 
+	 * @param miMatrizEstilos
+	 * @throws PersistenciaException
+	 */
+	public void estilosAMemoria(MatrizEstilos miMatrizEstilos) throws PersistenciaException{
+		
+		try {
+			Estilos[] estilos = EstilosDTO.seleccionarTodos(this.getManager());
+			for(Estilos e: estilos){
+	
+				EstilosFila estiloFila = new EstilosFila(
+						e.getNombre(),
+						e.getCantUnCompas(),
+						e.getCantDosCompases(),
+						e.getCantCuatroCompases(),
+						e.getCantOchoCompases(),
+						e.getUnAcordeEnCompas(),
+						e.getDosAcordesEnCompas(),
+						e.getTresAcordesEnCompas(),
+						e.getCuatroAcordesEnCompas());
+				
+				miMatrizEstilos.agregarEstilo(e.getNombre(), estiloFila);
+			}
+			
+			
+		} catch (SQLException e) {
+			throw new PersistenciaException("Error al acceder a 'estilos' en la base de datos - "+e.getMessage());
+			
+		}
+		
+	}
+
+	//######################################################################################################
+	
+	public void ocurrenciasEstilosAMemoria(MatrizEstilos miMatrizEstilos) throws PersistenciaException {
+		try{	
+			OcurrenciasEstilos[] ocurrenciasEstilos = OcurrenciasEstilosDTO.seleccionarTodos(this.getManager());
+			for(OcurrenciasEstilos o : ocurrenciasEstilos){
+				
+				miMatrizEstilos.agregaOcurrenciaEstilo(
+						o.getEstiloPrincipal().getNombre(), 
+						o.getEstiloSecundario().getNombre(),
+						o.getCantidad());
+				
+			}
+		
+		} catch (SQLException e) {
+			throw new PersistenciaException("Error al acceder a 'estilos' en la base de datos - "+e.getMessage());
+		}
+		
+	}
 	
 	
 	

@@ -33,6 +33,7 @@ public class Controlador {
 	private ListaValores miListaDeEstilosPrincipales;
 	private MatrizEstilos miMatrizEstilos;
 	private Map<String, MatrizAcordes> MatrizEvolutiva;
+	private static final boolean DEBUG = false;
 	
 	//#########################################################################################
 	/**
@@ -116,7 +117,8 @@ public class Controlador {
 			// calcular acumulados
 			this.calcularAcumuladoDeMap(this.getMatrizEvolutiva());
 			this.getMiMatrizEstilos().calcularAcumulados();
-			this.mostrarDatos();
+			if (DEBUG)
+				this.mostrarDatos();
 			 	
 		}catch(NullPointerException e1){
 			e1.printStackTrace();
@@ -229,7 +231,7 @@ public class Controlador {
 	 * MostrarDatos
 	 **/
 	//#########################################################################################
-	private void mostrarDatos() {
+	public void mostrarDatos() {
 
 		System.out.println("-------------------listado de acordes----------------------");
 		Map<String, MatrizAcordes> mapMatrizEvolutiva = this.getMatrizEvolutiva();
@@ -461,10 +463,10 @@ public class Controlador {
 	private void setManager(EntityManager manager) {
 		this.manager = manager;
 	}
-	private ListaValores getMiListaDeTonicas() {
+	public ListaValores getMiListaDeTonicas() {
 		return miListaDeTonicas;
 	}
-	private void setMiListaDeTonicas(ListaValores miListaDeTonicas) {
+	public void setMiListaDeTonicas(ListaValores miListaDeTonicas) {
 		this.miListaDeTonicas = miListaDeTonicas;
 	}
 	private ListaValores getMiListaDeTempos() {
@@ -486,7 +488,7 @@ public class Controlador {
 			ListaValores miListaDeEstilosPrincipales) {
 		this.miListaDeEstilosPrincipales = miListaDeEstilosPrincipales;
 	}
-	private MatrizEstilos getMiMatrizEstilos() {
+	public MatrizEstilos getMiMatrizEstilos() {
 		return miMatrizEstilos;
 	}
 	private void setMiMatrizEstilos(MatrizEstilos miMatrizEstilos) {
