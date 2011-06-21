@@ -35,7 +35,7 @@ public class ListaValores {
 	 * 
 	 * @throws ValoresException 
 	 */
-	public void agregarValor(String valor, String estilo) throws ValoresException {
+	public void agregarValor(String valor, String estilo,boolean modificado) throws ValoresException {
 		
 		if (valor == null) {
 			throw new ValoresException("El valor a agregar es incorrecto. " + ListaValores.class);
@@ -49,14 +49,14 @@ public class ListaValores {
 				return;
 			}
 		}
-		listaValores.add(new Valores(valor,estilo,1,true));
+		listaValores.add(new Valores(valor,estilo,1,modificado));
 		return;	
 	}
 	
 	/**---------------------------------------------------------------------------
 	  * 
 	  *---------------------------------------------------------------------------*/
-	public void agregarValor(String estilo) {
+	public void agregarValor(String estilo,boolean modificado) {
 		
 		ArrayList<Valores> listaValores = (ArrayList<Valores>) this.getLista();
 		
@@ -66,7 +66,7 @@ public class ListaValores {
 				return;
 			}
 		}
-		listaValores.add(new Valores(estilo,1));
+		listaValores.add(new Valores(estilo,1,modificado));
 		return;	
 	}
 	
@@ -85,6 +85,14 @@ public class ListaValores {
 		
 	}
 	
+	public void agregarValor(String valor, int cantidad, String estilo,boolean modificado) {
+		
+		ArrayList<Valores> listaValores = this.getLista();
+		
+		listaValores.add(new Valores(valor,estilo,cantidad,modificado));
+		
+	}
+	
 	/**---------------------------------------------------------------------------
 	  * BORRAR  
 	  *---------------------------------------------------------------------------*/
@@ -100,6 +108,30 @@ public class ListaValores {
 	}
 	
 	
+	
+	
+	public String toStringConModificado(String tabla){
+		
+		ArrayList<Valores> listaValores = this.getLista();
+		
+		String salida ="-------------------------"+tabla+"------------------------------\n";
+		for (Valores va : listaValores) {
+			
+			if(va.isModificado()){
+				salida += " < MODIFICADO >  ";
+			}else{
+				salida += " [NO modificado] ";
+			}
+			
+			salida += "---- Valor: "+va.getValor()+" ---- Total: "+ va.getCantidad()+" ---- estilo: "+ va.getEstilo();
+			
+		
+			salida +="\n";
+			
+		}
+		salida += "-----------------------------------------------------------------------\n";
+		return salida;
+	}
 	
 	
 	/**

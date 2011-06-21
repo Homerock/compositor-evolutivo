@@ -50,7 +50,11 @@ public class Persistencia {
 			
 			Tonicas[] tonicas = TonicasDTO.seleccionarTodos(this.getManager());
 			for (Tonicas t : tonicas ){
-				miListaDeTonicas.agregarValor(t.getAcorde().getNombre(), t.getCantidad(), t.getEstilos().getNombre());
+				miListaDeTonicas.agregarValor(
+						t.getAcorde().getNombre(), 
+						t.getCantidad(), 
+						t.getEstilos().getNombre(),
+						false);
 			}			
 		} catch (SQLException e) {
 			throw new PersistenciaException("Error al acceder a tonicas en la base de datos - "+e.getMessage());
@@ -63,7 +67,11 @@ public class Persistencia {
 		try {
 			Tempos[] tempos = TemposDTO.seleccionarTodos(this.getManager());
 			for (Tempos t : tempos ){
-				miListaDeTempos.agregarValor(t.getTempo(), t.getCantidad(), t.getEstilos().getNombre());
+				miListaDeTempos.agregarValor(
+						t.getTempo(),
+						t.getCantidad(), 
+						t.getEstilos().getNombre(),
+						false);
 			}			
 		} catch (SQLException e) {
 			throw new PersistenciaException("Error al acceder a tempos en la base de datos - "+e.getMessage());
@@ -77,7 +85,11 @@ public class Persistencia {
 		try {
 			Duracion[] duraciones = DuracionDTO.seleccionarTodos(this.getManager());
 			for (Duracion t : duraciones ){
-				miListaDeDuraciones.agregarValor(String.valueOf(t.getDuracion()), t.getCantidad(), t.getEstilos().getNombre());
+				miListaDeDuraciones.agregarValor(
+						String.valueOf(t.getDuracion()),
+						t.getCantidad(), 
+						t.getEstilos().getNombre(),
+						false);
 			}			
 		} catch (SQLException e) {
 			throw new PersistenciaException("Error al acceder a 'duracion' en la base de datos - "+e.getMessage());
@@ -91,7 +103,7 @@ public class Persistencia {
 		try {
 			Estilos[] estilos = EstilosDTO.seleccionarTodosPrincipales(this.getManager());
 			for (Estilos e : estilos ){
-				miListaDeEstilosPrincipales.agregarValor(e.getNombre());
+				miListaDeEstilosPrincipales.agregarValor(e.getNombre(),false);
 			}			
 		} catch (SQLException e) {
 			throw new PersistenciaException("Error al acceder a 'estilos' en la base de datos - "+e.getMessage());
@@ -120,7 +132,8 @@ public class Persistencia {
 						e.getUnAcordeEnCompas(),
 						e.getDosAcordesEnCompas(),
 						e.getTresAcordesEnCompas(),
-						e.getCuatroAcordesEnCompas());
+						e.getCuatroAcordesEnCompas(),
+						false);// dice si fue modificado 
 				
 				miMatrizEstilos.agregarEstilo(e.getNombre(), estiloFila);
 			}
@@ -143,7 +156,8 @@ public class Persistencia {
 				miMatrizEstilos.agregaOcurrenciaEstilo(
 						o.getEstiloPrincipal().getNombre(), 
 						o.getEstiloSecundario().getNombre(),
-						o.getCantidad());
+						o.getCantidad(),
+						false);
 				
 			}
 		
