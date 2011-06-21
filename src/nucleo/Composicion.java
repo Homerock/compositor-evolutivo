@@ -226,18 +226,17 @@ public class Composicion {
 	
 	//################################################################################
 	/**
-	 * Armamos Intro - A - B - C - Fill - A - B - C - End
+	 * Armamos Intro - A - B - Fill - A - B - B - End
 	 * @param miMatrizEstilos
 	 * @param nuevaCancion
 	 * @param cantCompasesIntro
 	 * @param cantCompasesEstrofaA
 	 * @param cantCompasesEstrofaB
-	 * @param cantCompasesEstrofaC
 	 * @param cantCompasesEnd
 	 */
 	//################################################################################
 	public void armarEstructuraB(MatrizEstilos miMatrizEstilos, Cancion nuevaCancion, int cantCompasesIntro, 
-			int cantCompasesEstrofaA, int cantCompasesEstrofaB, int cantCompasesEstrofaC, int cantCompasesEnd) {
+			int cantCompasesEstrofaA, int cantCompasesEstrofaB, int cantCompasesEnd) {
 		
 		Estrofa miEstrofa;
 		int cantCompasesFill = 1;
@@ -294,24 +293,6 @@ public class Composicion {
 		}
 		nuevaCancion.agregarEstrofa(miEstrofa);
 		
-		String estiloC;
-		semilla = miEstiloFila.getContador();
-		do {
-			estiloC = miEstiloFila.buscarEstilo(rnd.nextInt(semilla+1));	
-		} while(Utiles.cadenaContienePatron(estiloC, Constantes.END_ESTILO) || Utiles.cadenaContienePatron(estiloC, Constantes.FILL_ESTILO)
-				);
-		
-		// CARGO ESTROFA C
-		numEstrofa++;
-		miEstiloFila = miMatrizEstilos.getMisEstilos().get(estiloC);
-		miEstrofa = new Estrofa(numEstrofa,estiloC,cantCompasesEstrofaC);
-		for (int i = 0; i < cantCompasesEstrofaC; i++) {
-			cantAcordes = this.calcularCantidadAcordesUnCompas(miEstiloFila);
-			Compas miCompas = new Compas(cantAcordes);
-			miEstrofa.agregarCompas(miCompas);
-		}
-		nuevaCancion.agregarEstrofa(miEstrofa);
-		
 		// BUSCO UN FILL, SI EXISTE LO CARGO
 		if (mapEstilo.containsKey(estiloInicial+Constantes.FILL_ESTILO)) {
 			numEstrofa++;
@@ -335,9 +316,9 @@ public class Composicion {
 		numEstrofa++;
 		clonarEstrofa(nuevaCancion, estiloB, numEstrofa);
 		
-		// CLONAMOS C
+		// CLONAMOS B
 		numEstrofa++;
-		clonarEstrofa(nuevaCancion, estiloC, numEstrofa);
+		clonarEstrofa(nuevaCancion, estiloB, numEstrofa);
 		
 		// BUSCO Y SI EXISTE CARGO EL FINAL
 		if (mapEstilo.containsKey(estiloInicial+Constantes.END_ESTILO)) {

@@ -33,7 +33,7 @@ public class Controlador {
 	private ListaValores miListaDeEstilosPrincipales;
 	private MatrizEstilos miMatrizEstilos;
 	private Map<String, MatrizAcordes> MatrizEvolutiva;
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 	
 	//#########################################################################################
 	/**
@@ -370,7 +370,7 @@ public class Controlador {
 	 * @param estructura
 	 */
 	//#########################################################################################
-	public void componerConEstructruras(String tonica, String estilo, String tempo, int estructura) {
+	public void componerConEstructruras(String tonica, String estilo, String tempo, String estructura) {
 		
 		Composicion miCompositor = new Composicion();
 		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(estilo);
@@ -380,36 +380,28 @@ public class Controlador {
 		int cantCompasesIntro; 
 		int cantCompasesEstrofaA; 
 		int cantCompasesEstrofaB; 
-		int cantCompasesEstrofaC;
 		int cantCompasesEnd;
 		
-		switch(estructura) {
-			case Constantes.ESTRUCTURA_A: 	
-				cantCompasesIntro = 2;
-				cantCompasesEstrofaA = 4;
-				cantCompasesEstrofaB = 8;
-				cantCompasesEnd = 1;
-				miCompositor.armarEstructuraA(miMatrizEstilos, nuevaCancion, cantCompasesIntro, cantCompasesEstrofaA, cantCompasesEstrofaB, cantCompasesEnd);
-				break;
-			case Constantes.ESTRUCTURA_B:
-				cantCompasesIntro = 2;
-				cantCompasesEstrofaA = 4;
-				cantCompasesEstrofaB = 8;
-				cantCompasesEstrofaC = 6;
-				cantCompasesEnd = 1;
-				miCompositor.armarEstructuraB(miMatrizEstilos, nuevaCancion, cantCompasesIntro, cantCompasesEstrofaA, cantCompasesEstrofaB, cantCompasesEstrofaC, cantCompasesEnd);
-				break;
-			case Constantes.ESTRUCTURA_C: 
-				cantCompasesIntro = 2;
-				cantCompasesEstrofaA = 4;
-				cantCompasesEstrofaB = 8;
-				cantCompasesEnd = 1;
-				miCompositor.armarEstructuraC(miMatrizEstilos, nuevaCancion, cantCompasesIntro, cantCompasesEstrofaA, cantCompasesEstrofaB, cantCompasesEnd);
-				break;
-			
+		if (estructura.equalsIgnoreCase(Constantes.ESTRUCTURA_A)) {
+			cantCompasesIntro = 2;
+			cantCompasesEstrofaA = 4;
+			cantCompasesEstrofaB = 8;
+			cantCompasesEnd = 1;
+			miCompositor.armarEstructuraA(miMatrizEstilos, nuevaCancion, cantCompasesIntro, cantCompasesEstrofaA, cantCompasesEstrofaB, cantCompasesEnd);
+		} else if (estructura.equalsIgnoreCase(Constantes.ESTRUCTURA_B)) {
+			cantCompasesIntro = 2;
+			cantCompasesEstrofaA = 4;
+			cantCompasesEstrofaB = 8;
+			cantCompasesEnd = 1;
+			miCompositor.armarEstructuraB(miMatrizEstilos, nuevaCancion, cantCompasesIntro, cantCompasesEstrofaA, cantCompasesEstrofaB, cantCompasesEnd);
+		} else if (estructura.equalsIgnoreCase(Constantes.ESTRUCTURA_C)){
+			cantCompasesIntro = 2;
+			cantCompasesEstrofaA = 4;
+			cantCompasesEstrofaB = 8;
+			cantCompasesEnd = 1;
+			miCompositor.armarEstructuraC(miMatrizEstilos, nuevaCancion, cantCompasesIntro, cantCompasesEstrofaA, cantCompasesEstrofaB, cantCompasesEnd);
 		}
-		
-		
+
 		try {
 			miCompositor.cargarAcordesEnEstructura(miMatrizAcordes, nuevaCancion);
 			Archivos.generarArchivo(nuevaCancion);
@@ -435,7 +427,7 @@ public class Controlador {
 			System.err.println(e.getMessage());
 			return;
 		}
-		System.out.println(nuevaCancion.toString());
+		//System.out.println(nuevaCancion.toString());
 		
 	}
 	
