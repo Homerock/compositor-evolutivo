@@ -41,8 +41,8 @@ public interface Constantes {
 	public static final int OCHO_COMPASES = 8;
 	public static final int PAR = 2;
 	//COMPOSICION
-	public static final int ESTRUCTURA_A = 1;
-	public static final int ESTRUCTURA_B = 2;
-	public static final int ESTRUCTURA_C = 3;
+	public static final String ESTRUCTURA_A = "A - A - B - A - A - B";
+	public static final String ESTRUCTURA_B = "A - B - Fill - A - B - B";
+	public static final String ESTRUCTURA_C = "A - B - B - A - B - B' - A";
 
 }
