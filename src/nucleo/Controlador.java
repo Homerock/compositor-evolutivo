@@ -141,13 +141,17 @@ public class Controlador {
 	 *///#######################################################################################
 	private void guardarCancionEnMemoria(CancionAprendida cancion) throws EstilosException, ValoresException {
 
+		boolean modificado = true;//para saber si modifico un valor leido de la base de datos
+		
 		// arreglar xq le mandamos los numeros en las lineas y los tomara como acordes.
 		// probar utiles.calculaCantAcordesPorCompas("1 / Am")
-		Estilos.guardarEstilosEnMatriz(cancion.getCancionSinRepeats(), miMatrizEstilos);
-		this.getMiListaDeEstilosPrincipales().agregarValor(cancion.getEstiloPrincipal());
-		this.getMiListaDeTonicas().agregarValor(cancion.getTonica().getNombre(), cancion.getEstiloPrincipal());	
-		this.getMiListaDeTempos().agregarValor(cancion.getTempo(), cancion.getEstiloPrincipal());
-		this.getMiListaDeDuraciones().agregarValor(String.valueOf(cancion.getDuracion()), cancion.getEstiloPrincipal());
+		Estilos.guardarEstilosEnMatriz(cancion.getCancionSinRepeats(), miMatrizEstilos,modificado);
+		this.getMiListaDeEstilosPrincipales().agregarValor(cancion.getEstiloPrincipal(),modificado);
+		
+		this.getMiListaDeTonicas().agregarValor(cancion.getTonica().getNombre(), cancion.getEstiloPrincipal(),modificado);	
+		this.getMiListaDeTempos().agregarValor(cancion.getTempo(), cancion.getEstiloPrincipal(),modificado);
+		this.getMiListaDeDuraciones().agregarValor(String.valueOf(cancion.getDuracion()), cancion.getEstiloPrincipal(),modificado);
+		
 		this.cargarAcordesDeCancion(cancion.getListaAcordes(), cancion.getEstiloPrincipal());
 		
 		return;
@@ -461,22 +465,22 @@ public class Controlador {
 	public void setMiListaDeTonicas(ListaValores miListaDeTonicas) {
 		this.miListaDeTonicas = miListaDeTonicas;
 	}
-	private ListaValores getMiListaDeTempos() {
+	public ListaValores getMiListaDeTempos() {
 		return miListaDeTempos;
 	}
 	private void setMiListaDeTempos(ListaValores miListaDeTempos) {
 		this.miListaDeTempos = miListaDeTempos;
 	}
-	private ListaValores getMiListaDeDuraciones() {
+	public ListaValores getMiListaDeDuraciones() {
 		return miListaDeDuraciones;
 	}
-	private void setMiListaDeDuraciones(ListaValores miListaDeDuraciones) {
+	public void setMiListaDeDuraciones(ListaValores miListaDeDuraciones) {
 		this.miListaDeDuraciones = miListaDeDuraciones;
 	}
-	private ListaValores getMiListaDeEstilosPrincipales() {
+	public ListaValores getMiListaDeEstilosPrincipales() {
 		return miListaDeEstilosPrincipales;
 	}
-	private void setMiListaDeEstilosPrincipales(
+	public void setMiListaDeEstilosPrincipales(
 			ListaValores miListaDeEstilosPrincipales) {
 		this.miListaDeEstilosPrincipales = miListaDeEstilosPrincipales;
 	}

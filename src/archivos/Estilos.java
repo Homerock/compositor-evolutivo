@@ -184,9 +184,12 @@ public class Estilos {
 	 * @throws EstilosException
 	 */
 	//#########################################################################################
-	public static void guardarEstilosEnMatriz(ArrayList<String> cancionAnalizadaConEstilos, MatrizEstilos miMatrizEstilos) throws EstilosException{		
+	public static void guardarEstilosEnMatriz(
+			ArrayList<String> cancionAnalizadaConEstilos, 
+			MatrizEstilos miMatrizEstilos,
+			boolean modificado) throws EstilosException{		
 
-		//vaciamos las varibles esaticos
+		//vaciamos las varibles esticos
 		getMisEstilos().clear();
 		getMisEstilosOrdenados().clear();
 
@@ -220,19 +223,17 @@ public class Estilos {
 
 						//guardo las apariciones de los estilos	
 						if(!miMatrizEstilos.ExisteEstilo(grooveUltimo)){
-
-							miMatrizEstilos.agregarEstilo(grooveUltimo);									
-
+							miMatrizEstilos.agregarEstilo(grooveUltimo,modificado);									
 						}
 						if(!grooveAnteUltimo.isEmpty()){
-							miMatrizEstilos.agregaOcurrenciaEstilo(grooveAnteUltimo, grooveUltimo);
+							miMatrizEstilos.agregaOcurrenciaEstilo(grooveAnteUltimo, grooveUltimo,modificado);
 						}
 
 						try {//vemos si podemos setear el compas
 							//guaradamos el  estilo con sus compases o equivalencias
-							miMatrizEstilos.setCompas(grooveUltimo, cont);
+							miMatrizEstilos.setCompas(grooveUltimo, cont,modificado);
 							//Guardamos la cantidad de acordes por compas en este estilo(grooveUltimo)
-							miMatrizEstilos.setAcordesEnCompas(grooveUltimo, miLista);
+							miMatrizEstilos.setAcordesEnCompas(grooveUltimo, miLista,modificado);
 							
 						} catch (EstilosException e) {
 							System.err.println(e.getMessage());
@@ -274,16 +275,16 @@ public class Estilos {
 				agregarEstilo(grooveUltimo);
 
 			if(!miMatrizEstilos.ExisteEstilo(grooveUltimo)){
-				miMatrizEstilos.agregarEstilo(grooveUltimo);
+				miMatrizEstilos.agregarEstilo(grooveUltimo,modificado);
 			}
 			if(!grooveAnteUltimo.isEmpty()){
-				miMatrizEstilos.agregaOcurrenciaEstilo(grooveAnteUltimo, grooveUltimo);
+				miMatrizEstilos.agregaOcurrenciaEstilo(grooveAnteUltimo, grooveUltimo,modificado);
 			}
 
 			try {
-				miMatrizEstilos.setCompas(grooveUltimo, cont);
+				miMatrizEstilos.setCompas(grooveUltimo, cont,modificado);
 				
-				miMatrizEstilos.setAcordesEnCompas(grooveUltimo, miLista);
+				miMatrizEstilos.setAcordesEnCompas(grooveUltimo, miLista,modificado);
 			} catch (EstilosException e) {
 				//if(DEBUG)
 				System.err.println(e.getMessage());

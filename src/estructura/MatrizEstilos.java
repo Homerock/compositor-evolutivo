@@ -65,22 +65,13 @@ public class MatrizEstilos {
 	  * se deve verificar previamente si esta Estilo ya existe si se reescribe
 	  * @param EstiloPpal
 	  *---------------------------------------------------------------------------*/
-	public void agregarEstilo(String EstiloPpal){
+	public void agregarEstilo(String EstiloPpal,boolean modificado){
 		
 		Map<String, EstilosFila> mapEstilos = this.getMisEstilos();
 		
-		mapEstilos.put(EstiloPpal,new EstilosFila(EstiloPpal));
+		mapEstilos.put(EstiloPpal,new EstilosFila(EstiloPpal,modificado));
 		return;
 	}
-	
-	public void agregarEstilo(String EstiloPpal, int cantidad){
-		
-		Map<String, EstilosFila> mapEstilos = this.getMisEstilos();
-		
-		mapEstilos.put(EstiloPpal,new EstilosFila(EstiloPpal,cantidad));
-		return;
-	}
-	
 	
 	public void agregarEstilo(String EstiloPpal, EstilosFila estilosFila){
 		Map<String, EstilosFila> mapEstilos = this.getMisEstilos();
@@ -108,31 +99,44 @@ public class MatrizEstilos {
 	  * @param EstiloPpal
 	  * @param EstiloSec
 	  *---------------------------------------------------------------------------*/
-	public void agregaOcurrenciaEstilo(String EstiloPpal, String EstiloSec){
+	public void agregaOcurrenciaEstilo(String EstiloPpal, String EstiloSec,boolean modificado){
 		
 		EstilosFila mapEstiloPpal;
 		mapEstiloPpal= this.getMisEstilos().get(EstiloPpal);
-		mapEstiloPpal.agregarEstilo(EstiloSec);
+		mapEstiloPpal.agregarEstilo(EstiloSec,modificado);
 		return;
 	}
 	
-	public void agregaOcurrenciaEstilo(String EstiloPpal, String EstiloSec, int valor){
+	
+	/**
+	 *  se agrega una ocurrencia de una Estilo siguiente a la ppal
+	 * si esta Estilo ya existe solo se incrementa el contador
+	 * sino agrega la Estilo con la cantidad = valor 
+	 * 
+	 * @param EstiloPpal
+	 * @param EstiloSec
+	 * @param valor
+	 * @param modificado
+	 */
+	public void agregaOcurrenciaEstilo(String EstiloPpal, String EstiloSec, int valor,boolean modificado){
 		
 		EstilosFila mapEstiloPpal;
 		mapEstiloPpal= this.getMisEstilos().get(EstiloPpal);
-		mapEstiloPpal.agregarEstilo(EstiloSec, valor);
+		mapEstiloPpal.agregarEstilo(EstiloSec, valor,modificado);
 		
 		return;
 	}
 	
-	/**---------------------------------------------------------------------------
+	
+	/**
 	 * Seteamos el compas de un estilo determinado
 	 * solo consideramos los de 1,2,4,8 compases
 	 * 
 	 * @param estilo
 	 * @param compas
-	 ---------------------------------------------------------------------------*/
-	public void setCompas(String estilo , int compas) throws EstilosException{
+	 */
+	public void setCompas(String estilo , int compas,boolean modificado) throws EstilosException{
+		
 		EstilosFila miEstiloFila = this.getMisEstilos().get(estilo);
 		
 		if(compas < 0){
@@ -146,29 +150,29 @@ public class MatrizEstilos {
 			// es un numero par
 			
 			if(compas % Constantes.OCHO_COMPASES ==0){
-				miEstiloFila.incCantOchoCompases(compas/Constantes.OCHO_COMPASES);
+				miEstiloFila.incCantOchoCompases(compas/Constantes.OCHO_COMPASES,modificado);
 				
 				if(DEBUG)
 					System.out.println(" hay "+compas/Constantes.OCHO_COMPASES+" de 8 ");
 			}else  
 					if(compas % Constantes.CUATRO_COMPASES ==0){
-						miEstiloFila.incCantCuatroCompases(compas/Constantes.CUATRO_COMPASES);
+						miEstiloFila.incCantCuatroCompases(compas/Constantes.CUATRO_COMPASES,modificado);
 						if(DEBUG)
 							System.out.println("hay "+compas/Constantes.CUATRO_COMPASES+" de 4");
 					}else 
 						if(compas % Constantes.DOS_COMPASES ==0){
-							miEstiloFila.incCantDosCompases(compas/Constantes.DOS_COMPASES);
+							miEstiloFila.incCantDosCompases(compas/Constantes.DOS_COMPASES,modificado);
 							if(DEBUG)
 								System.out.println("hay "+compas/Constantes.DOS_COMPASES+" de 2 ");	
 						}
 			
 		}else{
-			miEstiloFila.incCantUnCompas();
+			miEstiloFila.incCantUnCompas(modificado);
 			if (DEBUG)
 				System.out.println(" hay 1 de un compas");
 			
 			compas = compas -1;
-			setCompas(estilo, compas);
+			setCompas(estilo, compas,modificado);//recursion jo jo jo
 		}
 		
 		return;
@@ -183,7 +187,7 @@ public class MatrizEstilos {
 	 * @param acordesDeUnEstilo : arraylist de acordes en este estilo
 	 */
 	 
-	public void setAcordesEnCompas(String estilo, ArrayList<String> acordesDeUnEstilo) {
+	public void setAcordesEnCompas(String estilo, ArrayList<String> acordesDeUnEstilo,boolean modificado) {
 		EstilosFila miEstiloFila = this.getMisEstilos().get(estilo);
 		
 		int cant;
@@ -191,13 +195,13 @@ public class MatrizEstilos {
 			cant = Utiles.calculaCantAcordesPorCompas(acordes);
 		
 			switch (cant) {
-				case Constantes.UN_ACORDE: miEstiloFila.incrementarUnAcordeEnCompas();
+				case Constantes.UN_ACORDE: miEstiloFila.incrementarUnAcordeEnCompas(modificado);
 										break;
-				case Constantes.DOS_ACORDE: miEstiloFila.incrementarDosAcordeEnCompas();
+				case Constantes.DOS_ACORDE: miEstiloFila.incrementarDosAcordeEnCompas(modificado);
 										break;
-				case Constantes.TRES_ACORDE: miEstiloFila.incrementarTresAcordeEnCompas();
+				case Constantes.TRES_ACORDE: miEstiloFila.incrementarTresAcordeEnCompas(modificado);
 										break;
-				case Constantes.CUATRO_ACORDE: miEstiloFila.incrementarCuatroAcordeEnCompas();
+				case Constantes.CUATRO_ACORDE: miEstiloFila.incrementarCuatroAcordeEnCompas(modificado);
 										break;
 			}
 		}

@@ -13,36 +13,16 @@ public class ValorEstilos {
 	
 	private boolean modificado ; // para optimizacion de la base de datos
 	
-	/**---------------------------------------------------------------------------
-	  * Constructor  
-	  *---------------------------------------------------------------------------*/
-	public ValorEstilos(){
-		this.valor=0;
-		this.valorAcumulado=0;
-		this.setModificado(false);
-	}
 	
-	/**---------------------------------------------------------------------------
+	/**
 	  * Constructor 
 	  * 
 	  * @param val
-	  *---------------------------------------------------------------------------*/
-	public ValorEstilos(int valor){
+	  */
+	public ValorEstilos(int valor,boolean modificado){
 		this.valor=valor;
 		this.valorAcumulado=0;
-		this.setModificado(false);
-	}
-	
-	/**---------------------------------------------------------------------------
-	  * Constructor 
-	  * 
-	  * @param val
-	  * @param valAc
-	  *---------------------------------------------------------------------------*/
-	public ValorEstilos(int valor , int valorAcumulado){
-		this.valor= valor;
-		this.valorAcumulado=valorAcumulado;
-		this.setModificado(false);
+		this.setModificado(modificado);
 	}
 	
 	public ValorEstilos(boolean modificado){
@@ -50,20 +30,14 @@ public class ValorEstilos {
 		this.valorAcumulado=0;
 		this.setModificado(modificado);
 	}
+
 	
-	public ValorEstilos(int valor,boolean modificado){
-		this.valor=valor;
-		this.valorAcumulado=0;
-		this.setModificado(modificado);
-	}
 	
 	public ValorEstilos(int valor , int valorAcumulado,boolean modificado){
 		this.valor= valor;
 		this.valorAcumulado=valorAcumulado;
 		this.setModificado(modificado);
 	}
-	
-	
 	
 	/**---------------------------------------------------------------------------
 	  * @return
@@ -75,8 +49,9 @@ public class ValorEstilos {
 	/**---------------------------------------------------------------------------
 	  * @param valor
 	  *---------------------------------------------------------------------------*/
-	public void setValor(int valor) {
+	public void setValor(int valor,boolean modificado) {
 		this.valor = valor;
+		this.setModificado(modificado);
 	}
 
 	/**---------------------------------------------------------------------------

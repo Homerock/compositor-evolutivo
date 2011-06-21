@@ -39,7 +39,7 @@ public class EstilosFila {
 	  * con el contador en cero
 	  * @param nombre
 	  *---------------------------------------------------------------------------*/
-	public EstilosFila(String nombre){
+	public EstilosFila(String nombre,boolean modificado){
 		this.setNombreEstilo(nombre);
 		this.mapEstilos=new HashMap<String, ValorEstilos> ();
 		this.setContador(0);
@@ -52,27 +52,23 @@ public class EstilosFila {
 		this.dosAcordesEnCompas = 0;
 		this.tresAcordesEnCompas = 0;
 		this.cuatroAcordesEnCompas = 0;
-		this.setModificado(false);
+		this.setModificado(modificado);
 	}
-	/**------------------------------------------------------------------------
-	 * Constructor de Estilos Fila
+
+	/**
+	 * Constructor.
 	 * 
 	 * @param nombre
-	 * @param cantidad
-	 ------------------------------------------------------------------------*/
-	public EstilosFila(String nombre, int cantidad){
-		this.setNombreEstilo(nombre);
-		this.mapEstilos=new HashMap<String, ValorEstilos> ();
-		this.setContador(cantidad);
-		this.setCantUnCompas(0);
-	 	this.setCantDosCompases(0);
-	 	this.setCantCuatroCompases(0);
-	 	this.setCantOchoCompases(0);
-	 	this.setModificado(false);
-	}
-	
-
-	
+	 * @param cantUnCompas
+	 * @param cantDosCompases
+	 * @param cantCuatroCompases
+	 * @param cantOchoCompases
+	 * @param unAcordeEnCompas
+	 * @param dosAcordesEnCompas
+	 * @param tresAcordesEnCompas
+	 * @param cuatroAcordesEnCompas
+	 * @param modificado
+	 */
 	public EstilosFila(
 			String nombre,
 			int cantUnCompas,
@@ -82,7 +78,8 @@ public class EstilosFila {
 			int unAcordeEnCompas ,
 			int dosAcordesEnCompas ,
 			int tresAcordesEnCompas,
-			int cuatroAcordesEnCompas
+			int cuatroAcordesEnCompas,
+			boolean modificado
 			){
 		
 		this.setContador(0);
@@ -98,14 +95,15 @@ public class EstilosFila {
 		this.setDosAcordesEnCompas(dosAcordesEnCompas);
 		this.setTresAcordesEnCompas(tresAcordesEnCompas);
 		this.setCuatroAcordesEnCompas(cuatroAcordesEnCompas);
-		this.setModificado(false);
+		this.setModificado(modificado);
 	}
 	/**
-	 *  Agrega en estilo al map con valor 1
-	 *  
+	 * constructructor.
+	 * 
 	 * @param Estilo
+	 * @param modificado
 	 */
-	public void agregarEstilo(String Estilo){
+	public void agregarEstilo(String Estilo,boolean modificado){
 		
 		Map<String, ValorEstilos> mapEstilos = this.getMapEstilos();
 		Integer cant=0;
@@ -114,9 +112,11 @@ public class EstilosFila {
 		if (mapEstilos.containsKey(Estilo)){
 			cant= new Integer(mapEstilos.get(Estilo).getValor());
 			cant=cant+1;
-			mapEstilos.get(Estilo).setValor(cant);
+			
+			mapEstilos.get(Estilo).setValor(cant, modificado);
+			
 		}else{
-			miValEstilo = new ValorEstilos(1);
+			miValEstilo = new ValorEstilos(1,modificado);
 			mapEstilos.put(Estilo, miValEstilo);//se sobreescribe con el valor nuevo
 		}
 		return;
@@ -126,20 +126,20 @@ public class EstilosFila {
 	  * Agrego un Estilo secundario y la cantidad de ocurrencias
 	  * @param Estilo y cantidad
 	  *---------------------------------------------------------------------------*/
-	public void agregarEstilo(String Estilo, int cantidad){
+	public void agregarEstilo(String Estilo, int cantidad,boolean modificado){
 		
 		Map<String, ValorEstilos> mapEstilos = this.getMapEstilos();
 		ValorEstilos miValEstilo;
 		
 		if (mapEstilos.containsKey(Estilo)){
-			mapEstilos.get(Estilo).setValor(cantidad);
+			mapEstilos.get(Estilo).setValor(cantidad,modificado);
 		}else{
-			miValEstilo = new ValorEstilos(cantidad);
+			miValEstilo = new ValorEstilos(cantidad,modificado);
 			mapEstilos.put(Estilo, miValEstilo);//se sobreescribe con el valor nuevo
 		}
 		return;
 	}
-	
+
 	/**---------------------------------------------------------------------------
 	  * Lista todos los estilos existentes
 	  *---------------------------------------------------------------------------*/
@@ -289,56 +289,39 @@ public class EstilosFila {
 		this.cantOchoCompases = cantOchoCompases;
 	}
 	
-	public void incCantUnCompas(){
+	public void incCantUnCompas(boolean modificado){
 		int cant = this.getCantUnCompas();
 		cant++;
 		this.setCantUnCompas(cant);
+		this.setModificado(modificado);
 		return;
 	}
 	
-	public void incCantDosCompases(){
-		int cant = this.getCantDosCompases();
-		cant++;
-		this.setCantDosCompases(cant);
-		return;
-	}
-	
-	public void incCantCuatroCompases(){
-		int cant = this.getCantCuatroCompases();
-		cant++;
-		this.setCantCuatroCompases(cant);
-		return;
-	}
-
-	public void incCantOchoCompases(){
-		int cant = this.getCantOchoCompases();
-		cant++;
-		this.setCantOchoCompases(cant);
-		return;
-	}
-
-	public void incCantUnCompas(int incremento){
+	public void incCantUnCompas(int incremento,boolean modificado){
 		int cant = this.getCantUnCompas();
 		cant = cant + incremento;
 		this.setCantUnCompas(cant);
+		this.setModificado(modificado);
 		return;
 	}
 	
-	public void incCantDosCompases(int incremento){
+	public void incCantDosCompases(int incremento,boolean modificado){
 		int cant = this.getCantDosCompases();
 		cant = cant + incremento;
 		this.setCantDosCompases(cant);
+		this.setModificado(modificado);
 		return;
 	}
 	
-	public void incCantCuatroCompases(int incremento){
+	public void incCantCuatroCompases(int incremento,boolean modificado){
 		int cant = this.getCantCuatroCompases();
 		cant = cant + incremento;
 		this.setCantCuatroCompases(cant);
+		this.setModificado(modificado);
 		return;
 	}
 	
-	public void incCantOchoCompases(int incremento){
+	public void incCantOchoCompases(int incremento,boolean modificado){
 		int cant = this.getCantOchoCompases();
 		cant = cant + incremento;
 		this.setCantOchoCompases(cant);
@@ -353,8 +336,9 @@ public class EstilosFila {
 		this.unAcordeEnCompas = unAcordeEnCompas;
 	}
 
-	public void incrementarUnAcordeEnCompas() {
+	public void incrementarUnAcordeEnCompas(boolean modificado) {
 		this.unAcordeEnCompas++;
+		this.setModificado(modificado);
 	}
 	
 	public int getDosAcordesEnCompas() {
@@ -365,8 +349,9 @@ public class EstilosFila {
 		this.dosAcordesEnCompas = dosAcordesEnCompas;
 	}
 	
-	public void incrementarDosAcordeEnCompas() {
+	public void incrementarDosAcordeEnCompas(boolean modificado) {
 		this.dosAcordesEnCompas++;
+		this.setModificado(modificado);
 	}
 
 	public int getTresAcordesEnCompas() {
@@ -377,8 +362,9 @@ public class EstilosFila {
 		this.tresAcordesEnCompas = tresAcordesEnCompas;
 	}
 
-	public void incrementarTresAcordeEnCompas() {
+	public void incrementarTresAcordeEnCompas(boolean modificado) {
 		this.tresAcordesEnCompas++;
+		this.setModificado(modificado);
 	}
 	
 	public int getCuatroAcordesEnCompas() {
@@ -389,8 +375,9 @@ public class EstilosFila {
 		this.cuatroAcordesEnCompas = cuatroAcordesEnCompas;
 	}
 
-	public void incrementarCuatroAcordeEnCompas() {
+	public void incrementarCuatroAcordeEnCompas(boolean modificado) {
 		this.cuatroAcordesEnCompas++;
+		this.setModificado(modificado);
 	}
 	
 	public boolean isModificado() {
