@@ -11,29 +11,33 @@ public class AcordesFila {
 	private String nombreAcorde;
 	private ArrayList<ValorAcordes> listaOcurrencias;
 	private int valorAcumuladoFila; 
+	
+	private boolean modificado ; // para optimizacion de la base de datos
+	
 
 
 	/**---------------------------------------------------------------------------
 	  * @param nombre
 	  *---------------------------------------------------------------------------*/
-	public AcordesFila(String nombre){
+	public AcordesFila(String nombre,boolean modificado){
 		this.setNombreAcorde(nombre);
 		this.listaOcurrencias = new ArrayList<ValorAcordes>();
 		this.setValorAcumuladoFila(0);
-	
+		this.setModificado(modificado);
 	}
 	
-	public AcordesFila(String nombre, int valor){
+	public AcordesFila(String nombre, int valor,boolean modificado){
 		this.setNombreAcorde(nombre);
 		this.listaOcurrencias = new ArrayList<ValorAcordes>();
 		this.setValorAcumuladoFila(valor);
+		this.setModificado(modificado);
 	
 	}
 	
 	/**---------------------------------------------------------------------------
 	  * @param Acorde
 	  *---------------------------------------------------------------------------*/
-	public void agregarAcorde(String acorde){
+	public void agregarAcorde(String acorde,boolean modificado){
 		
 		ArrayList<ValorAcordes> listaAcordes = this.getListaOcurrencias();
 		int cant=0;
@@ -46,14 +50,14 @@ public class AcordesFila {
 			if (sec.equalsIgnoreCase(acorde)) {
 				cant = va.getValor();
 				cant = cant+1;
-				va.setValor(cant);
+				va.setValor(cant,modificado);
 				encontrado = true;
 				break;
 			}
 		}
 		
 		if (!encontrado) {
-			miValAcorde = new ValorAcordes(acorde, 1);
+			miValAcorde = new ValorAcordes(acorde, 1,modificado);
 			listaAcordes.add(miValAcorde);
 		}
 		return;
@@ -64,7 +68,7 @@ public class AcordesFila {
 	  * Agrego el Acorde secundario y el valor de cantidad de ocurrencias
 	  * @param Acorde
 	  *---------------------------------------------------------------------------*/
-	public void agregarAcorde(String acorde, int valor){
+	public void agregarAcorde(String acorde, int valor,boolean modificado){
 				
 		ArrayList<ValorAcordes> listaAcordes = this.getListaOcurrencias();
 		ValorAcordes miValAcorde;
@@ -75,14 +79,14 @@ public class AcordesFila {
 		for (ValorAcordes va : listaAcordes) {
 			sec = va.getAcordeSecundario();
 			if (sec.equalsIgnoreCase(acorde)) {
-				va.setValor(valor);
+				va.setValor(valor,modificado);
 				encontrado = true;
 				break;
 			}
 		}
 		
 		if (!encontrado) {
-			miValAcorde = new ValorAcordes(acorde, valor);
+			miValAcorde = new ValorAcordes(acorde, valor,modificado);
 			listaAcordes.add(miValAcorde);
 		}
 		return;
@@ -176,4 +180,15 @@ public class AcordesFila {
 		this.listaOcurrencias = listaOcurrencias;
 	}
 
+	public boolean isModificado() {
+		return modificado;
+	}
+
+	public void setModificado(boolean modificado) {
+		this.modificado = modificado;
+	}
+
+	
+	
+	
 }
