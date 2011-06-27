@@ -11,24 +11,28 @@ public class ValorAcordes {
 	private int valor;
 	private int valorAcumulado;
 	
+	private boolean modificado ; // para optimizacion de la base de datos
+	
+	
 	/**---------------------------------------------------------------------------
 	  * 
 	  *---------------------------------------------------------------------------*/
-	public ValorAcordes(String acorde){
+	public ValorAcordes(String acorde,boolean modificado){
 		this.valor=0;
 		this.valorAcumulado=0;
 		this.acordeSecundario = acorde;
+		this.setModificado(modificado);
 		return;
 	}
 	
 	/**---------------------------------------------------------------------------
 	  * @param val
 	  *---------------------------------------------------------------------------*/
-	public ValorAcordes(String acorde, int val){
+	public ValorAcordes(String acorde, int valor,boolean modificado){
 		this.acordeSecundario = acorde;
-		this.valor=val;
+		this.valor=valor;
 		this.valorAcumulado=0;
-		
+		this.setModificado(modificado);
 		return;
 	}
 	
@@ -36,9 +40,10 @@ public class ValorAcordes {
 	  * @param val
 	  * @param valAc
 	  *---------------------------------------------------------------------------*/
-	public ValorAcordes(int val , int valAc){
-		this.valor= val;
-		this.valorAcumulado=valAc;
+	public ValorAcordes(int valor , int valorAcumulado,boolean modificado){
+		this.valor= valor;
+		this.valorAcumulado=valorAcumulado;
+		this.setModificado(modificado);
 		return;
 	}
 	
@@ -52,8 +57,9 @@ public class ValorAcordes {
 	/**---------------------------------------------------------------------------
 	  * @param valor
 	  *---------------------------------------------------------------------------*/
-	public void setValor(int valor) {
+	public void setValor(int valor,boolean modificado) {
 		this.valor = valor;
+		this.setModificado(modificado);
 	}
 
 	/**---------------------------------------------------------------------------
@@ -78,6 +84,16 @@ public class ValorAcordes {
 		this.acordeSecundario = acordeSecundario;
 	}
 	
+	
+	
+	public boolean isModificado() {
+		return modificado;
+	}
+
+	public void setModificado(boolean modificado) {
+		this.modificado = modificado;
+	}
+
 	/* ---------------------------------------------------------------------------
 	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()

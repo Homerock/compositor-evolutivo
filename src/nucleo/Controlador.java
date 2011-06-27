@@ -168,7 +168,7 @@ public class Controlador {
 	 **/
 	//#########################################################################################
 	private void cargarAcordesDeCancion(ArrayList<String> cancion, String estiloPrincipal) {
-		
+		boolean modificado = true;
 		int pos = 0;
 		String principal;
 		String secundaria;
@@ -176,7 +176,7 @@ public class Controlador {
 		if (cancion.size() == 0)
 			return;
 
-		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(estiloPrincipal);
+		MatrizAcordes miMatrizAcordes = this.obtenerMatrizEnMap(estiloPrincipal);
 		
 		while(pos < cancion.size()-1){
 
@@ -184,20 +184,20 @@ public class Controlador {
 			secundaria = cancion.get(pos+1);
 			// cargo la matriz en memoria
 			if (!miMatrizAcordes.ExisteAcordePpal(principal)) {
-				miMatrizAcordes.agregarAcordePrincipal(principal);
+				miMatrizAcordes.agregarAcordePrincipal(principal,modificado);
 			} 
 			pos++;			
 			// CARGAR EN LA MATRIZ DE ESE ESTILO PRINCIPAL
-			miMatrizAcordes.agregaOcurrenciaAcordeSecundario(principal, secundaria);	
+			miMatrizAcordes.agregaOcurrenciaAcordeSecundario(principal, secundaria,modificado);	
 		}
 	}
 	//#########################################################################################
 	/**
 	 * buscarMatrizEnMap
-	 * Busca la matriz correspondiente a un estilo principal dentro del map de matrices evolutivas
+	 * Busca la matriz correspondiente a un estilo principal dentro del map de matrices evolutivas , si no existe la crea!.
 	 **/
 	//#########################################################################################
-	private MatrizAcordes buscarMatrizEnMap(String estilo) {
+	private MatrizAcordes obtenerMatrizEnMap(String estilo) {
 
 		MatrizAcordes miMatrizAcordes = this.getMatrizEvolutiva().get(estilo);
 
@@ -288,7 +288,7 @@ public class Controlador {
 		}
 
 		//Obtengo la matriz de acordes correspondiente a el estilo principal
-		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(estilo);
+		MatrizAcordes miMatrizAcordes = this.obtenerMatrizEnMap(estilo);
 
 		try {
 			Cancion nuevaCancion = miCompositor.componerCancion(miMatrizAcordes, this.getMiMatrizEstilos(), tonica, estilo, Integer.parseInt(duracion), tempo);
@@ -334,7 +334,7 @@ public class Controlador {
 		
 		Composicion miCompositor = new Composicion();
 		//Obtengo la matriz de acordes correspondiente a el estilo principal
-		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(estilo);
+		MatrizAcordes miMatrizAcordes = this.obtenerMatrizEnMap(estilo);
 
 		try {
 			Cancion nuevaCancion = miCompositor.componerCancion(miMatrizAcordes, this.getMiMatrizEstilos(), tonica, estilo, Integer.parseInt(duracion), tempo);
@@ -377,7 +377,7 @@ public class Controlador {
 	public void componerConEstructruras(String tonica, String estilo, String tempo, String estructura) {
 		
 		Composicion miCompositor = new Composicion();
-		MatrizAcordes miMatrizAcordes = this.buscarMatrizEnMap(estilo);
+		MatrizAcordes miMatrizAcordes = this.obtenerMatrizEnMap(estilo);
 		Acorde acorde = new Acorde(tonica);
 		Cancion nuevaCancion = new Cancion(estilo+"_"+tonica,tempo,acorde,estilo);
 		
@@ -490,7 +490,7 @@ public class Controlador {
 	private void setMiMatrizEstilos(MatrizEstilos miMatrizEstilos) {
 		this.miMatrizEstilos = miMatrizEstilos;
 	}
-	private Map<String, MatrizAcordes> getMatrizEvolutiva() {
+	public Map<String, MatrizAcordes> getMatrizEvolutiva() {
 		return MatrizEvolutiva;
 	}
 	private void setMatrizEvolutiva(Map<String, MatrizAcordes> matrizEvolutiva) {

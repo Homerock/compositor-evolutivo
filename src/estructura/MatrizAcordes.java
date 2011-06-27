@@ -55,19 +55,19 @@ public class MatrizAcordes {
 	  * se debe verificar previamente si esta Acorde ya existe si se reescribe
 	  * @param AcordePpal
 	  *---------------------------------------------------------------------------*/
-	public void agregarAcordePrincipal(String AcordePpal){
+	public void agregarAcordePrincipal(String AcordePpal,boolean modificado){
 		
 		Map<String, AcordesFila> mapAcordes = this.getMisAcordes();
 		
-		mapAcordes.put(AcordePpal,new AcordesFila(AcordePpal));
+		mapAcordes.put(AcordePpal,new AcordesFila(AcordePpal,modificado));
 		return;
 	}
 	
-	public void agregarAcordePrincipal(String AcordePpal, int cantidad){
+	public void agregarAcordePrincipal(String AcordePpal, int cantidad,boolean modificado){
 		
 		Map<String, AcordesFila> mapAcordes = this.getMisAcordes();
 		
-		mapAcordes.put(AcordePpal,new AcordesFila(AcordePpal,cantidad));
+		mapAcordes.put(AcordePpal,new AcordesFila(AcordePpal,cantidad,modificado));
 		return;
 	}
 	
@@ -91,20 +91,20 @@ public class MatrizAcordes {
 	  * @param AcordePpal
 	  * @param AcordeSec
 	  *---------------------------------------------------------------------------*/
-	public void agregaOcurrenciaAcordeSecundario(String AcordePpal, String AcordeSec){
+	public void agregaOcurrenciaAcordeSecundario(String AcordePpal, String AcordeSec,boolean modificado){
 		
 		AcordesFila mapAcordePpal;
 		mapAcordePpal= this.getMisAcordes().get(AcordePpal);
-		mapAcordePpal.agregarAcorde(AcordeSec);
+		mapAcordePpal.agregarAcorde(AcordeSec,modificado);
 		return;
 	}
 	
 	/**---------------------------------------------------------------------------*/
-	public void agregaOcurrenciaAcordeSecundario(String AcordePpal, String AcordeSec, int valor){
+	public void agregaOcurrenciaAcordeSecundario(String AcordePpal, String AcordeSec, int valor,boolean modificado){
 		
 		AcordesFila mapAcordePpal;
 		mapAcordePpal= this.getMisAcordes().get(AcordePpal);
-		mapAcordePpal.agregarAcorde(AcordeSec, valor);
+		mapAcordePpal.agregarAcorde(AcordeSec, valor,modificado);
 		
 		return;
 	}

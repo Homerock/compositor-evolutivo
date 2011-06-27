@@ -4,12 +4,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Properties;
 
 import orm.*;
 
 import estructura.EstilosFila;
 import estructura.ListaValores;
+import estructura.MatrizAcordes;
 import estructura.MatrizEstilos;
 import excepciones.PersistenciaException;
 
@@ -109,7 +111,8 @@ public class Persistencia {
 			throw new PersistenciaException("Error al acceder a 'estilos' en la base de datos - "+e.getMessage());
 		}
 	} 
-	
+	//######################################################################################################
+
 	/**
 	 * guarda todos los estilos de la base de datos en la matriz, 
 	 * pero no las ocurrencias.
@@ -147,7 +150,13 @@ public class Persistencia {
 	}
 
 	//######################################################################################################
-	
+	// primero deben guardarse los estilos y despues las ocurrencias
+	/**
+	 * guarda las ocurrencias de los estilos.
+	 * 
+	 * @param miMatrizEstilos
+	 * @throws PersistenciaException
+	 */
 	public void ocurrenciasEstilosAMemoria(MatrizEstilos miMatrizEstilos) throws PersistenciaException {
 		try{	
 			OcurrenciasEstilos[] ocurrenciasEstilos = OcurrenciasEstilosDTO.seleccionarTodos(this.getManager());
@@ -168,7 +177,39 @@ public class Persistencia {
 	}
 	
 	
-	
+	//######################################################################################################
+
+	public void ocurrenciasAcordesAMemoria(Map<String, MatrizAcordes> miMatrizEvolutiva) throws PersistenciaException{
+		
+		boolean modificado = false;
+		MatrizAcordes miMatrizAcordes;
+		try {
+			OcurrenciasAcordes[] ocurrenciasAcordes = OcurrenciasAcordesDTO.seleccionarTodos(this.getManager());
+			for (OcurrenciasAcordes o: ocurrenciasAcordes){
+				
+				miMatrizAcordes = miMatrizEvolutiva.get(o.getEstilos().getNombre());
+				if (miMatrizAcordes == null) {
+					miMatrizAcordes = new MatrizAcordes();
+					miMatrizEvolutiva.put(o.getEstilos().getNombre(), miMatrizAcordes);
+				}
+				
+				// guardamos el acorde ppal si no existe
+				if (!miMatrizAcordes.ExisteAcordePpal(o.getAcordePrincipal().getNombre())) {
+					miMatrizAcordes.agregarAcordePrincipal(o.getAcordePrincipal().getNombre(),modificado);
+				} 
+				
+				// guardamos la ocurrencia
+				miMatrizAcordes.agregaOcurrenciaAcordeSecundario(o.getAcordePrincipal().getNombre(), o.getAcordeSecundario().getNombre(),o.getCantidad(),modificado);	
+				
+			}
+			
+			
+		} catch (SQLException e) {
+			throw new PersistenciaException("Error al acceder a 'ocurrenciasacordes' en la base de datos - "+e.getMessage());
+		}
+		
+		
+	}
 	
 	
 	private EntityManager getManager() {
