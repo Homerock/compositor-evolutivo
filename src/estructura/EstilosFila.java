@@ -140,20 +140,9 @@ public class EstilosFila {
 		return;
 	}
 
-	/**---------------------------------------------------------------------------
-	  * Lista todos los estilos existentes
-	  *---------------------------------------------------------------------------*/
-	public void listarEstilos(){
-		
-		Map<String, ValorEstilos> mapEstilos = this.getMapEstilos();
-		Iterator it = mapEstilos.entrySet().iterator();
 
-		while (it.hasNext()) {
-			Map.Entry e = (Map.Entry)it.next();
-			System.out.println(e.getKey() + " " + e.getValue().toString());
-		}
-	}
 	
+
 	/**---------------------------------------------------------------------------
 	  * devuelve una Estilo segun el valor pasado por parametro
 	  * nos fijamos en los valores acumulados de cada Estilo
@@ -386,8 +375,8 @@ public class EstilosFila {
 	public void setModificado(boolean modificado) {
 		this.modificado = modificado;
 	}
+	
 	public String toString(){
-		
 		
 		String salida =  " compas:cant =" +
 						"{ 1:"+this.getCantUnCompas() +
@@ -399,10 +388,53 @@ public class EstilosFila {
 						" | 2:"+this.getDosAcordesEnCompas()+
 						" | 3:"+this.getTresAcordesEnCompas()+
 						" | 4:"+ this.getCuatroAcordesEnCompas()+" }" ;
-						
 				
 		return salida;
 		
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String toStringEstilosConModificado(){
+		
+		Map<String, ValorEstilos> mapEstilosFILA = this.getMapEstilos();
+		Iterator it2 = mapEstilosFILA.entrySet().iterator();
+		
+		String salida ="";
+		
+		while (it2.hasNext()) {
+			Map.Entry e2 = (Map.Entry)it2.next();
+			
+			if(((ValorEstilos) e2.getValue()).isModificado()){
+				salida +=" < MODIFICADO >  ";	
+			}else{
+				salida +=" [NO modificado] ";
+			}
+			salida += e2.getKey() + " " + e2.getValue().toString()+"\n";
+		
+		}
+		return salida;
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	public String toStringEstilos(){
+		
+		Map<String, ValorEstilos> mapEstilosFILA = this.getMapEstilos();
+		Iterator it2 = mapEstilosFILA.entrySet().iterator();
+		
+		String salida ="";
+		
+		while (it2.hasNext()) {
+			Map.Entry e2 = (Map.Entry)it2.next();
+			
+			salida += e2.getKey() + " " + e2.getValue().toString()+"\n";
+		
+		}
+		return salida;
 	}
 	
 

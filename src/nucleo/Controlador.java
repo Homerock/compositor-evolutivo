@@ -244,20 +244,57 @@ public class Controlador {
 		//tengo que iterar para listar todas la matrices del map
 		while (it.hasNext()) {
 			Map.Entry e = (Map.Entry)it.next();
-			System.out.println("-----listado de acordes de estilo: " + e.getKey() +" ----------------------");
+			System.out.println("=== ESTILO : " + e.getKey() );
 			miMatriz = (MatrizAcordes) e.getValue();
-			miMatriz.listarAcordes();
+			System.out.println(miMatriz.toString());
+			//miMatriz.listarAcordes();
 		}
 		System.out.println("-------------------listado de estilos-------------------");
-		this.miMatrizEstilos.listarEstilos();
+		System.out.println(this.miMatrizEstilos.toString());
 		System.out.println("-------------------listado de tonicas----------------------");
-		this.miListaDeTonicas.listarValor();
+		System.out.println(this.miListaDeTonicas.toString());
 		System.out.println("-------------------listado de tempos-----------------------");
-		this.miListaDeTempos.listarValor();
+		System.out.println(this.miListaDeTempos.toString());
 		System.out.println("-------------------listado de duraciones-------------------");
-		this.miListaDeDuraciones.listarValor();
+		System.out.println(this.miListaDeDuraciones.toString());
+		System.out.println("-------------------lista de estilos principales-------------------");
+		System.out.println(this.getMiListaDeEstilosPrincipales().toString());
 	}
 
+	
+	//#########################################################################################
+	/**
+	 * MostrarDatos
+	 **/
+	//#########################################################################################
+	public void mostrarDatosConModificado() {
+
+
+		
+		System.out.println(this.miListaDeTonicas.toStringConModificado("TONICAS"));
+		System.out.println(this.miListaDeTempos.toStringConModificado("TEMPOS"));
+		System.out.println(this.miListaDeDuraciones.toStringConModificado("DURACIONES"));
+		System.out.println(this.getMiListaDeEstilosPrincipales().toStringConModificado("ESTILOS PRINCIPALES"));
+		
+		System.out.println("-------------------ESTILOS Y OCURRENCIAS-------------------");
+		System.out.println(this.miMatrizEstilos.toStringConModificado());
+		
+		
+		System.out.println("-------------------ACORDES Y OCURRENCIAS----------------------");
+		Map<String, MatrizAcordes> mapMatrizEvolutiva = this.getMatrizEvolutiva();
+		MatrizAcordes miMatriz;
+		Iterator it = mapMatrizEvolutiva.entrySet().iterator();
+		//tengo que iterar para listar todas la matrices del map
+		while (it.hasNext()) {
+			Map.Entry e = (Map.Entry)it.next();
+			System.out.println("=== ESTILO : " + e.getKey() );
+			miMatriz = (MatrizAcordes) e.getValue();
+			System.out.println(miMatriz.toStringConModificado());
+			//miMatriz.listarAcordes();
+		}
+		
+		
+	}
 	//#########################################################################################
 	/**
 	 * 

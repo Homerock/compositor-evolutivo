@@ -96,6 +96,7 @@ public class AcordesFila {
 	/**---------------------------------------------------------------------------
 	  * 
 	  *---------------------------------------------------------------------------*/
+	/*
 	public void listarAcordes(){
 		
 		ArrayList<ValorAcordes> listaAcordes = this.getListaOcurrencias();
@@ -104,6 +105,8 @@ public class AcordesFila {
 			System.out.println(va.getAcordeSecundario() +  "  [ " + va.getValor() + " " + va.getValorAcumulado() + " ]");
 		}
 	}
+	*/
+	
 	//---------------------------------------------------------------------------
 	/**
 	  * Devuelve el proximo Acorde de la matriz acumulada, correspondiente al valor pasado por parametro.
@@ -189,6 +192,42 @@ public class AcordesFila {
 	}
 
 	
+	/**
+	 * 
+	 */
+	public String toString(){
+		 ArrayList<ValorAcordes> listaValores = this.getListaOcurrencias();
+		 String salida="";
+		
+		for (ValorAcordes va : listaValores) {
+			salida +="Secundario: "+ va.getAcordeSecundario() +  "  [ " + va.getValor() + " " + va.getValorAcumulado() + " ] \n";
+			
+		}
+		return salida;
+	}
 	
+	/**
+	 * 
+	 * @return acordes
+	 */
+	public String toStringConModificado(){
+		 ArrayList<ValorAcordes> listaValores = this.getListaOcurrencias();
+		 String salida="";
+		
+		for (ValorAcordes va : listaValores) {
+			
+			if(va.isModificado()){
+				salida += " < MODIFICADO >  ";
+			}else{
+				salida += " [NO modificado] ";
+			}
+			salida +="Secundario: "+ va.getAcordeSecundario() +  "  [ " + va.getValor() + " " + va.getValorAcumulado() + " ]";
+		
+			salida +="\n";
+			
+		}
+		return salida;
+	}
+
 	
 }
