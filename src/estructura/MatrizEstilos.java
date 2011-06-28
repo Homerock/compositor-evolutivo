@@ -32,6 +32,7 @@ public class MatrizEstilos {
 	/**---------------------------------------------------------------------------
 	  * ListarEstilos
 	  *---------------------------------------------------------------------------*/
+	/*
 	public void listarEstilos(){
 		Map<String, EstilosFila> mapEstilos = this.getMisEstilos();
 		EstilosFila mapEstiloPpal;
@@ -44,7 +45,7 @@ public class MatrizEstilos {
 			mapEstiloPpal.listarEstilos();
 		}
 	}
-	
+*/
 	/**---------------------------------------------------------------------------
 	  * calcula todos los valores acumulados de cada elemento del map
 	  *---------------------------------------------------------------------------*/
@@ -227,5 +228,63 @@ public class MatrizEstilos {
 		
 		this.misEstilos.clear();
 		
+	}
+	
+	
+	/**
+	 * tostring con modificado
+	 * 
+	 * @return
+	 */
+	public String toStringConModificado(){
+		
+		String salida="";
+		
+		Map<String, EstilosFila> mapEstilos = this.getMisEstilos();
+		EstilosFila mapEstiloPpal;
+		Iterator it = mapEstilos.entrySet().iterator();
+		
+		while (it.hasNext()) {
+			Map.Entry e = (Map.Entry)it.next();
+			mapEstiloPpal= (EstilosFila) e.getValue();
+			
+			if (mapEstiloPpal.isModificado()){
+				salida+=" < MODIFICADO >  ";
+			}else{
+				salida+=" [NO modificado] ";
+			}
+			
+			salida +="Estilo ppal :"+e.getKey()+"- acumulado :"+mapEstiloPpal.getContador()+" - Total compases "+mapEstiloPpal.getContadorCompases()+" - "+mapEstiloPpal.toString()+" \n";
+			
+			salida += mapEstiloPpal.toStringEstilosConModificado();
+		}
+		
+		return salida;
+	}
+	
+	
+	/**
+	 * tostring con modificado
+	 * 
+	 * @return
+	 */
+	public String toString(){
+		
+		String salida="";
+		
+		Map<String, EstilosFila> mapEstilos = this.getMisEstilos();
+		EstilosFila mapEstiloPpal;
+		Iterator it = mapEstilos.entrySet().iterator();
+		
+		while (it.hasNext()) {
+			Map.Entry e = (Map.Entry)it.next();
+			mapEstiloPpal= (EstilosFila) e.getValue();
+			
+			salida +="Estilo ppal :"+e.getKey()+"- acumulado :"+mapEstiloPpal.getContador()+" - Total compases "+mapEstiloPpal.getContadorCompases()+" - "+mapEstiloPpal.toString()+" \n";
+			
+			salida += mapEstiloPpal.toStringEstilos();
+		}
+		
+		return salida;
 	}
 }

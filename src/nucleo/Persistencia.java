@@ -44,6 +44,7 @@ public class Persistencia {
 		}
 	}
 
+	
 	//######################################################################################################
 		
 	public void tonicasAMemoria(ListaValores miListaDeTonicas) throws PersistenciaException{
@@ -212,6 +213,12 @@ public class Persistencia {
 	}
 	
 	
+	
+	
+	
+	
+	
+	//######################################################################################################
 	private EntityManager getManager() {
 		return manager;
 	}

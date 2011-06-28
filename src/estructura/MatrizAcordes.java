@@ -19,22 +19,7 @@ public class MatrizAcordes {
 		this.misAcordes = new HashMap<String, AcordesFila>();
 	}
 	
-	/**---------------------------------------------------------------------------
-	  * ListarAcordes
-	  *---------------------------------------------------------------------------*/
-	public void listarAcordes(){
-		Map<String, AcordesFila> mapAcordes = this.getMisAcordes();
-		AcordesFila mapAcordePpal;
-		Iterator it = mapAcordes.entrySet().iterator();
-		
-		while (it.hasNext()) {
-			Map.Entry e = (Map.Entry)it.next();
-			mapAcordePpal= (AcordesFila) e.getValue();
-			System.out.println(" ---- Acorde ppal :"+e.getKey()+" ---- Total :"+mapAcordePpal.getValorAcumuladoFila());	
-			mapAcordePpal.listarAcordes();
-		}
-	}
-	
+
 	/**---------------------------------------------------------------------------
 	  * calcula todos los valores acumulados de cada elemento del map
 	  *---------------------------------------------------------------------------*/
@@ -129,5 +114,51 @@ public class MatrizAcordes {
 		this.misAcordes.clear();
 		
 	}
+	
+
+	/**---------------------------------------------------------------------------
+	  * ListarAcordes
+	  *---------------------------------------------------------------------------*/
+	public String toString(){
+		Map<String, AcordesFila> mapAcordes = this.getMisAcordes();
+		AcordesFila mapAcordePpal;
+		Iterator it = mapAcordes.entrySet().iterator();
+		String salida ="";
+		while (it.hasNext()) {
+			Map.Entry e = (Map.Entry)it.next();
+			mapAcordePpal= (AcordesFila) e.getValue();
+			salida+="Principal : "+e.getKey()+" === Acumulado :"+mapAcordePpal.getValorAcumuladoFila()+" \n";	
+			salida +=mapAcordePpal.toString();
+			//salida +="\n";
+		}
+		return salida;
+	}
+	
+	/**---------------------------------------------------------------------------
+	  * ListarAcordes
+	  *---------------------------------------------------------------------------*/
+	public String toStringConModificado(){
+		Map<String, AcordesFila> mapAcordes = this.getMisAcordes();
+		AcordesFila mapAcordePpal;
+		Iterator it = mapAcordes.entrySet().iterator();
+		String salida ="";
+		while (it.hasNext()) {
+			Map.Entry e = (Map.Entry)it.next();
+			mapAcordePpal= (AcordesFila) e.getValue();
+			
+			if (mapAcordePpal.isModificado()){
+				salida+=" < MODIFICADO >  ";
+			}else{
+				salida+=" [NO modificado] ";
+			}
+			
+			salida+="Principal : "+e.getKey()+" === Acumulado :"+mapAcordePpal.getValorAcumuladoFila()+" \n";	
+			salida +=mapAcordePpal.toStringConModificado();
+			
+		}
+		return salida;
+	}
+	
+	
 }
 

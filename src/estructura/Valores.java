@@ -56,21 +56,7 @@ public class Valores {
 		return;
 	}
 
-	/**---------------------------------------------------------------------------
-	  * Constructor 
-	  * 
-	  * @param val
-	  * @param valAc
-	  *---------------------------------------------------------------------------*/
-	/*public Valores(String estilo, int cant){
-		this.valor="";
-		this.estilo= estilo;
-		this.cantidad=cant;
-		this.setModificado(false);
-		
-		return;
-	}
-	*/
+
 	public Valores(String estilo, int cant,boolean modificado){
 		this.valor="";
 		this.estilo= estilo;

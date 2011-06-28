@@ -15,9 +15,7 @@ public class ListaValores {
 	  * 
 	  *---------------------------------------------------------------------------*/
 	public ListaValores() {
-	
 		this.lista = new ArrayList<Valores>();
-		
 	}
 
 		
@@ -88,30 +86,17 @@ public class ListaValores {
 	public void agregarValor(String valor, int cantidad, String estilo,boolean modificado) {
 		
 		ArrayList<Valores> listaValores = this.getLista();
-		
 		listaValores.add(new Valores(valor,estilo,cantidad,modificado));
 		
 	}
 	
-	/**---------------------------------------------------------------------------
-	  * BORRAR  
-	  *---------------------------------------------------------------------------*/
-	public void listarValor() {
-		
-		ArrayList<Valores> listaValores = this.getLista();
-		
-		System.out.println("-------------------------------------------------------");
-		for (Valores va : listaValores) {
-			System.out.println(" ---- Valor: "+va.getValor()+" ---- Total: "+ va.getCantidad()+" ---- estilo: "+ va.getEstilo());	
-		}
-		System.out.println("-------------------------------------------------------");
-	}
-	
-	
-	
-	
+	/**
+	 * toString con mostrando si fue modificado o no, del valor leido de la base de datos
+	 * 
+	 * @param nombre de tabla a mostrar.
+	 * @return cadena con lo contenido en memoria.
+	 */
 	public String toStringConModificado(String tabla){
-		
 		ArrayList<Valores> listaValores = this.getLista();
 		
 		String salida ="-------------------------"+tabla+"------------------------------\n";
@@ -122,12 +107,7 @@ public class ListaValores {
 			}else{
 				salida += " [NO modificado] ";
 			}
-			
-			salida += "---- Valor: "+va.getValor()+" ---- Total: "+ va.getCantidad()+" ---- estilo: "+ va.getEstilo();
-			
-		
-			salida +="\n";
-			
+			salida += "---- Valor: "+va.getValor()+" ---- Total: "+ va.getCantidad()+" ---- estilo: "+ va.getEstilo()+"\n";			
 		}
 		salida += "-----------------------------------------------------------------------\n";
 		return salida;
@@ -135,7 +115,9 @@ public class ListaValores {
 	
 	
 	/**
+	 * 
 	 * toString
+	 * 
 	 */
 	public String toString() {
 		
