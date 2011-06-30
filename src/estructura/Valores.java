@@ -112,12 +112,10 @@ public class Valores {
 	/**---------------------------------------------------------------------------
 	 *
 	 *---------------------------------------------------------------------------*/
-	public void incrementarCantidad() {
-		this.setModificado(true);
+	public void incrementarCantidad(boolean modificado) {
+		this.setModificado(modificado);
 		
-		int cant;
-		
-		cant = this.getCantidad();
+		int cant = this.getCantidad();
 		this.setCantidad(cant+1);
 	}
 		

@@ -33,7 +33,7 @@ public class Controlador {
 	private ListaValores miListaDeEstilosPrincipales;
 	private MatrizEstilos miMatrizEstilos;
 	private Map<String, MatrizAcordes> MatrizEvolutiva;
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 	
 	//#########################################################################################
 	/**
@@ -141,16 +141,17 @@ public class Controlador {
 	 *///#######################################################################################
 	private void guardarCancionEnMemoria(CancionAprendida cancion) throws EstilosException, ValoresException {
 
-		boolean modificado = true;//para saber si modifico un valor leido de la base de datos
+		boolean modificadoNuevo = true;//para saber si modifico un valor leido de la base de datos
+		boolean modificadoActualizar = false;
 		
 		// arreglar xq le mandamos los numeros en las lineas y los tomara como acordes.
 		// probar utiles.calculaCantAcordesPorCompas("1 / Am")
-		Estilos.guardarEstilosEnMatriz(cancion.getCancionSinRepeats(), miMatrizEstilos,modificado);
-		this.getMiListaDeEstilosPrincipales().agregarValor(cancion.getEstiloPrincipal(),modificado);
+		Estilos.guardarEstilosEnMatriz(cancion.getCancionSinRepeats(), miMatrizEstilos,modificadoNuevo);
+		this.getMiListaDeEstilosPrincipales().agregarValor(cancion.getEstiloPrincipal(),modificadoNuevo,modificadoActualizar);
 		
-		this.getMiListaDeTonicas().agregarValor(cancion.getTonica().getNombre(), cancion.getEstiloPrincipal(),modificado);	
-		this.getMiListaDeTempos().agregarValor(cancion.getTempo(), cancion.getEstiloPrincipal(),modificado);
-		this.getMiListaDeDuraciones().agregarValor(String.valueOf(cancion.getDuracion()), cancion.getEstiloPrincipal(),modificado);
+		this.getMiListaDeTonicas().agregarValor(cancion.getTonica().getNombre(), cancion.getEstiloPrincipal(),modificadoNuevo);	
+		this.getMiListaDeTempos().agregarValor(cancion.getTempo(), cancion.getEstiloPrincipal(),modificadoNuevo);
+		this.getMiListaDeDuraciones().agregarValor(String.valueOf(cancion.getDuracion()), cancion.getEstiloPrincipal(),modificadoNuevo);
 		
 		this.cargarAcordesDeCancion(cancion.getListaAcordes(), cancion.getEstiloPrincipal());
 		
