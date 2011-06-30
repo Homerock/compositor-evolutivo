@@ -152,13 +152,13 @@ public class EstilosDTO {
 			int dosAcordesEnCompas,
 			int tresAcordesEnCompas,
 			int cuatroAcordesEnCompas,
-			boolean esPrincipal
+			int esPrincipal
 			) throws SQLException, ORMException {
 		
 	
 		try{
 			
-			Estilos[] e= manager.find(Estilos.class, Query.select().where("nombre like '" + estilo + "'"));
+			Estilos[] e= manager.find(Estilos.class, Query.select().where(" nombre like '" + estilo + "' "));
 			e[0].setCantUnCompas(cantUnCompas);
 			e[0].setCantDosCompases(cantDosCompases);
 			e[0].setCantCuatroCompases(cantCuatroCompases);
@@ -175,6 +175,82 @@ public class EstilosDTO {
 		}		
 	}
 		
+		//################################################################################################################
+		/**
+		 * 
+		 * Actualiza todos los contadores de un estilo determinado.
+		 * 
+		 * @param manager
+		 * @param estilo
+		 * @param cantUnCompas
+		 * @param cantDosCompases
+		 * @param cantCuatroCompases
+		 * @param cantOchoCompases
+		 * @param unAcordeEnCompas
+		 * @param dosAcordesEnCompas
+		 * @param tresAcordesEnCompas
+		 * @param cuatroAcordesEnCompas
+		 * @throws SQLException
+		 * @throws ORMException
+		 * 
+		 *///################################################################################################################
+			public static void actualizar(
+				EntityManager manager, 
+				String estilo, 
+				int cantUnCompas,
+				int cantDosCompases,
+				int cantCuatroCompases,
+				int cantOchoCompases,
+				int unAcordeEnCompas,
+				int dosAcordesEnCompas,
+				int tresAcordesEnCompas,
+				int cuatroAcordesEnCompas
+				) throws SQLException, ORMException {
+			
+		
+			try{
+				
+				Estilos[] e= manager.find(Estilos.class, Query.select().where(" nombre like '" + estilo + "' "));
+				e[0].setCantUnCompas(cantUnCompas);
+				e[0].setCantDosCompases(cantDosCompases);
+				e[0].setCantCuatroCompases(cantCuatroCompases);
+				e[0].setCantOchoCompases(cantOchoCompases);
+				e[0].setUnAcordeEnCompas(unAcordeEnCompas);
+				e[0].setDosAcordesEnCompas(dosAcordesEnCompas);
+				e[0].setTresAcordesEnCompas(tresAcordesEnCompas);
+				e[0].setCuatroAcordesEnCompas(cuatroAcordesEnCompas);
+				e[0].save();
+				
+			}catch(ArrayIndexOutOfBoundsException e){
+				throw new ORMException("No existe el Estilo '"+estilo+"' a actualizar.");
+			}		
+		}
+		
+		
+		/**
+		 * actualiza si esprincipal un estilo determinado.
+		 * @param manager
+		 * @param estilo
+		 * @param esPrincipal
+		 * @throws SQLException
+		 * @throws ORMException
+		 */
+		public static void actualizar(EntityManager manager, String estilo,int esPrincipal)
+							throws SQLException, ORMException {
+		
+			try{
+	
+				Estilos[] e= manager.find(Estilos.class, Query.select().where(" nombre like '" + estilo + "' "));
+				e[0].setEsPrincipal(esPrincipal);
+				e[0].save();
+				
+			}catch(ArrayIndexOutOfBoundsException e){
+				throw new ORMException("No existe el Estilo '"+estilo+"' a actualizar.");
+			}
+			
+			
+			
+		}
 	//################################################################################################################
 	/**
 	 *  verifica si existe un estilo en la base datos.
@@ -242,7 +318,7 @@ public class EstilosDTO {
 	
 	public static Estilos[] seleccionarTodosPrincipales(EntityManager manager) throws SQLException {
 				
-		Estilos[] e1 = manager.find(Estilos.class,Query.select().where(" esprincipal "));
+		Estilos[] e1 = manager.find(Estilos.class,Query.select().where(" esprincipal = 1 "));
 		return e1;
 			
 		

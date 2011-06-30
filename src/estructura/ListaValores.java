@@ -43,7 +43,7 @@ public class ListaValores {
 		
 		for (Valores va : listaValores) {
 			if (va.getValor().equalsIgnoreCase(valor) && va.getEstilo().equalsIgnoreCase(estilo)) {
-				va.incrementarCantidad();
+				va.incrementarCantidad(modificado);
 				return;
 			}
 		}
@@ -60,11 +60,31 @@ public class ListaValores {
 		
 		for (Valores va : listaValores) {
 			if (va.getEstilo().equalsIgnoreCase(estilo)) {
-				va.incrementarCantidad();
+				va.incrementarCantidad(modificado);
 				return;
 			}
 		}
 		listaValores.add(new Valores(estilo,1,modificado));
+		return;	
+	}
+	/**
+	 * agrega un valor
+	 * 
+	 * @param estilo
+	 * @param modificadoNuevo
+	 * @param modificadoActualizar
+	 */
+	public void agregarValor(String estilo,boolean modificadoNuevo,boolean modificadoActualizar) {
+		
+		ArrayList<Valores> listaValores = (ArrayList<Valores>) this.getLista();
+		
+		for (Valores va : listaValores) {
+			if (va.getEstilo().equalsIgnoreCase(estilo)) {
+				va.incrementarCantidad(modificadoActualizar);
+				return;
+			}
+		}
+		listaValores.add(new Valores(estilo,1,modificadoNuevo));
 		return;	
 	}
 	

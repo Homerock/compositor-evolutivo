@@ -32,7 +32,7 @@ public interface Estilos extends Entity {
 	public void setCuatroAcordesEnCompas(int cuatroAcordesEnCompas);
 	
 	
-	public boolean getEsPrincipal();
-	public void setEsPrincipal(boolean esPrincipal);
+	public int getEsPrincipal();
+	public void setEsPrincipal(int esPrincipal);
 	
 }

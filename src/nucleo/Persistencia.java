@@ -4,15 +4,22 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
 import orm.*;
 
+import estructura.AcordesFila;
 import estructura.EstilosFila;
 import estructura.ListaValores;
 import estructura.MatrizAcordes;
 import estructura.MatrizEstilos;
+import estructura.ValorAcordes;
+import estructura.ValorEstilos;
+import estructura.Valores;
+import excepciones.ORMException;
 import excepciones.PersistenciaException;
 
 import net.java.ao.EntityManager;
@@ -20,7 +27,8 @@ import net.java.ao.EntityManager;
 public class Persistencia {
 	
 	private EntityManager manager;
-
+	private boolean DEBUG = true;
+	
 	public Persistencia() throws PersistenciaException{
 		Properties prop = new Properties();
 		
@@ -207,19 +215,12 @@ public class Persistencia {
 			
 		} catch (SQLException e) {
 			throw new PersistenciaException("Error al acceder a 'ocurrenciasacordes' en la base de datos - "+e.getMessage());
-		}
-		
-		
+		}		
 	}
 	
-	
-	
-	
-	
-	
-	
+
 	//######################################################################################################
-	private EntityManager getManager() {
+	public EntityManager getManager() {
 		return manager;
 	}
 
@@ -227,5 +228,319 @@ public class Persistencia {
 		this.manager = manager;
 	}
 
+	//######################################################################################################
+	private void ocurrenciasEstiloABaseDeDatos(EstilosFila estilosFila) throws PersistenciaException, ORMException{
+		Iterator it2 = estilosFila.getMapEstilos().entrySet().iterator();
+		ValorEstilos valorEstilo;
+		Estilos estiloPpal;
+		Estilos estiloSec;
+		
+		try {
+		
+			while (it2.hasNext()) {
+				Map.Entry e2 = (Map.Entry)it2.next();
+				valorEstilo = (ValorEstilos) e2.getValue();
+				
+				if(valorEstilo.isModificado()){
+					estiloPpal = EstilosDTO.buscar(this.getManager(), estilosFila.getNombreEstilo());
+					estiloSec = EstilosDTO.buscar(this.getManager(), e2.getKey().toString());
+					if (OcurrenciasEstilosDTO.existe(this.getManager(), estiloPpal, estiloSec)) {
+						OcurrenciasEstilosDTO.actualizar(this.getManager(), estiloPpal, estiloSec, valorEstilo.getValor());
+					} else {
+						OcurrenciasEstilosDTO.insertar(this.getManager(), estiloPpal, estiloSec, valorEstilo.getValor());
+					}
+				}
+			}
+		
+		} catch (SQLException e) {
+			throw new PersistenciaException("Error al acceder a 'ocurrenciasestilos' en la base de datos - "+e.getMessage());
+		}
+	}
+	
+	public void matrizEstilosABaseDeDatos(MatrizEstilos miMatrizEstilos) throws ORMException, PersistenciaException {
+
+		Map<String, EstilosFila> mapEstilos = miMatrizEstilos.getMisEstilos();
+		EstilosFila mapEstiloPpal;
+		Iterator it = mapEstilos.entrySet().iterator();
+
+		try {
+
+			while (it.hasNext()) {
+				Map.Entry e = (Map.Entry)it.next();
+				mapEstiloPpal= (EstilosFila) e.getValue();
+
+				if (mapEstiloPpal.isModificado()){
+					System.out.println(mapEstiloPpal.toString());
+					if (EstilosDTO.existe(this.getManager(), mapEstiloPpal.getNombreEstilo())){
+						EstilosDTO.actualizar(this.getManager(), 
+								mapEstiloPpal.getNombreEstilo(),
+								mapEstiloPpal.getCantUnCompas(),
+								mapEstiloPpal.getCantDosCompases(),
+								mapEstiloPpal.getCantCuatroCompases(),
+								mapEstiloPpal.getCantOchoCompases(),
+								mapEstiloPpal.getUnAcordeEnCompas(),
+								mapEstiloPpal.getDosAcordesEnCompas(),
+								mapEstiloPpal.getTresAcordesEnCompas(),
+								mapEstiloPpal.getCuatroAcordesEnCompas()
+								); // false porque no es estilo principal, esto se controla despues
+
+					}else{
+						EstilosDTO.insertar(this.getManager(), 
+								mapEstiloPpal.getNombreEstilo(),
+								mapEstiloPpal.getCantUnCompas(),
+								mapEstiloPpal.getCantDosCompases(),
+								mapEstiloPpal.getCantCuatroCompases(),
+								mapEstiloPpal.getCantOchoCompases(),
+								mapEstiloPpal.getUnAcordeEnCompas(),
+								mapEstiloPpal.getDosAcordesEnCompas(),
+								mapEstiloPpal.getTresAcordesEnCompas(),
+								mapEstiloPpal.getCuatroAcordesEnCompas()
+						);
+					}	
+				}
+			}
+		} catch (SQLException e1) {
+			throw new PersistenciaException("Error al acceder a 'estilos' en la base de datos - "+e1.getMessage());
+		} 
+
+		it = mapEstilos.entrySet().iterator();
+		
+		while(it.hasNext()) {
+			Map.Entry e = (Map.Entry)it.next();
+			mapEstiloPpal= (EstilosFila) e.getValue();
+			this.ocurrenciasEstiloABaseDeDatos(mapEstiloPpal);
+		}
+
+	}
+
+	
+	/**
+	 * actuliza todos los estilos principales
+	 * precondicion : el estilo debe existir.
+	 * 
+	 * @param miListaDeEstilosPrincipales
+	 * @throws ORMException
+	 * @throws PersistenciaException
+	 */
+	public void listaDeEstilosPrincipalesABaseDeDatos(ListaValores miListaDeEstilosPrincipales) throws ORMException, PersistenciaException {
+		
+		ArrayList<Valores> listaValores = miListaDeEstilosPrincipales.getLista();
+		
+		int principal = 1;
+		try {
+			for (Valores va : listaValores) {
+				if(va.isModificado()){
+					if( DEBUG ){
+						System.out.println("Actualizo Estilo principal "+va.getEstilo());
+					}
+					EstilosDTO.actualizar(this.getManager(),va.getEstilo(),principal);
+				}	
+			}
+		} catch (SQLException e) {
+			throw new PersistenciaException("Error al acceder a 'estilos' en la base de datos - "+e.getMessage());
+		} 
+		
+	}
+		
+	
+	/**
+	 * 
+	 * @param miListaDeTempos
+	 * @throws ORMException
+	 * @throws PersistenciaException
+	 */
+	public void listaTemposABaseDeDatos(ListaValores miListaDeTempos)throws ORMException, PersistenciaException {
+		
+		ArrayList<Valores> listaValores = miListaDeTempos.getLista();
+		
+		try {
+			for (Valores va : listaValores) {
+				if(va.isModificado()){
+					// si fue modificado
+					Estilos estilo = EstilosDTO.buscar(this.getManager(), va.getEstilo());
+					
+					if(TemposDTO.existe(this.getManager(), va.getValor(), estilo)){
+						TemposDTO.actualizar(this.getManager(), va.getValor(), estilo, va.getCantidad());
+						
+						if( DEBUG ){
+							System.out.println("Actualizo Tempo "+va.getValor()+" - Estilo "+va.getEstilo());
+						}
+						
+					}else{
+						TemposDTO.insertar(this.getManager(), va.getValor(), estilo, va.getCantidad());
+						
+						if( DEBUG ){
+							System.out.println("Inserto Tempo "+va.getValor()+" - Estilo "+va.getEstilo());
+						}
+					}
+				}	
+			}
+		} catch (SQLException e) {
+			throw new PersistenciaException("Error al acceder a 'tempo' en la base de datos - "+e.getMessage());
+		} 
+		
+	}
+
+
+	
+	public void listaDeDuracionesABaseDeDatos(ListaValores miListaDeDuraciones)throws ORMException, PersistenciaException {
+		
+		ArrayList<Valores> listaValores = miListaDeDuraciones.getLista();
+		
+		try {
+			for (Valores va : listaValores) {
+				if(va.isModificado()){
+					// si fue modificado
+					Estilos estilo = EstilosDTO.buscar(this.getManager(), va.getEstilo());
+					
+					if(DuracionDTO.existe(this.getManager(), Integer.parseInt(va.getValor()), estilo)){
+						DuracionDTO.actualizar(this.getManager(), Integer.parseInt(va.getValor()), estilo, va.getCantidad());
+						
+						if( DEBUG ){
+							System.out.println("Actualizo Duracion "+va.getValor()+" - Estilo "+va.getEstilo());
+						}
+						
+					}else{
+						DuracionDTO.insertar(this.getManager(), Integer.parseInt(va.getValor()), estilo, va.getCantidad());
+						
+						if( DEBUG ){
+							System.out.println("Inserto Duracion "+va.getValor()+" - Estilo "+va.getEstilo());
+						}
+					}
+				}	
+			}
+		} catch (SQLException e) {
+			throw new PersistenciaException("Error al acceder a 'duracion' en la base de datos - "+e.getMessage());
+		} 
+		
+	}
+
+	/**
+	 * Precondicion: Los acordes deben estar cargados
+	 * @param miListaDeTonicas
+	 * @throws ORMException
+	 * @throws PersistenciaException
+	 */
+	public void listaDeTonicasABaseDeDatos(ListaValores miListaDeTonicas) throws ORMException, PersistenciaException {
+		
+		ArrayList<Valores> listaValores = miListaDeTonicas.getLista();
+		
+		try {
+			for (Valores va : listaValores) {
+				if(va.isModificado()){
+					// si fue modificado
+					Estilos estilo = EstilosDTO.buscar(this.getManager(), va.getEstilo());
+					Acordes acorde = AcordesDTO.buscar(this.getManager(), va.getValor());
+					
+					if(TonicasDTO.existe(this.getManager(), acorde, estilo)){
+						TonicasDTO.actualizar(this.getManager(), acorde, estilo, va.getCantidad());
+						
+						if( DEBUG ){
+							System.out.println("Actualizo Tonica "+va.getValor()+" - Estilo "+va.getEstilo());
+						}
+						
+					}else{
+						TonicasDTO.insertar(this.getManager(), acorde, estilo, va.getCantidad());
+						
+						if( DEBUG ){
+							System.out.println("Inserto Tonica "+va.getValor()+" - Estilo "+va.getEstilo());
+						}
+					}
+				}	
+			}
+		} catch (SQLException e) {
+			throw new PersistenciaException("Error al acceder a 'tonicas' en la base de datos - "+e.getMessage());
+		} 	
+	}
+
+	/**
+	 * 
+	 * @param matrizEvolutiva
+	 * @throws ORMException 
+	 * @throws PersistenciaException 
+	 */
+	public void matrizAcordesABaseDeDatos(Map<String, MatrizAcordes> matrizEvolutiva) throws PersistenciaException, ORMException {
+		
+		Iterator it = matrizEvolutiva.entrySet().iterator();
+		MatrizAcordes miMatriz;
+		
+		//tengo que iterar para listar todas la matrices del map
+		while (it.hasNext()) {
+			Map.Entry e = (Map.Entry)it.next();
+			String estiloPpal = (String) e.getKey();
+			miMatriz = (MatrizAcordes) e.getValue();
+			acordesABaseDeDatos(miMatriz, estiloPpal);
+		}
+	}
+	
+	private void acordesABaseDeDatos(MatrizAcordes miMatriz, String estiloPpal) throws PersistenciaException, ORMException{
+		
+		Iterator it = miMatriz.getMisAcordes().entrySet().iterator();
+		AcordesFila miAcordeFila;
+		
+		try {
+			while (it.hasNext()) {
+				Map.Entry e = (Map.Entry)it.next();
+				miAcordeFila = (AcordesFila) e.getValue();
+				
+				if (miAcordeFila.isModificado()){
+					System.out.println(miAcordeFila.toString());
+					if (AcordesDTO.existe(this.getManager(), miAcordeFila.getNombreAcorde())){
+						AcordesDTO.actualizar(this.getManager(), miAcordeFila.getNombreAcorde(), miAcordeFila.getValorAcumuladoFila());
+
+					}else{
+						AcordesDTO.insertar(this.getManager(), miAcordeFila.getNombreAcorde());
+					}	
+				}
+			}
+		
+		} catch (SQLException e) {
+			throw new PersistenciaException("Error al acceder a 'ocurrenciasestilos' en la base de datos - "+e.getMessage());
+		}
+		
+		
+		
+		it = miMatriz.getMisAcordes().entrySet().iterator();
+		
+		while(it.hasNext()) {
+			Map.Entry e = (Map.Entry)it.next();
+			miAcordeFila = (AcordesFila) e.getValue();
+			this.ocurrenciasAcordesABaseDeDatos(miAcordeFila,estiloPpal);	// getKey es el estilo de la matriz
+		}
+		
+	}
+
+	/**
+	 * 
+	 * @param miAcordeFila
+	 * @throws PersistenciaException
+	 * @throws ORMException
+	 */
+	private void ocurrenciasAcordesABaseDeDatos(AcordesFila miAcordeFila, String estiloPpal) throws PersistenciaException, ORMException{
+		
+		ArrayList<ValorAcordes> ocurrencias = miAcordeFila.getListaOcurrencias();
+		Acordes acordePpal;
+		Acordes acordeSec;
+		Estilos estilo;
+		
+		try {
+		
+			for (ValorAcordes oa : ocurrencias) {
+				if(oa.isModificado()){
+					acordePpal = AcordesDTO.buscar(this.getManager(), miAcordeFila.getNombreAcorde());
+					acordeSec = AcordesDTO.buscar(this.getManager(), oa.getAcordeSecundario());
+					estilo = EstilosDTO.buscar(this.getManager(), estiloPpal);
+					if (OcurrenciasAcordesDTO.existe(this.getManager(), acordePpal, acordeSec, estilo)) {
+						OcurrenciasAcordesDTO.actualizar(this.getManager(), acordePpal, acordeSec, estilo, oa.getValor());
+					} else {
+						OcurrenciasAcordesDTO.insertar(this.getManager(), acordePpal, acordeSec, estilo, oa.getValor());
+					}
+				}
+			}
+		} catch (SQLException e) {
+			throw new PersistenciaException("Error al acceder a 'ocurrenciasestilos' en la base de datos - "+e.getMessage());
+		}
+	}
+	
 
 }
