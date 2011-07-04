@@ -489,7 +489,7 @@ public class Persistencia {
 						AcordesDTO.actualizar(this.getManager(), miAcordeFila.getNombreAcorde(), miAcordeFila.getValorAcumuladoFila());
 
 					}else{
-						AcordesDTO.insertar(this.getManager(), miAcordeFila.getNombreAcorde());
+						AcordesDTO.insertar(this.getManager(), miAcordeFila.getNombreAcorde(),miAcordeFila.getValorAcumuladoFila());
 					}	
 				}
 			}
