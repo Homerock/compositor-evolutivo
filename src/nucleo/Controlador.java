@@ -21,6 +21,8 @@ import estructura.Valores;
 import excepciones.ArchivosException;
 import excepciones.CancionException;
 import excepciones.EstilosException;
+import excepciones.ORMException;
+import excepciones.PersistenciaException;
 import excepciones.ValoresException;
 import utiles.*;
 
@@ -34,6 +36,7 @@ public class Controlador {
 	private MatrizEstilos miMatrizEstilos;
 	private Map<String, MatrizAcordes> MatrizEvolutiva;
 	private static final boolean DEBUG = false;
+	private Persistencia manejadorPersistencia = null;
 	
 	//#########################################################################################
 	/**
@@ -49,8 +52,18 @@ public class Controlador {
 		this.setMiListaDeDuraciones(new ListaValores());
 		this.setMiListaDeEstilosPrincipales(new ListaValores());
 		
+		try {
+			manejadorPersistencia = new Persistencia();
+			datosAMemoria();
+			
+		} catch (PersistenciaException e) {
+			System.err.println("No se pudo conectar con la base de datos " + e.getMessage());
+		} catch (ORMException e) {
+			System.err.println("No se pudo conectar con la base de datos " + e.getMessage());
+		}
+		
 	}
-	
+
 	//#########################################################################################
 	/**
 	 * 
@@ -124,6 +137,42 @@ public class Controlador {
 			e1.printStackTrace();
 		}	
 	}
+	
+	/**
+	 * @throws PersistenciaException 
+	 * @throws ORMException 
+	 * 
+	 */
+	private void datosAMemoria() throws PersistenciaException, ORMException {
+	
+		this.getManejadorPersistencia().estilosAMemoria(this.getMiMatrizEstilos());
+		this.getManejadorPersistencia().ocurrenciasEstilosAMemoria(this.getMiMatrizEstilos());
+		this.getManejadorPersistencia().estilosPrincipalesAMemoria(this.getMiListaDeEstilosPrincipales());
+		this.getManejadorPersistencia().ocurrenciasAcordesAMemoria(this.getMatrizEvolutiva());
+		this.getManejadorPersistencia().duracionAMemoria(getMiListaDeDuraciones());
+		this.getManejadorPersistencia().temposAMemoria(getMiListaDeTempos());
+		this.getManejadorPersistencia().tonicasAMemoria(getMiListaDeTonicas());
+	}
+	
+	/**
+	 * @throws PersistenciaException 
+	 * @throws ORMException 
+	 * 
+	 */
+	public void memoriaABaseDeDatos() throws ORMException, PersistenciaException {
+		
+		if (this.getManejadorPersistencia() != null) {
+			this.getManejadorPersistencia().matrizEstilosABaseDeDatos(getMiMatrizEstilos());
+			this.getManejadorPersistencia().listaDeEstilosPrincipalesABaseDeDatos(getMiListaDeEstilosPrincipales());
+			this.getManejadorPersistencia().matrizAcordesABaseDeDatos(getMatrizEvolutiva());
+			this.getManejadorPersistencia().listaTemposABaseDeDatos(getMiListaDeTempos());
+			this.getManejadorPersistencia().listaDeDuracionesABaseDeDatos(getMiListaDeDuraciones());
+			this.getManejadorPersistencia().listaDeTonicasABaseDeDatos(getMiListaDeTonicas());
+		} else {
+			throw new PersistenciaException("Error en la conexion a base de datos. Los datos no se pudieron guardar"); 
+		}
+	}
+	
 	//#########################################################################################
 	/**
 	 * Guarda todos los datos de la cancion en las estructuras en memoria: 
@@ -533,5 +582,11 @@ public class Controlador {
 	}
 	private void setMatrizEvolutiva(Map<String, MatrizAcordes> matrizEvolutiva) {
 		MatrizEvolutiva = matrizEvolutiva;
+	}
+	public Persistencia getManejadorPersistencia() {
+		return manejadorPersistencia;
+	}
+	public void setManejadorPersistencia(Persistencia manejadorPersistencia) {
+		this.manejadorPersistencia = manejadorPersistencia;
 	}
 }
