@@ -541,6 +541,5 @@ public class Persistencia {
 			throw new PersistenciaException("Error al acceder a 'ocurrenciasestilos' en la base de datos - "+e.getMessage());
 		}
 	}
-	
 
 }

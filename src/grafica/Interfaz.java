@@ -25,6 +25,9 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
+import excepciones.ORMException;
+import excepciones.PersistenciaException;
+
 import nucleo.Controlador;
 import utiles.Constantes;
 import archivos.Reconocedor;
@@ -36,6 +39,7 @@ public class Interfaz implements ItemListener{
 	private static final String ACERCA_DE = "acerca_de";
 	private static final String COMPONER = "componer";
 	private static final String APRENDER = "aprender";
+	private static final String ACTUALIZAR = "actualizar";
 	
 	private static final int OK_ACEPTAR = -1;
 	private static final int SI_NO_OPCION = 0;
@@ -264,6 +268,8 @@ public class Interfaz implements ItemListener{
 		subOpcion1_1.setActionCommand(APRENDER);
 		subOpcion1_2.addActionListener(manejador);
 		subOpcion1_2.setActionCommand(SALIR);
+		subOpcion2_1.addActionListener(manejador);
+		subOpcion2_1.setActionCommand(ACTUALIZAR);
 		
 	}
 	
@@ -277,7 +283,7 @@ public class Interfaz implements ItemListener{
 		return botonComponer;
 	}
 	
-	private void cargarCombo() {
+	public void cargarCombo() {
 		ArrayList<String> lista = controlador.getComboEstilos();
 		
 		jComboEstiloBasico.removeAllItems();
@@ -302,6 +308,16 @@ public class Interfaz implements ItemListener{
 			
 			if (e.getActionCommand() == ACERCA_DE) {
 				JOptionPane.showConfirmDialog(framePrincipal, "Homerock llego... nada será igual","Acerca de...", OK_ACEPTAR);
+			}
+			
+			if (e.getActionCommand() == ACTUALIZAR) {
+				try {
+					controlador.memoriaABaseDeDatos();
+				} catch (ORMException e1) {
+					System.err.println(e1.getMessage());
+				} catch (PersistenciaException e1) {
+					System.err.println(e1.getMessage());
+				}
 			}
 			
 			if (e.getActionCommand() == APRENDER) {
