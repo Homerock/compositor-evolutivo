@@ -35,7 +35,7 @@ public class Controlador {
 	private ListaValores miListaDeEstilosPrincipales;
 	private MatrizEstilos miMatrizEstilos;
 	private Map<String, MatrizAcordes> MatrizEvolutiva;
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 	private Persistencia manejadorPersistencia = null;
 	
 	//#########################################################################################
@@ -242,8 +242,12 @@ public class Controlador {
 		}
 		
 		// cerramos el circulo de la musica, para solucionar bags.
-		if(secundaria !=null && !secundaria.equals(tonica)){
-			miMatrizAcordes.agregaOcurrenciaAcordeSecundario(secundaria, tonica,modificado);
+		principal = secundaria;
+		if(principal !=null && !principal.equals(tonica)){
+			if (!miMatrizAcordes.ExisteAcordePpal(principal)) {
+				miMatrizAcordes.agregarAcordePrincipal(principal,modificado);
+			} 
+			miMatrizAcordes.agregaOcurrenciaAcordeSecundario(principal, tonica,modificado);
 			
 		}
 	}

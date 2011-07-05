@@ -155,17 +155,17 @@ public class EstilosFila {
 		Map<String, ValorEstilos> mapEstilos = this.getMapEstilos();
 		Iterator it = mapEstilos.entrySet().iterator();
 		ValorEstilos miValEstilo;
-		String Estilo="";
+		String estilo= null;
 
 		while (it.hasNext()) {
 			Map.Entry e = (Map.Entry)it.next();
 			miValEstilo = (ValorEstilos)e.getValue(); 
 			if (miValEstilo.getValorAcumulado()>=valor){
-				Estilo= (String)e.getKey();
+				estilo= (String)e.getKey();
 				break;
 			}
 		}
-		return Estilo;
+		return estilo;
 	}
 	
 	/**---------------------------------------------------------------------------
