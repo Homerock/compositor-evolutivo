@@ -202,7 +202,7 @@ public class Controlador {
 		this.getMiListaDeTempos().agregarValor(cancion.getTempo(), cancion.getEstiloPrincipal(),modificadoNuevo);
 		this.getMiListaDeDuraciones().agregarValor(String.valueOf(cancion.getDuracion()), cancion.getEstiloPrincipal(),modificadoNuevo);
 		
-		this.cargarAcordesDeCancion(cancion.getListaAcordes(), cancion.getEstiloPrincipal());
+		this.cargarAcordesDeCancion(cancion.getTonica().getNombre(),cancion.getListaAcordes(), cancion.getEstiloPrincipal());
 		
 		return;
 	}
@@ -217,11 +217,11 @@ public class Controlador {
 	 * @param miMatrizAcordes
 	 **/
 	//#########################################################################################
-	private void cargarAcordesDeCancion(ArrayList<String> cancion, String estiloPrincipal) {
+	private void cargarAcordesDeCancion(String tonica , ArrayList<String> cancion, String estiloPrincipal) {
 		boolean modificado = true;
 		int pos = 0;
 		String principal;
-		String secundaria;
+		String secundaria = null;
 
 		if (cancion.size() == 0)
 			return;
@@ -239,6 +239,12 @@ public class Controlador {
 			pos++;			
 			// CARGAR EN LA MATRIZ DE ESE ESTILO PRINCIPAL
 			miMatrizAcordes.agregaOcurrenciaAcordeSecundario(principal, secundaria,modificado);	
+		}
+		
+		// cerramos el circulo de la musica, para solucionar bags.
+		if(secundaria !=null && !secundaria.equals(tonica)){
+			miMatrizAcordes.agregaOcurrenciaAcordeSecundario(secundaria, tonica,modificado);
+			
 		}
 	}
 	//#########################################################################################
