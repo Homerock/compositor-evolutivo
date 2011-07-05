@@ -467,10 +467,11 @@ public class Composicion {
 		int semilla;
 		Random rnd = new Random();
 		String estilo = estiloInicial;
+		String proxEstilo;
 		int cantAcordes;
 		
-		while(n < nuevaCancion.getDuracion()) {
-			
+	//	while(n < nuevaCancion.getDuracion()) {
+		do {	
 			miEstiloFila = miMatrizEstilos.getMisEstilos().get(estilo);
 			// busco si ya existe la estrofa con este estilo
 			if (nuevaCancion.existeEstrofaEstilo(estilo)) {
@@ -497,14 +498,18 @@ public class Composicion {
 			numEstrofa++;
 			n = n + cantCompases;		
 			semilla = miEstiloFila.getContador();
-			estilo = miEstiloFila.buscarEstilo(rnd.nextInt(semilla+1));
+			proxEstilo = miEstiloFila.buscarEstilo(rnd.nextInt(semilla+1));
+			
+			if (proxEstilo != null) {
+				estilo = proxEstilo;
+			}
 			
 			// si encontramos el End terminamos de armar la estructura
 			if ((estilo.indexOf(Constantes.END_ESTILO) != -1) || (estilo.indexOf(Constantes.INTRO_ESTILO) != -1)) {
 				System.out.println("CORTE POR ENCONTRAR: " + estilo);
 				break;
 			}
-		}
+		} while (n < nuevaCancion.getDuracion());
 	}
 
 	
