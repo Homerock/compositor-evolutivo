@@ -133,10 +133,11 @@ public class Composicion {
 	 * @param cantCompasesEstrofaA
 	 * @param cantCompasesEstrofaB
 	 * @param cantCompasesEnd
+	 * @throws CancionException 
 	 */
 	//################################################################################
 	public void armarEstructuraA(MatrizEstilos miMatrizEstilos, Cancion nuevaCancion, int cantCompasesIntro, 
-			int cantCompasesEstrofaA, int cantCompasesEstrofaB, int cantCompasesEnd) {
+			int cantCompasesEstrofaA, int cantCompasesEstrofaB, int cantCompasesEnd) throws CancionException {
 		
 		Estrofa miEstrofa;
 		int cantAcordes;
@@ -184,6 +185,9 @@ public class Composicion {
 		semilla = miEstiloFila.getContador();
 		do {
 			estiloB = miEstiloFila.buscarEstilo(rnd.nextInt(semilla+1));	
+			if (estiloB == null) {
+				throw new CancionException("Error en la generacion de estilos ."+Composicion.class);
+			}
 		} while(Utiles.cadenaContienePatron(estiloB, Constantes.END_ESTILO) || Utiles.cadenaContienePatron(estiloB, Constantes.FILL_ESTILO)
 				|| estiloB.equalsIgnoreCase(estiloInicial));
 		
@@ -233,10 +237,11 @@ public class Composicion {
 	 * @param cantCompasesEstrofaA
 	 * @param cantCompasesEstrofaB
 	 * @param cantCompasesEnd
+	 * @throws CancionException 
 	 */
 	//################################################################################
 	public void armarEstructuraB(MatrizEstilos miMatrizEstilos, Cancion nuevaCancion, int cantCompasesIntro, 
-			int cantCompasesEstrofaA, int cantCompasesEstrofaB, int cantCompasesEnd) {
+			int cantCompasesEstrofaA, int cantCompasesEstrofaB, int cantCompasesEnd) throws CancionException {
 		
 		Estrofa miEstrofa;
 		int cantCompasesFill = 1;
@@ -279,6 +284,9 @@ public class Composicion {
 		semilla = miEstiloFila.getContador();
 		do {
 			estiloB = miEstiloFila.buscarEstilo(rnd.nextInt(semilla+1));
+			if (estiloB == null) {
+				throw new CancionException("Error en la generacion de estilos ."+Composicion.class);
+			}
 		} while(Utiles.cadenaContienePatron(estiloB, Constantes.END_ESTILO) || Utiles.cadenaContienePatron(estiloB, Constantes.FILL_ESTILO) 
 				|| estiloB.equalsIgnoreCase(estiloInicial));
 		
@@ -345,10 +353,11 @@ public class Composicion {
 	 * @param cantCompasesEstrofaA
 	 * @param cantCompasesEstrofaB
 	 * @param cantCompasesEnd
+	 * @throws CancionException 
 	 */
 	//################################################################################
 	public void armarEstructuraC(MatrizEstilos miMatrizEstilos, Cancion nuevaCancion, int cantCompasesIntro, 
-			int cantCompasesEstrofaA, int cantCompasesEstrofaB, int cantCompasesEnd) {
+			int cantCompasesEstrofaA, int cantCompasesEstrofaB, int cantCompasesEnd) throws CancionException {
 		
 		Estrofa miEstrofa;
 		int cantAcordes;
@@ -391,6 +400,9 @@ public class Composicion {
 		semilla = miEstiloFila.getContador();
 		do {
 			estiloB = miEstiloFila.buscarEstilo(rnd.nextInt(semilla+1));
+			if (estiloB == null) {
+				throw new CancionException("Error en la generacion de estilos ."+Composicion.class);
+			}
 		} while(Utiles.cadenaContienePatron(estiloB, Constantes.END_ESTILO) || Utiles.cadenaContienePatron(estiloB, Constantes.FILL_ESTILO) 
 				|| estiloB.equalsIgnoreCase(estiloInicial));
 		

@@ -1,2 +1,2 @@
 #!/bin/bash
-psql compositordb -Ucompositordb -hlocalhost < backup.txt
+psql compositordb -Ucompositordb -hlocalhost < $1

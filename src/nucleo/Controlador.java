@@ -483,27 +483,29 @@ public class Controlador {
 		int cantCompasesEstrofaB; 
 		int cantCompasesEnd;
 		
-		if (estructura.equalsIgnoreCase(Constantes.ESTRUCTURA_A)) {
-			cantCompasesIntro = 2;
-			cantCompasesEstrofaA = 4;
-			cantCompasesEstrofaB = 8;
-			cantCompasesEnd = 1;
-			miCompositor.armarEstructuraA(miMatrizEstilos, nuevaCancion, cantCompasesIntro, cantCompasesEstrofaA, cantCompasesEstrofaB, cantCompasesEnd);
-		} else if (estructura.equalsIgnoreCase(Constantes.ESTRUCTURA_B)) {
-			cantCompasesIntro = 2;
-			cantCompasesEstrofaA = 4;
-			cantCompasesEstrofaB = 8;
-			cantCompasesEnd = 1;
-			miCompositor.armarEstructuraB(miMatrizEstilos, nuevaCancion, cantCompasesIntro, cantCompasesEstrofaA, cantCompasesEstrofaB, cantCompasesEnd);
-		} else if (estructura.equalsIgnoreCase(Constantes.ESTRUCTURA_C)){
-			cantCompasesIntro = 2;
-			cantCompasesEstrofaA = 4;
-			cantCompasesEstrofaB = 8;
-			cantCompasesEnd = 1;
-			miCompositor.armarEstructuraC(miMatrizEstilos, nuevaCancion, cantCompasesIntro, cantCompasesEstrofaA, cantCompasesEstrofaB, cantCompasesEnd);
-		}
-
 		try {
+		
+			if (estructura.equalsIgnoreCase(Constantes.ESTRUCTURA_A)) {
+				cantCompasesIntro = 2;
+				cantCompasesEstrofaA = 4;
+				cantCompasesEstrofaB = 8;
+				cantCompasesEnd = 1;
+				miCompositor.armarEstructuraA(miMatrizEstilos, nuevaCancion, cantCompasesIntro, cantCompasesEstrofaA, cantCompasesEstrofaB, cantCompasesEnd);
+			} else if (estructura.equalsIgnoreCase(Constantes.ESTRUCTURA_B)) {
+				cantCompasesIntro = 2;
+				cantCompasesEstrofaA = 4;
+				cantCompasesEstrofaB = 8;
+				cantCompasesEnd = 1;
+				miCompositor.armarEstructuraB(miMatrizEstilos, nuevaCancion, cantCompasesIntro, cantCompasesEstrofaA, cantCompasesEstrofaB, cantCompasesEnd);
+			} else if (estructura.equalsIgnoreCase(Constantes.ESTRUCTURA_C)){
+				cantCompasesIntro = 2;
+				cantCompasesEstrofaA = 4;
+				cantCompasesEstrofaB = 8;
+				cantCompasesEnd = 1;
+				miCompositor.armarEstructuraC(miMatrizEstilos, nuevaCancion, cantCompasesIntro, cantCompasesEstrofaA, cantCompasesEstrofaB, cantCompasesEnd);
+			}
+
+	
 			miCompositor.cargarAcordesEnEstructura(miMatrizAcordes, nuevaCancion);
 			Archivos.generarArchivo(nuevaCancion);
 			// cargo en la matriz la nueva cancion que compuse
