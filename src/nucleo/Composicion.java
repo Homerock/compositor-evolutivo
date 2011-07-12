@@ -429,9 +429,11 @@ public class Composicion {
 		numEstrofa++;
 		clonarEstrofa(nuevaCancion, estiloB, numEstrofa);
 		
-		// CLONAMOS B
+		// sera B' > CLONAMOS B
 		numEstrofa++;
 		clonarEstrofa(nuevaCancion, estiloB, numEstrofa);
+		nuevaCancion.agregarNumeroEstrofaAlterada(numEstrofa);// decimos q esta se alterara despues
+		
 		
 		// CLONAMOS A
 		numEstrofa++;
@@ -453,6 +455,8 @@ public class Composicion {
 	
 	
 	
+
+
 	//################################################################################
 	/**
 	 * reemplaza el otro armarEstructuraEstilos
@@ -779,6 +783,90 @@ public class Composicion {
 		return valor;
 		
 	}
-	
 
+	/**
+	 * modficamos el ultimo compas de la estrofa , dejandole el 1 acorde , y si la cantidad es menor q el maximo agrgamos uno mas.
+	 * generando nuevamente los acordes de ese ultimo compas de la estrofa.
+	 * 
+	 * @param miMatrizAcordes
+	 * @param cancion
+	 * @param numeroEstrofa
+	 * @throws AcordesException 
+	 * @throws CancionException 
+	 */
+	public void modificarEstrofaDeCancion(MatrizAcordes miMatrizAcordes,Cancion cancion,int numeroEstrofa) throws CancionException, AcordesException {
+		Acorde acordeAnterior = null;
+		
+		if(numeroEstrofa>1){//si no es la primer estrofa
+			acordeAnterior = cancion.getEstrofaPorNumero(numeroEstrofa-1).getUltimoCompas().getUltimoAcorde();
+		}else{
+			acordeAnterior = cancion.getTonica();
+		}
+		
+		Estrofa estrofa = cancion.getEstrofaPorNumero(numeroEstrofa);
+		ArrayList<Compas> listaCompases = estrofa.getListaDeCompases();
+		int tam = listaCompases.size();
+		int mitad = tam / 2;
+		
+		for (int i=mitad; i < tam; i++) {
+			Compas compas = listaCompases.get(i);
+			if(modificoCompas()){
+				System.out.println("modifico :"+compas.toString());
+				modificarAcordesDeCompas(miMatrizAcordes, acordeAnterior,compas);	
+			}
+			acordeAnterior = compas.getUltimoAcorde();
+		}
+	
+	}
+	
+	
+	
+	//################################################################################
+	/**
+	 * modifica los acordes de un compas (entre uno y cuatro acordes)
+	 * 
+	 * @param miMatrizAcordes
+	 * @param acordeAnterior
+	 * @param miCompas
+	 * @return
+	 * @throws CancionException 
+	 * @throws AcordesException 
+	 */
+	//################################################################################
+	private void modificarAcordesDeCompas(MatrizAcordes miMatrizAcordes, Acorde acordeAnterior, Compas miCompas) throws CancionException, AcordesException {
+		
+		
+		ArrayList<Acorde> listaAcordes = new ArrayList<Acorde>();
+		Acorde miAcorde;
+		
+		int cantidad= Utiles.generarNumeroAleatorio(Constantes.MINIMO_ACORDES, Constantes.MAXIMO_ACORDES);
+			
+		for (int i = 1; i <= cantidad;i++) {
+			
+			miAcorde = this.generarAcorde(miMatrizAcordes, acordeAnterior);// lanza una acordesExcepcion. bug solucionado
+			listaAcordes.add(miAcorde);	
+			acordeAnterior = miAcorde;
+		}
+		
+		miCompas.setCantidadAcordes(cantidad);
+		miCompas.setAcordes(listaAcordes);
+		return ;
+	}
+	
+	
+	/**
+	 * 
+	 * 
+	 * @return
+	 */
+	private boolean modificoCompas(){
+		int num = Utiles.generarNumeroAleatorio(1, 2);
+		if (num ==1){
+			return true;
+		}
+		return false;
+		
+	}
+	
+	
 }

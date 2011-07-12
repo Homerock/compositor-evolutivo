@@ -20,8 +20,11 @@ public class Cancion {
 	private Acorde tonica ;
 	private String estiloPrincipal;
 	private ArrayList<Estrofa> estrofas;// estrofas de la cancion
+	
+	private ArrayList<Integer> numerosEstrofasAlteradas; // cuando es un alteracion de otra estrofa.
 
-
+	
+	
 	/*################################################################################################################
 	 ###################						CONSTRUCTORES				    ###################################### 
 	 ################################################################################################################# */
@@ -33,6 +36,7 @@ public class Cancion {
 		this.setTonica(new Acorde());
 		this.setEstiloPrincipal(null);
 		this.setEstrofas(new ArrayList<Estrofa>());
+		this.setNumerosEstrofasAlteradas(new ArrayList<Integer>());
 	}
 	
 	/**
@@ -51,6 +55,7 @@ public class Cancion {
 		this.setTonica(tonica);
 		this.setEstiloPrincipal(estiloPrincipal);
 		this.setEstrofas(new ArrayList<Estrofa>());
+		this.setNumerosEstrofasAlteradas(new ArrayList<Integer>());
 	}
 	
 	/**
@@ -68,6 +73,8 @@ public class Cancion {
 		this.setTonica(tonica);
 		this.setEstiloPrincipal(estiloPrincipal);
 		this.setEstrofas(new ArrayList<Estrofa>());
+		this.setNumerosEstrofasAlteradas(new ArrayList<Integer>());
+		
 	}
 	
 
@@ -76,9 +83,7 @@ public class Cancion {
 	 ################################################################################################################# */
 
 	public void agregarEstrofa(Estrofa miEstrofa) {
-		
 		this.getEstrofas().add(miEstrofa);
-		
 	}
 	
 	public String getNombre() {
@@ -128,6 +133,21 @@ public class Cancion {
 	public void setEstrofas(ArrayList<Estrofa> estrofas) {
 		this.estrofas = estrofas;
 	}
+
+	public void setNumerosEstrofasAlteradas(ArrayList<Integer> numerosEstrofasAlteradas) {
+		this.numerosEstrofasAlteradas = numerosEstrofasAlteradas;
+	}
+
+	public ArrayList<Integer> getNumerosEstrofasAlteradas() {
+		return numerosEstrofasAlteradas;
+	}
+	
+	public void agregarNumeroEstrofaAlterada(int numero){
+		this.getNumerosEstrofasAlteradas().add(new Integer(numero));
+	}
+	
+
+	
 	/**
 	 * verifica en la lista de estilos de la cancion existe alguna estrofa con un estilo determinado. 
 	 * @param estilo que queremos aviriguar si existe
@@ -165,6 +185,9 @@ public class Cancion {
 		}
 		return miEstrofa;
 	}
+
+	
+
 
 	@Override
 	public String toString() {

@@ -18,6 +18,7 @@ import estructura.ListaValores;
 import estructura.MatrizAcordes;
 import estructura.MatrizEstilos;
 import estructura.Valores;
+import excepciones.AcordesException;
 import excepciones.ArchivosException;
 import excepciones.CancionException;
 import excepciones.EstilosException;
@@ -507,6 +508,18 @@ public class Controlador {
 
 	
 			miCompositor.cargarAcordesEnEstructura(miMatrizAcordes, nuevaCancion);
+			
+			
+			// tenemos que modificar una estrofa ya que es
+			// A - B - B - A - B - B' -A 
+			if (estructura.equalsIgnoreCase(Constantes.ESTRUCTURA_C)){
+				ArrayList<Integer> numerosEstrofasAlteradas = nuevaCancion.getNumerosEstrofasAlteradas();
+				for (Integer i : numerosEstrofasAlteradas){
+					miCompositor.modificarEstrofaDeCancion(miMatrizAcordes, nuevaCancion,i.intValue());
+				}				
+			}
+			
+			
 			Archivos.generarArchivo(nuevaCancion);
 			// cargo en la matriz la nueva cancion que compuse
 			Aprendizaje.aprenderCancion(nuevaCancion.getNombre()+ Constantes.EXTENSION_ARCHIVO);
@@ -514,6 +527,9 @@ public class Controlador {
 			this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
 			this.getMiMatrizEstilos().calcularAcumulados();
 			
+		}catch (AcordesException e) {				
+			System.err.println(e.getMessage());
+			return;
 		}  catch (CancionException e) {
 			System.err.println(e.getMessage());
 			return;
@@ -531,6 +547,7 @@ public class Controlador {
 			return;
 		}
 		//System.out.println(nuevaCancion.toString());
+
 		
 	}
 	
