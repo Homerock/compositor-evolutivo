@@ -59,6 +59,18 @@ public class Compas implements Cloneable{
 		return this.getAcordes().get(ultimo);
 	}
 	
+	
+	
+	/**
+	 * metodo para no llamar a get  de la lista
+	 * @param numero entre 0 y el larga de la lista
+	 * @return
+	 */
+	public Acorde getAcordePorNumero(int numero){
+		return this.getAcordes().get(numero-1);
+	}
+	
+	
 	public int getCantidadAcordes() {
 		return cantidadAcordes;
 	}

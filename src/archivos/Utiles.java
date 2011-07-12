@@ -3,6 +3,7 @@ package archivos;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+import java.util.Random;
 import java.util.StringTokenizer;
 import utiles.*;
 
@@ -475,5 +476,28 @@ public class Utiles {
 	//#########################################################################################
 	public void setNotasPosibles(ArrayList<String> notasPosibles) {
 		this.notasPosibles = notasPosibles;
+	}
+	
+	
+	
+	//#########################################################################################
+	/**
+	 * GENERA UN NUMERO ALEATORIO ENTRE EL MINIMO Y EL MAXIMO 
+	 * @param min
+	 * @param max
+	 * @return
+	 */
+	//#########################################################################################
+	public static int generarNumeroAleatorio(int min,int max){
+		Random rnd = new Random();
+		int maxIteraciones = 50;
+		int num = 0;
+		for (int i =0 ; i< maxIteraciones;i++){
+			num = rnd.nextInt(max+1);
+			if(num >=min && num <=max){
+				break;
+			}		
+		}
+		return num;
 	}
 }
