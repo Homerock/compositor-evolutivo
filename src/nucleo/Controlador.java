@@ -39,6 +39,8 @@ public class Controlador {
 	private static final boolean DEBUG = true;
 	private Persistencia manejadorPersistencia = null;
 	
+	private Cancion cancionNueva=null;
+	
 	//#########################################################################################
 	/**
 	 * constructor
@@ -371,6 +373,7 @@ public class Controlador {
 		Composicion miCompositor = new Composicion();
 		String tempo;
 		String duracion;
+		boolean error=false;
 
 		try {
 			tempo = this.getMiListaDeTempos().obtenerMayorValorPorEstilo(estilo);
@@ -387,9 +390,9 @@ public class Controlador {
 
 		//Obtengo la matriz de acordes correspondiente a el estilo principal
 		MatrizAcordes miMatrizAcordes = this.obtenerMatrizEnMap(estilo);
-
+		Cancion nuevaCancion = null;
 		try {
-			Cancion nuevaCancion = miCompositor.componerCancion(miMatrizAcordes, this.getMiMatrizEstilos(), tonica, estilo, Integer.parseInt(duracion), tempo);
+			nuevaCancion = miCompositor.componerCancion(miMatrizAcordes, this.getMiMatrizEstilos(), tonica, estilo, Integer.parseInt(duracion), tempo);
 			// genero el archivo .mma que contiene a la nueva cancion 
 			Archivos.generarArchivo(nuevaCancion);
 			// cargo en la matriz la nueva cancion que compuse
@@ -398,21 +401,38 @@ public class Controlador {
 			this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
 			this.getMiMatrizEstilos().calcularAcumulados();
 			
+			
+			
 		}  catch (CancionException e) {
+			error = true;
 			System.err.println(e.getMessage());
 			return;
 		} catch (NumberFormatException e) {
+			error = true;
 			System.err.println(e.getMessage());
 			return;
 		} catch (EstilosException e) {
+			error = true;
 			System.err.println(e.getMessage());
 			return;
 		} catch (ValoresException e) {
+			error = true;
 			System.err.println(e.getMessage());
 			return;
 		} catch (ArchivosException e) {
+			error = true;
 			System.err.println(e.getMessage());
 			return;
+			
+		}finally{
+			//seteo la cancion
+			if (!error){// si no hay error
+				this.setCancionNueva(nuevaCancion);
+			}else{// si hay error
+				this.setCancionNueva(null);
+			}
+			
+			
 		}		
 	}
 	
@@ -433,9 +453,10 @@ public class Controlador {
 		Composicion miCompositor = new Composicion();
 		//Obtengo la matriz de acordes correspondiente a el estilo principal
 		MatrizAcordes miMatrizAcordes = this.obtenerMatrizEnMap(estilo);
-
+		boolean error = false;
+		Cancion nuevaCancion = null;
 		try {
-			Cancion nuevaCancion = miCompositor.componerCancion(miMatrizAcordes, this.getMiMatrizEstilos(), tonica, estilo, Integer.parseInt(duracion), tempo);
+			nuevaCancion = miCompositor.componerCancion(miMatrizAcordes, this.getMiMatrizEstilos(), tonica, estilo, Integer.parseInt(duracion), tempo);
 			// genero el archivo .mma que contiene a la nueva cancion 
 			Archivos.generarArchivo(nuevaCancion);
 			// cargo en la matriz la nueva cancion que compuse
@@ -445,20 +466,32 @@ public class Controlador {
 			this.getMiMatrizEstilos().calcularAcumulados();
 			
 		}  catch (CancionException e) {
+			error = true;
 			System.err.println(e.getMessage());
 			return;
 		} catch (NumberFormatException e) {
+			error = true;
 			System.err.println(e.getMessage());
 			return;
 		} catch (EstilosException e) {
+			error = true;
 			System.err.println(e.getMessage());
 			return;
 		} catch (ValoresException e) {
+			error = true;
 			System.err.println(e.getMessage());
 			return;
 		} catch (ArchivosException e) {
+			error = true;
 			System.err.println(e.getMessage());
 			return;
+		}finally{
+			//seteo la cancion
+			if (!error){// si no hay error
+				this.setCancionNueva(nuevaCancion);
+			}else{// si hay error
+				this.setCancionNueva(null);
+			}
 		}
 	}
 	
@@ -477,7 +510,8 @@ public class Controlador {
 		Composicion miCompositor = new Composicion();
 		MatrizAcordes miMatrizAcordes = this.obtenerMatrizEnMap(estilo);
 		Acorde acorde = new Acorde(tonica);
-		Cancion nuevaCancion = new Cancion(estilo+"_"+tonica,tempo,acorde,estilo);
+		Cancion nuevaCancion = null;
+		boolean error = false;
 		
 		int cantCompasesIntro; 
 		int cantCompasesEstrofaA; 
@@ -485,7 +519,8 @@ public class Controlador {
 		int cantCompasesEnd;
 		
 		try {
-		
+			nuevaCancion = new Cancion(estilo+"_"+tonica,tempo,acorde,estilo);
+				
 			if (estructura.equalsIgnoreCase(Constantes.ESTRUCTURA_A)) {
 				cantCompasesIntro = 2;
 				cantCompasesEstrofaA = 4;
@@ -527,24 +562,37 @@ public class Controlador {
 			this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
 			this.getMiMatrizEstilos().calcularAcumulados();
 			
-		}catch (AcordesException e) {				
+		}catch (AcordesException e) {		
+			error = true;
 			System.err.println(e.getMessage());
 			return;
 		}  catch (CancionException e) {
+			error = true;
 			System.err.println(e.getMessage());
 			return;
 		} catch (NumberFormatException e) {
+			error = true;
 			System.err.println(e.getMessage());
 			return;
 		} catch (EstilosException e) {
+			error = true;
 			System.err.println(e.getMessage());
 			return;
 		} catch (ValoresException e) {
+			error = true;
 			System.err.println(e.getMessage());
 			return;
 		} catch (ArchivosException e) {
+			error = true;
 			System.err.println(e.getMessage());
 			return;
+		}finally{
+			//seteo la cancion
+			if (!error){// si no hay error
+				this.setCancionNueva(nuevaCancion);
+			}else{// si hay error
+				this.setCancionNueva(null);
+			}
 		}
 		//System.out.println(nuevaCancion.toString());
 
@@ -618,4 +666,14 @@ public class Controlador {
 	public void setManejadorPersistencia(Persistencia manejadorPersistencia) {
 		this.manejadorPersistencia = manejadorPersistencia;
 	}
+
+	public Cancion getCancionNueva() {
+		return cancionNueva;
+	}
+
+	public void setCancionNueva(Cancion cancionNueva) {
+		this.cancionNueva = cancionNueva;
+	}
+	
+	
 }

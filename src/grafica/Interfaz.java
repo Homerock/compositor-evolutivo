@@ -2,6 +2,7 @@ package grafica;
 
 
 import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -9,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
@@ -22,8 +25,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+
+import canciones.Cancion;
+import canciones.Compas;
+import canciones.Estrofa;
 
 import excepciones.ORMException;
 import excepciones.PersistenciaException;
@@ -78,7 +87,7 @@ public class Interfaz implements ItemListener{
 	private JPanel panelComponer;	//Panel componer
 	private JPanel panelEditar;	//Panel Ver/Editar
 	
-	private JLabel label2;
+	private JLabel labelEditar;
 	
 	private JComboBox jComboTipoComposicion;
 	private JComboBox jComboEstiloBasico;
@@ -133,6 +142,7 @@ public class Interfaz implements ItemListener{
 		framePrincipal.setVisible(true);
 		framePrincipal.addWindowListener(new Cruz());
 	}
+	
 	
 	private void armarPanelComponer(ManejadorEventos manejador) {
 		
@@ -244,8 +254,95 @@ public class Interfaz implements ItemListener{
 	private void armarPanelEditar() {
 	
 		panelEditar = new JPanel();
-		label2 = new JLabel("VER - EDITAR");
-		panelEditar.add(label2);
+		labelEditar = new JLabel("VER - EDITAR");
+		panelEditar.add(labelEditar);
+		
+		//panelEditar.add(new tablaAcordes());
+	}
+	
+	private void actualizarPanelEditar(Cancion cancionNueva){
+		
+		for (Estrofa e : cancionNueva.getEstrofas()){
+			panelEditar.add(new tablaAcordes(e));
+		}
+		
+		
+	}
+	
+	class tablaAcordes extends JPanel{
+		
+
+		
+		tablaAcordes (Estrofa laEstrofa){
+			String[] columnNames = {"1er Acorde",
+	                "2do Acorde",
+	                "3er Acorde",
+	                "4to Acorde"
+	                };
+			
+			int cantCompases = laEstrofa.getCantidadCompases();
+			int cantAcordes = 4;
+			String[][] data = new String[cantCompases][cantAcordes];
+			
+			for (int i =0 ; i<cantCompases;i++){
+				Compas compases = laEstrofa.getListaDeCompases().get(i);
+				for(int j=0;j<cantAcordes;j++){
+					if (j>=compases.getAcordes().size()){
+						break;
+					}
+					
+					data[i][j]=compases.getAcordes().get(j).getNombre();
+				}
+				
+			}
+			/*= {
+			{"Kathy", "Smith",
+			"Snowboarding", new Integer(5)},
+			{"John", "Doe",
+			"Rowing", new Integer(3)},
+			{"Sue", "Black",
+			"Knitting", new Integer(2)},
+			{"Jane", "White",
+			"Speed reading", new Integer(20)},
+			{"Joe", "Brown",
+			"Pool", new Integer(10)}
+			};
+			*/
+			
+			
+			final JTable table = new JTable(data, columnNames);
+			table.setPreferredScrollableViewportSize(new Dimension(500, 90));
+			table.setFillsViewportHeight(true);
+			/*
+			if (DEBUG) {
+			table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				
+			    printDebugData(table);
+			}
+			});
+			}*/
+
+			
+			//Create the scroll pane and add the table to it.
+			JScrollPane scrollPane = new JScrollPane(table);
+			
+			//Add the scroll pane to this panel.
+			add(scrollPane);
+			
+			
+		}	
+		  public boolean isCellEditable(int row, int col) {
+	          //Note that the data/cell address is constant,
+	          //no matter where the cell appears onscreen.
+	          if (col < 2) {
+	              return false;
+	          } else {
+	              return true;
+	          }
+	      }
+		  
+		
 	}
 	
 	private void armarMenuPrincipal(ManejadorEventos manejador){
@@ -380,6 +477,14 @@ public class Interfaz implements ItemListener{
 					
 					controlador.componerConEstructruras(tonica, estilo, tempo, estructura);
 				}	
+				
+				// cuando se termino la composicion
+				// mostrar la cancion quese compuso en editar
+				Cancion cancionNueva = controlador.getCancionNueva();
+				if (cancionNueva!=null){
+					actualizarPanelEditar(cancionNueva);
+				}
+				
 			}
 		}
 	}
