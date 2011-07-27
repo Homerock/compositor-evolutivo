@@ -16,6 +16,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -29,6 +30,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 
 import canciones.Cancion;
 import canciones.Compas;
@@ -49,13 +52,14 @@ public class Interfaz implements ItemListener{
 	private static final String COMPONER = "componer";
 	private static final String APRENDER = "aprender";
 	private static final String ACTUALIZAR = "actualizar";
-	
+	private static final String MODIFICAR_CANCION ="modificar_cancion";
+
 	private static final int OK_ACEPTAR = -1;
 	private static final int SI_NO_OPCION = 0;
 	private static final int OPCION_SI = 0;
 	private static final int OPCION_NO = 1;
 	private static final int TABS_POSICION = 3;	//tres = abajo
-	
+
 	private static final String TIPO_BASICO = "Básica";
 	private static final String TIPO_INTERMEDIO = "Intermedia";
 	private static final String TIPO_AVANZADO = "Avanzada";
@@ -65,9 +69,9 @@ public class Interfaz implements ItemListener{
 	private static final String LABEL_CANT_COMPASES = "Cantidad de Compases: ";
 	private static final String LABEL_TEMPO = "Tempo: ";
 	private static final String LABEL_TIPO_CANCION = "Tipo de Canción: ";
-	
+
 	private Controlador controlador;
-	
+
 	private JFrame framePrincipal;
 	private JMenuBar menuPrincipal;
 	private JMenu opcion1;	//aprender
@@ -82,13 +86,15 @@ public class Interfaz implements ItemListener{
 	private JMenuItem subOpcion4_1;	//about
 	private JTabbedPane pestania;
 	private JButton botonComponer;
-	
+	private JButton botonModificarCancion;
+
 	private JPanel card;
 	private JPanel panelComponer;	//Panel componer
 	private JPanel panelEditar;	//Panel Ver/Editar
-	
+	private JPanel panelCancion;	//Panel Ver/Editar
+
 	private JLabel labelEditar;
-	
+
 	private JComboBox jComboTipoComposicion;
 	private JComboBox jComboEstiloBasico;
 	private JComboBox jComboEstiloIntermedio;
@@ -101,11 +107,11 @@ public class Interfaz implements ItemListener{
 	private JTextField cantCompasesIntermedioText;
 	private JTextField tempoIntermedioText;
 	private JTextField tempoAvanzadoText;
-	
-	
-	
+
+
+
 	public Interfaz(Controlador miControlador) {
-		
+
 		framePrincipal = new JFrame("Homerock -1.0");
 		menuPrincipal = new JMenuBar();
 		opcion1 = new JMenu("Archivo");
@@ -122,19 +128,19 @@ public class Interfaz implements ItemListener{
 		controlador = miControlador;
 		crearFrame();
 	}
-	
+
 	public void crearFrame() {
-		
+
 		ManejadorEventos manejador = new ManejadorEventos();
 		framePrincipal.setSize(600, 400);
-//		framePrincipal.setLayout(new GridLayout(1,1));
-		
+		//		framePrincipal.setLayout(new GridLayout(1,1));
+
 		this.armarMenuPrincipal(manejador);
 		framePrincipal.setJMenuBar(menuPrincipal);
-		
+
 		this.armarPanelComponer(manejador);
-		this.armarPanelEditar();
-		
+		this.armarPanelEditar(manejador);
+
 		pestania.addTab("Componer",panelComponer);
 		pestania.addTab("Ver/Editar",panelEditar);
 		framePrincipal.add(pestania);
@@ -142,24 +148,24 @@ public class Interfaz implements ItemListener{
 		framePrincipal.setVisible(true);
 		framePrincipal.addWindowListener(new Cruz());
 	}
-	
-	
+
+
 	private void armarPanelComponer(ManejadorEventos manejador) {
-		
+
 		card = new JPanel();
 		panelComponer = new JPanel();
-		
+
 		jComboTipoComposicion = new JComboBox();
 		jComboTipoComposicion.addItem(TIPO_BASICO);
 		jComboTipoComposicion.addItem(TIPO_INTERMEDIO);
 		jComboTipoComposicion.addItem(TIPO_AVANZADO);
 		jComboTipoComposicion.setEditable(false);
 		jComboTipoComposicion.addItemListener(this);
-		
+
 		JPanel panelBasico = new JPanel();
 		JPanel panelIntermedio = new JPanel();
 		JPanel panelAvanzado = new JPanel();
-	
+
 		//panel basico
 		//panelBasico.setLayout(new GridLayout(5,2));
 		panelBasico.setLayout(new GridBagLayout());
@@ -179,7 +185,7 @@ public class Interfaz implements ItemListener{
 		confL.gridx= 1;
 		confL.gridy = 1;
 		panelBasico.add(jComboEstiloBasico,confL);
-		
+
 		panelIntermedio.setLayout(new GridLayout(5,2));
 		panelIntermedio.add(new JLabel(LABEL_TONICA));
 		tonicaIntermedioText = new JTextField("",5);
@@ -193,7 +199,7 @@ public class Interfaz implements ItemListener{
 		panelIntermedio.add(new JLabel(LABEL_TEMPO));
 		tempoIntermedioText = new JTextField("",3);
 		panelIntermedio.add(tempoIntermedioText);
-		
+
 		panelAvanzado.setLayout(new GridLayout(5,2));
 		panelAvanzado.add(new JLabel(LABEL_TONICA));
 		tonicaAvanzadoText = new JTextField("",5);
@@ -210,18 +216,18 @@ public class Interfaz implements ItemListener{
 		Interfaz.this.jComboEstructuraAvanzado.addItem(Constantes.ESTRUCTURA_B);
 		Interfaz.this.jComboEstructuraAvanzado.addItem(Constantes.ESTRUCTURA_C);
 		panelAvanzado.add(jComboEstructuraAvanzado);
-		
-		
+
+
 		card.setLayout(new CardLayout());
 		card.add(TIPO_BASICO,panelBasico);
 		card.add(TIPO_INTERMEDIO,panelIntermedio);
 		card.add(TIPO_AVANZADO,panelAvanzado);
-		
+
 		//boton componer
 		botonComponer = getJButtonComponer();
 		botonComponer.addActionListener(manejador);
 		botonComponer.setActionCommand(COMPONER);
-		
+
 		panelComponer.setLayout(new GridBagLayout());
 		GridBagConstraints confLayout = new GridBagConstraints();
 		confLayout.weighty=0.05;
@@ -231,134 +237,191 @@ public class Interfaz implements ItemListener{
 		confLayout.gridx= 1 ;
 		confLayout.gridy = 0;
 		panelComponer.add(jComboTipoComposicion, confLayout);
-		
+
 		confLayout.weighty=0.9;
 		confLayout.gridwidth=2;//columnas que ocupa
 		confLayout.gridx= 0;
 		confLayout.gridy = 1;
 		panelComponer.add(card,confLayout);
-		
+
 		confLayout.gridwidth=2;//columnas que ocupa
 		confLayout.gridx= 0;
 		confLayout.gridy = 2;
 		panelComponer.add(botonComponer,confLayout);
-		
+
 	}
-	
+
 	public void itemStateChanged(ItemEvent evt) {
-		
+
 		CardLayout c1 = (CardLayout) card.getLayout();
 		c1.show(card, (String) evt.getItem());
 	}	
+
 	
-	private void armarPanelEditar() {
 	
+	
+	private void armarPanelEditar(ManejadorEventos manejador) {
+
 		panelEditar = new JPanel();
+		panelEditar.setLayout(new BoxLayout(panelEditar, BoxLayout.Y_AXIS));
 		labelEditar = new JLabel("VER - EDITAR");
+
+
 		panelEditar.add(labelEditar);
+
 		
-		//panelEditar.add(new tablaAcordes());
+		
+		//boton 
+		botonModificarCancion = getJButtonModificarCancion();
+		botonModificarCancion.addActionListener(manejador);
+		botonModificarCancion.setActionCommand(MODIFICAR_CANCION);
+		panelEditar.add(botonModificarCancion);
+		
+		
+		// panel para la cancion
+		panelCancion = new JPanel();
+		panelCancion.setLayout(new BoxLayout(panelCancion,BoxLayout.Y_AXIS));
+	
+		panelEditar.add(panelCancion);
+
 	}
+
+	ArrayList<TablaAcordes> estrofas = new ArrayList<TablaAcordes>() ;
 	
 	private void actualizarPanelEditar(Cancion cancionNueva){
+
+		panelCancion.removeAll();
+		estrofas.clear();
 		
 		for (Estrofa e : cancionNueva.getEstrofas()){
-			panelEditar.add(new tablaAcordes(e));
+			TablaAcordes tablaAcordes = new TablaAcordes(e);
+			estrofas.add(tablaAcordes);
+			panelCancion.add(tablaAcordes);
+			
 		}
-		
-		
+
 	}
 	
-	class tablaAcordes extends JPanel{
-		
+	
+	class TablaAcordes extends JPanel {
+		MiTablaAcordes tabla;
+		public TablaAcordes(Estrofa laEstrofa) {
+			//super(new GridLayout(1,0));
 
-		
-		tablaAcordes (Estrofa laEstrofa){
-			String[] columnNames = {"1er Acorde",
-	                "2do Acorde",
-	                "3er Acorde",
-	                "4to Acorde"
-	                };
+			tabla = new MiTablaAcordes();
+			tabla.llenarAcordes(laEstrofa);
+			JTable table = new JTable(tabla);
+			table.setPreferredScrollableViewportSize(new Dimension(400, 80));
 			
-			int cantCompases = laEstrofa.getCantidadCompases();
-			int cantAcordes = 4;
-			String[][] data = new String[cantCompases][cantAcordes];
-			
-			for (int i =0 ; i<cantCompases;i++){
-				Compas compases = laEstrofa.getListaDeCompases().get(i);
-				for(int j=0;j<cantAcordes;j++){
-					if (j>=compases.getAcordes().size()){
-						break;
-					}
-					
-					data[i][j]=compases.getAcordes().get(j).getNombre();
-				}
-				
-			}
-			/*= {
-			{"Kathy", "Smith",
-			"Snowboarding", new Integer(5)},
-			{"John", "Doe",
-			"Rowing", new Integer(3)},
-			{"Sue", "Black",
-			"Knitting", new Integer(2)},
-			{"Jane", "White",
-			"Speed reading", new Integer(20)},
-			{"Joe", "Brown",
-			"Pool", new Integer(10)}
-			};
-			*/
-			
-			
-			final JTable table = new JTable(data, columnNames);
-			table.setPreferredScrollableViewportSize(new Dimension(500, 90));
 			table.setFillsViewportHeight(true);
-			/*
-			if (DEBUG) {
-			table.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				
-			    printDebugData(table);
-			}
-			});
-			}*/
 
-			
 			//Create the scroll pane and add the table to it.
 			JScrollPane scrollPane = new JScrollPane(table);
-			
+
 			//Add the scroll pane to this panel.
 			add(scrollPane);
-			
-			
-		}	
-		  public boolean isCellEditable(int row, int col) {
-	          //Note that the data/cell address is constant,
-	          //no matter where the cell appears onscreen.
-	          if (col < 2) {
-	              return false;
-	          } else {
-	              return true;
-	          }
-	      }
-		  
+		}
 		
+		public MiTablaAcordes getTabla(){
+			return tabla;
+		}
+		
+		class MiTablaAcordes extends AbstractTableModel{
+
+			String[] columnNames = {"1er Acorde",
+					"2do Acorde",
+					"3er Acorde",
+					"4to Acorde",
+					"Modificar"
+			};
+
+			Object[][] data;
+
+			public void llenarAcordes (Estrofa laEstrofa) {
+
+				int cantCompases = laEstrofa.getCantidadCompases();
+				int cantCol = 5;
+				data = new Object[cantCompases][cantCol];
+
+				for (int i =0 ; i<cantCompases;i++){
+					Compas compases = laEstrofa.getListaDeCompases().get(i);
+					for(int j=0;j<cantCol;j++){
+
+
+						if (j>=compases.getAcordes().size()){
+							if(j == cantCol-1){
+								data[i][j]=new Boolean(false);
+							} else {
+								data[i][j] = "";
+							}
+						} else {
+							data[i][j]=compases.getAcordes().get(j).getNombre();
+						}
+					}
+				}
+			}
+
+			public int getColumnCount() {
+				return columnNames.length;
+			}
+
+			public int getRowCount() {
+				return data.length;
+			}
+
+	        public String getColumnName(int col) {
+	            return columnNames[col];
+	        }
+	        
+			public Object getValueAt(int row, int col) {
+				return data[row][col];
+			}
+
+			/*
+			 * JTable uses this method to determine the default renderer/
+			 * editor for each cell.  If we didn't implement this method,
+			 * then the last column would contain text ("true"/"false"),
+			 * rather than a check box.
+			 */
+			public Class getColumnClass(int c) {
+				return getValueAt(0, c).getClass();
+			}
+
+			/*
+			 * Don't need to implement this method unless your table's
+			 * editable.
+			 */
+			
+			public boolean isCellEditable(int row, int col) {
+				//Note that the data/cell address is constant,
+				//no matter where the cell appears onscreen.
+				return true;
+				/*
+				if (col < 2) {
+					return false;
+				} else {
+					return true;
+				}
+				*/
+			}
+
+		}	//Fin de clase MiTablaAcordes
 	}
-	
+
 	private void armarMenuPrincipal(ManejadorEventos manejador){
 
 		menuPrincipal.add(opcion1);
 		menuPrincipal.add(opcion2);
 		menuPrincipal.add(opcion3);
 		menuPrincipal.add(opcion4);
-		
+
 		opcion1.add(subOpcion1_1);
 		opcion1.add(subOpcion1_2);
 		opcion2.add(subOpcion2_1);
 		opcion2.add(subOpcion2_2);
 		opcion3.add(subOpcion3_1);
 		opcion4.add(subOpcion4_1);
-		
+
 		subOpcion4_1.addActionListener(manejador);
 		subOpcion4_1.setActionCommand(ACERCA_DE);
 		subOpcion1_1.addActionListener(manejador);
@@ -367,9 +430,9 @@ public class Interfaz implements ItemListener{
 		subOpcion1_2.setActionCommand(SALIR);
 		subOpcion2_1.addActionListener(manejador);
 		subOpcion2_1.setActionCommand(ACTUALIZAR);
-		
+
 	}
-	
+
 	private JButton getJButtonComponer() {
 		if (botonComponer == null) {
 			botonComponer = new JButton();
@@ -379,10 +442,20 @@ public class Interfaz implements ItemListener{
 		}
 		return botonComponer;
 	}
+
+	private JButton getJButtonModificarCancion() {
+		if (botonModificarCancion == null) {
+			botonModificarCancion = new JButton();
+			botonModificarCancion.setText("Modificar Canción");
+			botonModificarCancion.setVisible(true);
+		}
+		return botonModificarCancion;
+	}
+	
 	
 	public void cargarCombo() {
 		ArrayList<String> lista = controlador.getComboEstilos();
-		
+
 		jComboEstiloBasico.removeAllItems();
 		for (String estilo : lista) { 
 			Interfaz.this.jComboEstiloBasico.addItem(estilo);
@@ -390,23 +463,23 @@ public class Interfaz implements ItemListener{
 			Interfaz.this.jComboEstiloAvanzado.addItem(estilo);
 		}
 	}
-	
+
 	class ManejadorEventos implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
+
 			if (e.getActionCommand() == SALIR) {
 				int resultado = JOptionPane.showConfirmDialog(framePrincipal, "Desea salir?","Salir", SI_NO_OPCION);
 				if (resultado == OPCION_SI) {
 					System.exit(0);
 				}
 			}
-			
+
 			if (e.getActionCommand() == ACERCA_DE) {
 				JOptionPane.showConfirmDialog(framePrincipal, "Homerock llego... nada será igual","Acerca de...", OK_ACEPTAR);
 			}
-			
+
 			if (e.getActionCommand() == ACTUALIZAR) {
 				try {
 					controlador.memoriaABaseDeDatos();
@@ -416,16 +489,52 @@ public class Interfaz implements ItemListener{
 					System.err.println(e1.getMessage());
 				}
 			}
-			
+
 			if (e.getActionCommand() == APRENDER) {
-				
+
 				controlador.aprender();
 				cargarCombo();
 			}
 			
+			if (e.getActionCommand() == MODIFICAR_CANCION ) {
+				for(int i=0; i < estrofas.size();i++){
+					 TablaAcordes t = estrofas.get(i);
+					 int numRows = t.getTabla().getRowCount();
+					 int numCols = 		 t.getTabla().getColumnCount();
+
+
+			            for (int j=0; j < numRows; j++) {
+			                System.out.print("    row " + j + ":");
+			                for (int k=0; k < numCols; k++) {
+			                	
+			                    System.out.print("  " + t.getTabla().data[j][k]);
+			                }
+			                System.out.println();
+			            }
+			            System.out.println("--------------------------");
+
+					 
+					/*
+					      int numRows = getRowCount();
+            int numCols = getColumnCount();
+
+            for (int i=0; i < numRows; i++) {
+                System.out.print("    row " + i + ":");
+                for (int j=0; j < numCols; j++) {
+                    System.out.print("  " + data[i][j]);
+                }
+                System.out.println();
+            }
+            System.out.println("--------------------------");
+        }
+					 * */
+				}
+			}
+			
+			
 			if (e.getActionCommand() == COMPONER) {
 				String tipoComposicion = (String) jComboTipoComposicion.getSelectedItem();
-				
+
 				if (tipoComposicion.equals(TIPO_BASICO)){
 					System.out.println("basico");
 					String tonica = Interfaz.this.tonicaBasicoText.getText();
@@ -440,7 +549,7 @@ public class Interfaz implements ItemListener{
 					}
 					controlador.componer(tonica, estilo);
 				}
-				
+
 				if (tipoComposicion.equals(TIPO_INTERMEDIO)){
 					System.out.println("Intermedio");
 					String tonica = Interfaz.this.tonicaIntermedioText.getText();
@@ -464,7 +573,7 @@ public class Interfaz implements ItemListener{
 					String estilo = (String) Interfaz.this.jComboEstiloAvanzado.getSelectedItem();
 					String tempo = Interfaz.this.tempoAvanzadoText.getText();
 					String estructura = (String) Interfaz.this.jComboEstructuraAvanzado.getSelectedItem();
-					
+
 					if (tonica.trim().equals("") || estilo == null || tempo.trim().equals("")) {
 						JOptionPane.showConfirmDialog(framePrincipal, "Falta ingresar datos","Componer", OK_ACEPTAR);
 						return;
@@ -474,31 +583,31 @@ public class Interfaz implements ItemListener{
 						return;
 					}
 					System.out.println(estructura);
-					
+
 					controlador.componerConEstructruras(tonica, estilo, tempo, estructura);
 				}	
-				
+
 				// cuando se termino la composicion
 				// mostrar la cancion quese compuso en editar
 				Cancion cancionNueva = controlador.getCancionNueva();
 				if (cancionNueva!=null){
 					actualizarPanelEditar(cancionNueva);
 				}
-				
+
 			}
 		}
 	}
-	
+
 	class Cruz implements WindowListener {
 
 		@Override
 		public void windowActivated(WindowEvent arg0) {
-		
+
 		}
 
 		@Override
 		public void windowClosed(WindowEvent arg0) {
-			
+
 		}
 
 		@Override
@@ -508,30 +617,30 @@ public class Interfaz implements ItemListener{
 
 		@Override
 		public void windowDeactivated(WindowEvent arg0) {
-			
+
 		}
 
 		@Override
 		public void windowDeiconified(WindowEvent arg0) {
-			
+
 		}
 
 		@Override
 		public void windowIconified(WindowEvent arg0) {
-			
+
 		}
 
 		@Override
 		public void windowOpened(WindowEvent arg0) {
-			
+
 		}
 	}
-	
+
 	/*public static void main(String arg[]) {
 		Interfaz miInterfaz = new Interfaz();
 		miInterfaz.crearFrame();
 	}*/
-	
+
 }
 
 
