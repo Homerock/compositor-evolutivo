@@ -92,6 +92,7 @@ public class Interfaz implements ItemListener{
 	private JPanel panelComponer;	//Panel componer
 	private JPanel panelEditar;	//Panel Ver/Editar
 	private JPanel panelCancion;	//Panel Ver/Editar
+	private JScrollPane panelScrollEditar;
 
 	private JLabel labelEditar;
 
@@ -108,7 +109,9 @@ public class Interfaz implements ItemListener{
 	private JTextField tempoIntermedioText;
 	private JTextField tempoAvanzadoText;
 
-
+	//estrofas---->
+	ArrayList<TablaAcordes> estrofas = new ArrayList<TablaAcordes>() ;
+	
 
 	public Interfaz(Controlador miControlador) {
 
@@ -278,24 +281,29 @@ public class Interfaz implements ItemListener{
 		panelEditar.add(botonModificarCancion);
 		
 		
+		
 		// panel para la cancion
 		panelCancion = new JPanel();
 		panelCancion.setLayout(new BoxLayout(panelCancion,BoxLayout.Y_AXIS));
 	
-		panelEditar.add(panelCancion);
+		panelScrollEditar = new JScrollPane();
+		panelScrollEditar.setViewportView(panelCancion);
+		panelEditar.add(panelScrollEditar);
 
 	}
-
-	ArrayList<TablaAcordes> estrofas = new ArrayList<TablaAcordes>() ;
+	
 	
 	private void actualizarPanelEditar(Cancion cancionNueva){
 
-		panelCancion.removeAll();
-		estrofas.clear();
+		panelCancion.removeAll();//panel donde se muetran las etrofas
+		estrofas.clear();//lista donde estan las estrofas
 		
 		for (Estrofa e : cancionNueva.getEstrofas()){
 			TablaAcordes tablaAcordes = new TablaAcordes(e);
 			estrofas.add(tablaAcordes);
+			
+			JLabel labelEstilo = new JLabel(e.getEstilo());//label del estilo
+			panelCancion.add(labelEstilo);
 			panelCancion.add(tablaAcordes);
 			
 		}
@@ -308,6 +316,7 @@ public class Interfaz implements ItemListener{
 		public TablaAcordes(Estrofa laEstrofa) {
 			//super(new GridLayout(1,0));
 
+			
 			tabla = new MiTablaAcordes();
 			tabla.llenarAcordes(laEstrofa);
 			JTable table = new JTable(tabla);
@@ -342,7 +351,7 @@ public class Interfaz implements ItemListener{
 				int cantCompases = laEstrofa.getCantidadCompases();
 				int cantCol = 5;
 				data = new Object[cantCompases][cantCol];
-
+				
 				for (int i =0 ; i<cantCompases;i++){
 					Compas compases = laEstrofa.getListaDeCompases().get(i);
 					for(int j=0;j<cantCol;j++){
@@ -377,6 +386,12 @@ public class Interfaz implements ItemListener{
 				return data[row][col];
 			}
 
+	        public void setValueAt(Object value, int row, int col) {
+	          
+	            data[row][col] = value;
+	            fireTableCellUpdated(row, col);
+
+	        }
 			/*
 			 * JTable uses this method to determine the default renderer/
 			 * editor for each cell.  If we didn't implement this method,
@@ -395,14 +410,14 @@ public class Interfaz implements ItemListener{
 			public boolean isCellEditable(int row, int col) {
 				//Note that the data/cell address is constant,
 				//no matter where the cell appears onscreen.
-				return true;
-				/*
-				if (col < 2) {
+				//return true;
+				
+				if (col < 4) {
 					return false;
 				} else {
 					return true;
 				}
-				*/
+				
 			}
 
 		}	//Fin de clase MiTablaAcordes
@@ -466,6 +481,8 @@ public class Interfaz implements ItemListener{
 
 	class ManejadorEventos implements ActionListener{
 
+		Cancion cancionNueva;
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
@@ -497,38 +514,55 @@ public class Interfaz implements ItemListener{
 			}
 			
 			if (e.getActionCommand() == MODIFICAR_CANCION ) {
-				for(int i=0; i < estrofas.size();i++){
-					 TablaAcordes t = estrofas.get(i);
-					 int numRows = t.getTabla().getRowCount();
-					 int numCols = 		 t.getTabla().getColumnCount();
-
-
-			            for (int j=0; j < numRows; j++) {
-			                System.out.print("    row " + j + ":");
-			                for (int k=0; k < numCols; k++) {
-			                	
-			                    System.out.print("  " + t.getTabla().data[j][k]);
-			                }
-			                System.out.println();
-			            }
-			            System.out.println("--------------------------");
-
-					 
-					/*
-					      int numRows = getRowCount();
-            int numCols = getColumnCount();
-
-            for (int i=0; i < numRows; i++) {
-                System.out.print("    row " + i + ":");
-                for (int j=0; j < numCols; j++) {
-                    System.out.print("  " + data[i][j]);
-                }
-                System.out.println();
-            }
-            System.out.println("--------------------------");
-        }
-					 * */
-				}
+				
+				if (cancionNueva!=null){
+					ArrayList<Integer> estrofasModificadas = new ArrayList<Integer>();
+		
+				
+					for(int i=0; i < estrofas.size();i++){
+						 TablaAcordes t = estrofas.get(i);
+						 int numRows = t.getTabla().getRowCount();
+						 int numCols = 		 t.getTabla().getColumnCount();
+	
+	
+				            for (int j=0; j < numRows; j++) {
+				                System.out.print("    row " + j + ":");
+				                for (int k=0; k < numCols; k++) {
+				                	
+				                    System.out.print("  " + t.getTabla().data[j][k]);
+				                    
+				                    if(k==4){// modificado
+					                    if (((Boolean)t.getTabla().data[j][k]).booleanValue()==true){
+					                    	estrofasModificadas.add(new Integer(j));
+					                    }	
+				                    }
+				                }
+				                System.out.println();
+				            }
+				            System.out.println("--------------------------");
+				            
+				            
+				            if(estrofasModificadas.size()>0){
+				            	int valor = i+1;
+				            	System.out.println("estrofa "+valor+" - Compases modificadas :"+estrofasModificadas.toString());
+				            	System.out.println(cancionNueva.getEstrofaPorNumero(i+1).toString());
+				            	
+				            	
+				            }
+			            	estrofasModificadas.clear();
+				            	
+				            
+				            
+	
+					}
+				
+				
+				
+				
+					//	actualizarPanelEditar(cancionNueva);
+				
+				}// fin si la cancionNueva no es nula
+				
 			}
 			
 			
@@ -589,7 +623,7 @@ public class Interfaz implements ItemListener{
 
 				// cuando se termino la composicion
 				// mostrar la cancion quese compuso en editar
-				Cancion cancionNueva = controlador.getCancionNueva();
+				cancionNueva = controlador.getCancionNueva();
 				if (cancionNueva!=null){
 					actualizarPanelEditar(cancionNueva);
 				}
