@@ -186,15 +186,13 @@ public class Cancion {
 		return miEstrofa;
 	}
 
-	
-
-
 	@Override
 	public String toString() {
 		return "Cancion [nombre = " + nombre + ", tempo = " + tempo + ", duracion = " + duracion + ", tonica = " 
 				+ tonica + ", estiloPrincipal = " + estiloPrincipal + "\n"
 				+ "estrofas = " + estrofas + "]\n";
 	}
+
 	
 
 }

@@ -112,7 +112,9 @@ public class Interfaz implements ItemListener{
 	//estrofas---->
 	ArrayList<TablaAcordes> estrofas = new ArrayList<TablaAcordes>() ;
 	
-
+	boolean DEBUG=false;
+	
+	
 	public Interfaz(Controlador miControlador) {
 
 		framePrincipal = new JFrame("Homerock -1.0");
@@ -522,48 +524,46 @@ public class Interfaz implements ItemListener{
 					for(int i=0; i < estrofas.size();i++){
 						 TablaAcordes t = estrofas.get(i);
 						 int numRows = t.getTabla().getRowCount();
-						 int numCols = 		 t.getTabla().getColumnCount();
+						 int numCols = t.getTabla().getColumnCount();
 	
 	
 				            for (int j=0; j < numRows; j++) {
-				                System.out.print("    row " + j + ":");
+				            	
+				            	if (DEBUG){
+				            		System.out.print("    row " + j + ":");
+				            	}
+				            		
 				                for (int k=0; k < numCols; k++) {
-				                	
-				                    System.out.print("  " + t.getTabla().data[j][k]);
+				                	if (DEBUG){
+				                		System.out.print("  " + t.getTabla().data[j][k])	;
+				                	}
 				                    
-				                    if(k==4){// modificado
+				                    
+				                    if(k==4){// boolean modificado
 					                    if (((Boolean)t.getTabla().data[j][k]).booleanValue()==true){
-					                    	estrofasModificadas.add(new Integer(j));
+					                    	cancionNueva.getEstrofaPorNumero(i+1).getCompasPorNumero(j+1).setModificarCompas(true);
 					                    }	
 				                    }
-				                }
-				                System.out.println();
+				                }   
 				            }
-				            System.out.println("--------------------------");
-				            
-				            
-				            if(estrofasModificadas.size()>0){
-				            	int valor = i+1;
-				            	System.out.println("estrofa "+valor+" - Compases modificadas :"+estrofasModificadas.toString());
-				            	System.out.println(cancionNueva.getEstrofaPorNumero(i+1).toString());
-				            	
-				            	
-				            }
-			            	estrofasModificadas.clear();
-				            	
-				            
-				            
-	
 					}
-				
-				
-				
-				
-					//	actualizarPanelEditar(cancionNueva);
-				
+
 				}// fin si la cancionNueva no es nula
 				
-			}
+				if(DEBUG){
+					for (Estrofa e1 : cancionNueva.getEstrofas()){
+						for(Compas c1 :e1.getListaDeCompases()){
+							if(c1.isModificarCompas()){
+								System.out.println("modificar "+c1);
+							}
+						}
+					}
+				}
+				cancionNueva = controlador.modificarCancion(cancionNueva);
+				
+				//	actualizarPanelEditar(cancionNueva);
+
+			}//fin MODIFICAR_CANCION
 			
 			
 			if (e.getActionCommand() == COMPONER) {
