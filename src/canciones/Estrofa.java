@@ -76,6 +76,10 @@ public class Estrofa implements Cloneable{
 				+ "listaDeCompases = " + listaDeCompases + "\n" 
 				+ "esEstrofaGemela = " + esEstrofaGemela + ", nroEstrofaGemela = " + nroEstrofaGemela + "]";
 	}
+	
+	
+	
+
 
 	public void agregarCompas(Compas miCompas) {
 		this.getListaDeCompases().add(miCompas);
@@ -84,6 +88,16 @@ public class Estrofa implements Cloneable{
 	public Compas getUltimoCompas() {
 		int ultimo = this.getListaDeCompases().size() -1;
 		return this.getListaDeCompases().get(ultimo);
+	}
+	
+	/**
+	 * retona el numero de compas de la lista de compases
+	 * 
+	 * @param num
+	 * @return
+	 */
+	public Compas getCompasPorNumero (int num) {
+		return this.getListaDeCompases().get(num-1);
 	}
 
 	public String getEstilo() {

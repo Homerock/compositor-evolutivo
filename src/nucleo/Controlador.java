@@ -12,6 +12,8 @@ import archivos.Estilos;
 import canciones.Acorde;
 import canciones.Cancion;
 import canciones.CancionAprendida;
+import canciones.Compas;
+import canciones.Estrofa;
 
 import net.java.ao.EntityManager;
 import estructura.ListaValores;
@@ -599,6 +601,22 @@ public class Controlador {
 		
 	}
 	
+	public Cancion modificarCancion(Cancion cancion) {
+		
+		for (Estrofa e1 : cancion.getEstrofas()){
+			for(Compas c1 :e1.getListaDeCompases()){
+				if(c1.isModificarCompas()){
+					
+					
+					System.out.println("modificar "+c1);
+				}
+			}
+		}
+	
+		return null;
+	}
+	
+	
 	//#########################################################################################
 	/**
 	 * getComboEstilos
@@ -674,6 +692,7 @@ public class Controlador {
 	public void setCancionNueva(Cancion cancionNueva) {
 		this.cancionNueva = cancionNueva;
 	}
+
 	
 	
 }

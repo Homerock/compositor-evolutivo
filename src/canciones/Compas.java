@@ -17,6 +17,7 @@ public class Compas implements Cloneable{
 	private int cantidadAcordes;
 	private ArrayList<Acorde> acordes;
 	
+	private boolean modificarCompas=false;//para la parte ver/modificar
 
 	/*################################################################################################################
 	 ###################						CONSTRUCTOR						###################################### 
@@ -89,7 +90,15 @@ public class Compas implements Cloneable{
 		return "Compas [cantidadAcordes=" + cantidadAcordes + ", acordes="
 				+ acordes + "]";
 	}
-	
 
+	public boolean isModificarCompas() {
+		return modificarCompas;
+	}
+
+	public void setModificarCompas(boolean modificarCompas) {
+		this.modificarCompas = modificarCompas;
+	}
+
+	
 	
 }
