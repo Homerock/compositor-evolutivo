@@ -405,6 +405,10 @@ public class Controlador {
 			
 			
 			
+		}  catch (AcordesException e) {
+			error = true;
+			System.err.println(e.getMessage());
+			return;	
 		}  catch (CancionException e) {
 			error = true;
 			System.err.println(e.getMessage());
@@ -467,6 +471,12 @@ public class Controlador {
 			this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
 			this.getMiMatrizEstilos().calcularAcumulados();
 			
+			
+			
+		}  catch (AcordesException e) {
+			error = true;
+			System.err.println(e.getMessage());
+			return;
 		}  catch (CancionException e) {
 			error = true;
 			System.err.println(e.getMessage());
@@ -601,19 +611,37 @@ public class Controlador {
 		
 	}
 	
-	public Cancion modificarCancion(Cancion cancion) {
+	public void modificarCancion(Cancion cancion) {
+		
+		Acorde AcordeUltimo = cancion.getTonica();
 		
 		for (Estrofa e1 : cancion.getEstrofas()){
 			for(Compas c1 :e1.getListaDeCompases()){
 				if(c1.isModificarCompas()){
+					try {
+						Composicion.modificarAcordesDeCompas(this.getMatrizEvolutiva().get(cancion.getEstiloPrincipal()), AcordeUltimo, c1);
+						
+						c1.setModificarCompas(false);
+						if (DEBUG)
+							System.out.println("cambio acordes a compas : "+c1.toString());
+						
+					} catch (CancionException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (AcordesException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}					
 					
-					
-					System.out.println("modificar "+c1);
 				}
+				//actualizamos el ultimo acorde
+				AcordeUltimo = c1.getUltimoAcorde();
 			}
+			
+			
 		}
 	
-		return null;
+		return ;
 	}
 	
 	
