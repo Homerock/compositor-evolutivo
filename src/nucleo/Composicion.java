@@ -46,6 +46,7 @@ public class Composicion {
 	 * @param duracion
 	 * @param tempo
 	 * @return 
+	 * @throws AcordesException 
 	 * 
 	 */
 	//################################################################################
@@ -55,7 +56,7 @@ public class Composicion {
 			String tonica, 
 			String estiloSeleccionado, 
 			int duracion, 
-			String tempo) throws CancionException{
+			String tempo) throws CancionException, AcordesException{
 		
 		boolean DEBUG = true;
 		
@@ -535,9 +536,10 @@ public class Composicion {
 	 * @param miMatrizAcordes
 	 * @param nuevaCancion
 	 * @throws CancionException 
+	 * @throws AcordesException 
 	 */
 	//################################################################################
-	public void cargarAcordesEnEstructura(MatrizAcordes miMatrizAcordes, Cancion nuevaCancion) throws CancionException {
+	public void cargarAcordesEnEstructura(MatrizAcordes miMatrizAcordes, Cancion nuevaCancion) throws CancionException, AcordesException {
 		
 		
 		Acorde acordeAnterior = nuevaCancion.getTonica();
@@ -570,7 +572,7 @@ public class Composicion {
 				
 			} else {
 				for (Compas miCompas : miEstrofa.getListaDeCompases()) {
-					nuevosAcordes = this.generarAcordesDeCompas(miMatrizAcordes, acordeAnterior, miCompas, nuevaCancion.getTonica());
+					nuevosAcordes = this.generarAcordesDeCompas(miMatrizAcordes, acordeAnterior, miCompas);
 					miCompas.setAcordes(nuevosAcordes);
 					acordeAnterior = miCompas.getUltimoAcorde();			
 				}
@@ -633,9 +635,10 @@ public class Composicion {
 	 * @param miCompas
 	 * @return
 	 * @throws CancionException 
+	 * @throws AcordesException 
 	 */
 	//################################################################################
-	private ArrayList<Acorde> generarAcordesDeCompas(MatrizAcordes miMatrizAcordes, Acorde acordeAnterior, Compas miCompas, Acorde tonica) throws CancionException {
+	public static ArrayList<Acorde> generarAcordesDeCompas(MatrizAcordes miMatrizAcordes, Acorde acordeAnterior, Compas miCompas) throws CancionException, AcordesException {
 		
 		
 		ArrayList<Acorde> listaAcordes = new ArrayList<Acorde>();
@@ -654,19 +657,21 @@ public class Composicion {
 
 		
 		for (int i = 1; i <= cantidad;i++) {
-			try {
-				miAcorde = this.generarAcorde(miMatrizAcordes, acordeAnterior);
-			} catch (AcordesException e) {
+			//try {
+				miAcorde = generarAcorde(miMatrizAcordes, acordeAnterior);
+			//} catch (AcordesException e) {
 				// cuando no se puede generar el siguiente acorde, cargamos la tonica
 				// esto sucede cuando el acordeAnterior es solo el ultimo acorde de una cancion, esto hace que no tenga siguiente
-				miAcorde = new Acorde(tonica.getNombre());
-			}			
+				//miAcorde = new Acorde(tonica.getNombre());
+			//}			
 			listaAcordes.add(miAcorde);
 			
 			acordeAnterior = miAcorde;
 		}
 		return listaAcordes;
 	}
+
+	
 	
 	
 	//################################################################################
@@ -675,7 +680,7 @@ public class Composicion {
 	 * @param listaAcordes
 	 */
 	//################################################################################
-	private Acorde generarAcorde(MatrizAcordes miMatrizAcordes, Acorde acordeAnterior) throws AcordesException {
+	private static Acorde generarAcorde(MatrizAcordes miMatrizAcordes, Acorde acordeAnterior) throws AcordesException {
 		
 		AcordesFila acordePpal;
 		Random rnd = new Random();
@@ -833,7 +838,7 @@ public class Composicion {
 	 * @throws AcordesException 
 	 */
 	//################################################################################
-	private void modificarAcordesDeCompas(MatrizAcordes miMatrizAcordes, Acorde acordeAnterior, Compas miCompas) throws CancionException, AcordesException {
+	public static void modificarAcordesDeCompas(MatrizAcordes miMatrizAcordes, Acorde acordeAnterior, Compas miCompas) throws CancionException, AcordesException {
 		
 		
 		ArrayList<Acorde> listaAcordes = new ArrayList<Acorde>();
@@ -843,7 +848,7 @@ public class Composicion {
 			
 		for (int i = 1; i <= cantidad;i++) {
 			
-			miAcorde = this.generarAcorde(miMatrizAcordes, acordeAnterior);// lanza una acordesExcepcion. bug solucionado
+			miAcorde = generarAcorde(miMatrizAcordes, acordeAnterior);// lanza una acordesExcepcion. bug solucionado
 			listaAcordes.add(miAcorde);	
 			acordeAnterior = miAcorde;
 		}

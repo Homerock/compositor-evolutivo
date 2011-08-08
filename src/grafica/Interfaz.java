@@ -305,11 +305,17 @@ public class Interfaz implements ItemListener{
 			estrofas.add(tablaAcordes);
 			
 			JLabel labelEstilo = new JLabel(e.getEstilo());//label del estilo
+			
+			labelEstilo.repaint();//ver
 			panelCancion.add(labelEstilo);
 			panelCancion.add(tablaAcordes);
 			
 		}
-
+		panelEditar.repaint();
+		panelScrollEditar.repaint();
+		panelCancion.repaint();
+		pestania.repaint();
+		
 	}
 	
 	
@@ -550,18 +556,9 @@ public class Interfaz implements ItemListener{
 
 				}// fin si la cancionNueva no es nula
 				
-				if(DEBUG){
-					for (Estrofa e1 : cancionNueva.getEstrofas()){
-						for(Compas c1 :e1.getListaDeCompases()){
-							if(c1.isModificarCompas()){
-								System.out.println("modificar "+c1);
-							}
-						}
-					}
-				}
-				cancionNueva = controlador.modificarCancion(cancionNueva);
-				
-				//	actualizarPanelEditar(cancionNueva);
+			
+				controlador.modificarCancion(cancionNueva);
+				actualizarPanelEditar(cancionNueva);
 
 			}//fin MODIFICAR_CANCION
 			
