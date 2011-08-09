@@ -2,6 +2,7 @@ package grafica;
 
 
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -41,7 +42,9 @@ import excepciones.ORMException;
 import excepciones.PersistenciaException;
 
 import nucleo.Controlador;
+import nucleo.Reproductor;
 import utiles.Constantes;
+import archivos.Archivos;
 import archivos.Reconocedor;
 
 
@@ -53,6 +56,9 @@ public class Interfaz implements ItemListener{
 	private static final String APRENDER = "aprender";
 	private static final String ACTUALIZAR = "actualizar";
 	private static final String MODIFICAR_CANCION ="modificar_cancion";
+	private static final String REPRODUCIR_CANCION ="reproducir";
+	private static final String PAUSAR_CANCION ="pausar";
+	
 
 	private static final int OK_ACEPTAR = -1;
 	private static final int SI_NO_OPCION = 0;
@@ -87,6 +93,8 @@ public class Interfaz implements ItemListener{
 	private JTabbedPane pestania;
 	private JButton botonComponer;
 	private JButton botonModificarCancion;
+	private JButton botonReproducirCancion;
+	private JButton botonPausarCancion;
 
 	private JPanel card;
 	private JPanel panelComponer;	//Panel componer
@@ -113,6 +121,7 @@ public class Interfaz implements ItemListener{
 	ArrayList<TablaAcordes> estrofas = new ArrayList<TablaAcordes>() ;
 	
 	boolean DEBUG=false;
+	Reproductor reproductor=null;
 	
 	
 	public Interfaz(Controlador miControlador) {
@@ -281,6 +290,19 @@ public class Interfaz implements ItemListener{
 		botonModificarCancion.addActionListener(manejador);
 		botonModificarCancion.setActionCommand(MODIFICAR_CANCION);
 		panelEditar.add(botonModificarCancion);
+		
+		//boton REPTODUCIR 
+		botonReproducirCancion = getJButtonReproducirCancion();
+		botonReproducirCancion.addActionListener(manejador);
+		botonReproducirCancion.setActionCommand(REPRODUCIR_CANCION);
+		panelEditar.add(botonReproducirCancion);
+		
+		//boton REPTODUCIR 
+		botonPausarCancion = getJButtonPausarCancion();
+		botonPausarCancion.addActionListener(manejador);
+		botonPausarCancion.setActionCommand(PAUSAR_CANCION);
+		panelEditar.add(botonPausarCancion);
+		
 		
 		
 		
@@ -475,6 +497,29 @@ public class Interfaz implements ItemListener{
 		return botonModificarCancion;
 	}
 	
+
+	private JButton getJButtonReproducirCancion() {
+		
+		if (botonReproducirCancion == null) {
+			botonReproducirCancion = new JButton();
+			botonReproducirCancion.setText("Reproducir");
+			botonReproducirCancion.setVisible(true);
+		}
+		return botonReproducirCancion ;
+	}
+		
+
+	private JButton getJButtonPausarCancion() {
+		
+		if (botonPausarCancion == null) {
+			botonPausarCancion= new JButton();
+			botonPausarCancion.setText("Pausa");
+			botonPausarCancion.setVisible(true);
+		}
+		return botonPausarCancion;
+	}
+		
+	
 	
 	public void cargarCombo() {
 		ArrayList<String> lista = controlador.getComboEstilos();
@@ -490,6 +535,7 @@ public class Interfaz implements ItemListener{
 	class ManejadorEventos implements ActionListener{
 
 		Cancion cancionNueva;
+		
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -558,9 +604,28 @@ public class Interfaz implements ItemListener{
 				
 			
 				controlador.modificarCancion(cancionNueva);
+				
 				actualizarPanelEditar(cancionNueva);
+				Archivos.generarArchivo(cancionNueva);
+				reproductor=null;
 
 			}//fin MODIFICAR_CANCION
+			
+			
+			
+			if (e.getActionCommand() == REPRODUCIR_CANCION){
+				if(reproductor==null){
+					
+					reproductor = new Reproductor(cancionNueva.getNombre()+".mid");
+				}
+				reproductor.reproducir();
+			}//FIN REPRODUCIR_CANCION
+			
+
+			if (e.getActionCommand() == PAUSAR_CANCION){
+					reproductor.pausar();
+			}//FIN 
+			
 			
 			
 			if (e.getActionCommand() == COMPONER) {
