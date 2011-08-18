@@ -4,6 +4,8 @@ public interface Constantes {
 	
 	public final static String DIRECTORIO_LINUX = "Directorio";
 	public final static String ARCHIVO_LINUX = "Archivo genérico";
+	public final static String ARCHIVO_WINDOWS = "Archivo MMA";
+	public final static String DIRECTORIO_WINDOWS = "Carpeta de archivos";
 	public final static String EXTENSION_ARCHIVO = ".mma";
 	
 	public static final String COMENTARIO = "//";
