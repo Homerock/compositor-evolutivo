@@ -86,9 +86,10 @@ public class Controlador {
 			String tipo=chooser.getTypeDescription(chooser.getSelectedFile());
 			if (resultado == JFileChooser.CANCEL_OPTION)
 				return;
-
+			
+				System.out.println("Tipo nada:"+tipo);
 			//si se carga un directorio
-			if (tipo.compareTo(Constantes.DIRECTORIO_LINUX)==0){	
+			if (tipo.compareTo(Constantes.DIRECTORIO_LINUX)==0 || tipo.compareTo(Constantes.DIRECTORIO_WINDOWS)==0){	
 				String path = chooser.getSelectedFile()+"/";
 				String files;
 				File folder = new File(path);
@@ -116,7 +117,7 @@ public class Controlador {
 				}
 			}
 			//si es un archivo
-			if(tipo.compareTo(Constantes.ARCHIVO_LINUX)==0){
+			if(tipo.compareTo(Constantes.ARCHIVO_LINUX)==0 || tipo.compareTo(Constantes.ARCHIVO_WINDOWS)==0){
 					try {		
 						
 						cancionAprendida = Aprendizaje.aprenderCancion(chooser.getSelectedFile().toString());
