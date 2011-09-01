@@ -233,6 +233,7 @@ public class Controlador {
 		this.getManejadorPersistencia().duracionAMemoria(getMiListaDeDuraciones());
 		this.getManejadorPersistencia().temposAMemoria(getMiListaDeTempos());
 		this.getManejadorPersistencia().tonicasAMemoria(getMiListaDeTonicas());
+		this.getManejadorPersistencia().cancionesAMemoria(getListaCanciones());
 	}
 	
 	/**
@@ -438,7 +439,7 @@ public class Controlador {
 	}
 	//#########################################################################################
 	/**
-	 * 
+	 * NO SE USAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa
 	 * @param tonica
 	 * @param estilo
 	 * @throws ArchivosException 
@@ -478,8 +479,6 @@ public class Controlador {
 			// vuelvo a calcular los acumulados para seguir componiendo
 			this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
 			this.getMiMatrizEstilos().calcularAcumulados();
-			
-			
 			
 		}  catch (AcordesException e) {
 			error = true;
@@ -564,7 +563,6 @@ public class Controlador {
 			// vuelvo a calcular los acumulados para seguir componiendo
 			this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
 			this.getMiMatrizEstilos().calcularAcumulados();
-			
 			
 			
 		}  catch (AcordesException e) {
@@ -747,6 +745,18 @@ public class Controlador {
 		return ;
 	}
 	
+	/**
+	 * 
+	 * @param cancion
+	 */
+	public void guardarCancion(String nombreFantasia, String comentario) {
+		
+		canciones.Cancion cancion = getCancionNueva();
+		cancion.setComentario(comentario);
+		cancion.setNombreFantasia(nombreFantasia);
+		manejadorPersistencia.cancionNuevaABaseDeDatos(cancion);
+		
+	}
 	
 	//#########################################################################################
 	/**
@@ -832,6 +842,4 @@ public class Controlador {
 		this.listaCanciones = listaCanciones;
 	}
 
-	
-	
 }

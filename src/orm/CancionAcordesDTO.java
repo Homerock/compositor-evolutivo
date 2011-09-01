@@ -17,8 +17,8 @@ public class CancionAcordesDTO {
 	public static void insertar(
 			EntityManager manager, 
 			orm.Cancion cancion,
-			orm.Estilos estiloEstrofa,
-			Acordes acorde,
+			String estiloEstrofa,
+			String acorde,
 			int numeroEstrofa,
 			int numeroCompas,
 			int numeroAcorde
@@ -28,8 +28,8 @@ public class CancionAcordesDTO {
 		try{
 			
 			parametros.put("cancionid", cancion.getID());
-			parametros.put("estiloestrofaid", estiloEstrofa.getID());
-			parametros.put("acordeid", acorde.getID());
+			parametros.put("estiloestrofa", estiloEstrofa);
+			parametros.put("acorde", acorde);
 			parametros.put("numeroEstrofa", numeroEstrofa);
 			parametros.put("numeroCompas",numeroCompas);
 			parametros.put("numeroAcorde",numeroAcorde);
@@ -37,7 +37,7 @@ public class CancionAcordesDTO {
 			manager.create(CancionAcordes.class, parametros);
 			
 		}catch(PSQLException e){
-			throw new ORMException("el acorde "+acorde.getNombre()+" para la cancion , ya existe.");
+			throw new ORMException("el acorde "+acorde+" para la cancion , ya existe.");
 		}
 		return;
 	}

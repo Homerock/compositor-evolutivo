@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -29,7 +31,10 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTree;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import nucleo.Controlador;
@@ -43,6 +48,7 @@ import archivos.Reconocedor;
 import canciones.Cancion;
 import canciones.Compas;
 import canciones.Estrofa;
+import estructura.MatrizAcordes;
 import excepciones.ORMException;
 import excepciones.PersistenciaException;
 
@@ -111,7 +117,7 @@ public class Pantalla extends JFrame {
     private FileSystemModel fileSystemModel = new FileSystemModel();
     //private JTree fileTree = new JTree(fileSystemModel);
     private Arbol fileTree = new Arbol(new File("/home"));
-    private Arbol fileTreeCanciones = new Arbol(new File("/home"));
+    private JTree fileTreeCanciones = new JTree();
     
 	private JComboBox jComboEstilo;
 	private JComboBox jComboEstructuraAvanzado;
@@ -261,17 +267,25 @@ public class Pantalla extends JFrame {
     
     private void armarPanelCanciones(ManejadorEventos manejador) {
     	
-    	panelCanciones.getViewport().add(fileTreeCanciones, null);
-    	/*
-    	panelCanciones = new JPanelBackground();
-        try {
-        	panelCanciones.setBackground(new File("./img/fondoAzul.jpg"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+    	String nombre;
+    	DefaultMutableTreeNode nodoCancion;
+    	
+    	DefaultMutableTreeNode padre = new DefaultMutableTreeNode("Canciones");
+    	DefaultTreeModel modelo = new DefaultTreeModel(padre);
+    	JTree tree = new JTree(modelo);
+    	
+    	Map<String, Cancion> canciones = controlador.getListaCanciones();
+    	Iterator it = canciones.entrySet().iterator();
+		//tengo que iterar para listar todas la matrices del map
+		while (it.hasNext()) {
+			Map.Entry e = (Map.Entry)it.next();
+			Cancion miCancion = (Cancion) e.getValue();
+			nombre = miCancion.getNombre();
+			nodoCancion=new DefaultMutableTreeNode(nombre);
+	    	modelo.insertNodeInto(nodoCancion, padre, 0);
 		}
-    	//return panelCanciones;
-    	*/
+    	
+    	panelCanciones.getViewport().add(tree, null);
     }
     
     private void armarPanelBD(ManejadorEventos manejador) {
@@ -472,7 +486,7 @@ public class Pantalla extends JFrame {
 		
 	}
 
-    private void armarPanelDetalleAprender(ManejadorEventos manejador) {
+	private void armarPanelDetalleAprender(ManejadorEventos manejador) {
 		
     	panelDetalleAprender = new JPanelBackground();
     	
@@ -704,7 +718,7 @@ public class Pantalla extends JFrame {
 		
 	}
     
-    private JTextArea getJTextComentarios() {
+    public JTextArea getJTextComentarios() {
     	if(jTextComentarios == null) {
     		jTextComentarios = new JTextArea();
     		jTextComentarios.setName("jTextComentarios");
@@ -713,7 +727,7 @@ public class Pantalla extends JFrame {
     	return jTextComentarios;
     }
     
-    private JTextField getJTextNombre() {
+    public JTextField getJTextNombre() {
     	if(jTextNombre == null) {
     		jTextNombre = new JTextField();
     		jTextNombre.setName("jTextNombre");
@@ -802,7 +816,7 @@ public class Pantalla extends JFrame {
 			
 			if (e.getActionCommand() == Constantes.COMPONER) {
 				
-				System.out.println("Componer");
+				
 				String tonica = Pantalla.this.tonicaText.getText();
 				String estilo = (String) Pantalla.this.jComboEstilo.getSelectedItem();
 				String tempo = Pantalla.this.tempoText.getText();
@@ -818,7 +832,7 @@ public class Pantalla extends JFrame {
 					return;
 				}
 				
-				if (jCheckEstructura.isEnabled()) {
+				if (jCheckEstructura.isSelected()) {
 					controlador.componerConEstructruras(tonica, estilo, tempo, estructura);
 				} else {
 					controlador.componer(tonica, estilo, tempo, duracion);
@@ -877,6 +891,11 @@ public class Pantalla extends JFrame {
 				reproductor=null;
 
 			}//fin MODIFICAR_CANCION
+			
+			if (e.getActionCommand() == Constantes.GUARDAR_CANCION){
+				
+				controlador.guardarCancion(Pantalla.this.getJTextNombre().getText(),Pantalla.this.getJTextComentarios().getText());
+			}
 			
 			if (e.getActionCommand() == Constantes.REPRODUCIR_CANCION){
 				System.out.println("PLAY");

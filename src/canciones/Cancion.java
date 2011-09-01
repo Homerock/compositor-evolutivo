@@ -14,7 +14,8 @@ public class Cancion {
 	 ###################							ATRIBUTOS					###################################### 
 	 ################################################################################################################# */
 
-	private String nombre;
+	private String nombre;	//nombre de archivo mma
+	private String nombreFantasia;	//nombre para guardar en la BD
 	private String tempo;
 	private int duracion;// cantidad de compases de toda la cancion
 	private Acorde tonica ;
@@ -230,16 +231,16 @@ public class Cancion {
 		this.comentario = comentario;
 	}
 
-	/*
-	public void agregarEstrofa(int nroEstrofa){
-		
-		
-		estrofas = this.getEstrofas();
-		
-		estrofas[nroEstrofa-1]
-		
-		
+	public String getNombreFantasia() {
+		return nombreFantasia;
 	}
-	*/
+
+	public void setNombreFantasia(String nombreFantasia) {
+		this.nombreFantasia = nombreFantasia;
+	}
+
+	
+
+	
 
 }
