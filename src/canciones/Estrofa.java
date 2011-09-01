@@ -29,6 +29,15 @@ public class Estrofa implements Cloneable{
 
 	public Estrofa(){
 	}
+
+	public Estrofa(int numeroEstrofa, String estilo) {
+		
+		this.numeroEstrofa = numeroEstrofa;
+		this.estilo = estilo;
+		this.cantidadCompases = 0;
+		this.esEstrofaGemela = false;
+		this.listaDeCompases = new ArrayList<Compas>();
+	}
 	
 	/**
 	 * 

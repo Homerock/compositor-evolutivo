@@ -38,6 +38,8 @@ public class Controlador {
 	private ListaValores miListaDeEstilosPrincipales;
 	private MatrizEstilos miMatrizEstilos;
 	private Map<String, MatrizAcordes> MatrizEvolutiva;
+	private Map<String, Cancion> listaCanciones;
+	
 	private static final boolean DEBUG = true;
 	private Persistencia manejadorPersistencia = null;
 	
@@ -56,6 +58,7 @@ public class Controlador {
 		this.setMiListaDeTempos(new ListaValores());
 		this.setMiListaDeDuraciones(new ListaValores());
 		this.setMiListaDeEstilosPrincipales(new ListaValores());
+		this.setListaCanciones(new HashMap<String, Cancion>());
 		
 		try {
 			manejadorPersistencia = new Persistencia();
@@ -719,6 +722,14 @@ public class Controlador {
 
 	public void setCancionNueva(Cancion cancionNueva) {
 		this.cancionNueva = cancionNueva;
+	}
+
+	public Map<String, Cancion> getListaCanciones() {
+		return listaCanciones;
+	}
+
+	public void setListaCanciones(Map<String, Cancion> listaCanciones) {
+		this.listaCanciones = listaCanciones;
 	}
 
 	

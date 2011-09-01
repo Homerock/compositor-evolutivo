@@ -19,7 +19,4 @@ public interface OcurrenciasAcordes extends Entity {
 	public void setEstilos(Estilos estilo);
 	
 	
-	
-	
-	
 }

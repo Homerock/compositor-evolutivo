@@ -85,6 +85,11 @@ public class Compas implements Cloneable{
 		this.acordes = acordes;
 	}
 
+	public void agregarAcorde (Acorde acorde){
+		this.acordes.add(acorde);
+		
+	}
+	
 	@Override
 	public String toString() {
 		return "Compas [cantidadAcordes=" + cantidadAcordes + ", acordes="

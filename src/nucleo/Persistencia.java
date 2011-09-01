@@ -3,11 +3,20 @@ package nucleo;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.StringTokenizer;
+
+import canciones.Acorde;
+import canciones.Cancion;
+import canciones.Compas;
+import canciones.Estrofa;
 
 import orm.*;
 
@@ -516,7 +525,8 @@ public class Persistencia {
 	 * @throws PersistenciaException
 	 * @throws ORMException
 	 */
-	private void ocurrenciasAcordesABaseDeDatos(AcordesFila miAcordeFila, String estiloPpal) throws PersistenciaException, ORMException{
+	private void ocurrenciasAcordesABaseDeDatos(AcordesFila miAcordeFila, String estiloPpal) 
+	throws PersistenciaException, ORMException{
 		
 		ArrayList<ValorAcordes> ocurrencias = miAcordeFila.getListaOcurrencias();
 		Acordes acordePpal;
@@ -540,6 +550,140 @@ public class Persistencia {
 		} catch (SQLException e) {
 			throw new PersistenciaException("Error al acceder a 'ocurrenciasestilos' en la base de datos - "+e.getMessage());
 		}
+	}
+	
+	public void cancionNuevaABaseDeDatos(canciones.Cancion cancion){
+		
+		try {
+			Estilos estiloPrincipal = EstilosDTO.buscar(manager, cancion.getEstiloPrincipal());
+			Acordes tonica = AcordesDTO.buscar(manager, cancion.getTonica().getNombre()); 
+			
+			CancionDTO.insertar(manager, cancion.getNombre(), cancion.getTempo(), estiloPrincipal, tonica, "algo en el otro!!!",cancion.getDuracion());
+			
+			orm.Cancion cancionInsertada = CancionDTO.buscarUltima(manager);
+			
+			ArrayList<Estrofa> estrofas = cancion.getEstrofas();
+			
+			for (int i =0 ;i<estrofas.size();i++){
+				Estilos estiloEstrofa = EstilosDTO.buscar(manager, estrofas.get(i).getEstilo());
+				
+				ArrayList<Compas> compases = estrofas.get(i).getListaDeCompases();
+				for (int j=0;j<compases.size() ;j++){
+					
+					ArrayList<Acorde> acordes = compases.get(j).getAcordes();
+					for (int k =0;k<acordes.size();k++){
+						Acordes acorde = AcordesDTO.buscar(manager,acordes.get(k).getNombre());
+						
+						CancionAcordesDTO.insertar(manager, cancionInsertada, estiloEstrofa, acorde, i+1, j+1, k+1);
+						
+					}
+					
+					
+				}
+				
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ORMException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	    
+	
+	
+	public void cancionesAMemoria(Map<String, Cancion> listaCanciones) throws PersistenciaException{
+		
+		try {
+			orm.Cancion[] canciones =  CancionDTO.seleccionarTodos(manager);
+			canciones.Cancion cancionMemoria;
+			
+			for(int i=0; i<canciones.length;i++){
+		
+				orm.Cancion cancionDB = canciones[i];
+				//String [] campos = cancionDB.getFechaCreacion().split("\\-");  
+				//String fecha = campos[2]+'/'+campos[1]+'/'+campos[0];
+				
+				 cancionMemoria = 
+					new Cancion(cancionDB.getNombre(),
+							cancionDB.getTempo(),
+							cancionDB.getDuracion(),
+							new canciones.Acorde(cancionDB.getTonica().getNombre()),
+							cancionDB.getEstiloPrincipal().getNombre(),
+							cancionDB.getComentario(),
+							cancionDB.getFechaCreacion()
+						);
+				//guardo cancion sin estrofas
+				listaCanciones.put(String.valueOf(cancionDB.getID()),cancionMemoria);
+			}
+			
+			Iterator it = listaCanciones.keySet().iterator();
+			
+			while(it.hasNext()) {
+			    String clave = (String) it.next(); 
+			    cancionAcordesAMemoria(listaCanciones.get(clave), Integer.parseInt(clave));
+			}			
+			
+			
+		} catch (SQLException e) {
+			throw new PersistenciaException("Error al acceder a 'estilos' en la base de datos - "+e.getMessage());
+			
+		}
+		
+	}
+	// es llamado x cancionesAMemoria
+	/**
+	 * guarda los acordes de una cancion en el objeto, 
+	 * primero debe haberse traido la cancion de base de datos
+	 * @param cancion
+	 * @param idCancion
+	 * @throws PersistenciaException
+	 */
+	public void cancionAcordesAMemoria( canciones.Cancion cancion, int idCancion) throws PersistenciaException{
+		
+		try {
+			orm.CancionAcordes[] cancion_acordes = CancionAcordesDTO.seleccionarTodosPorIDCancion(manager, idCancion);
+			
+			for(CancionAcordes ac : cancion_acordes){
+				Estrofa estrofa =null ;
+				Compas compas =null;
+				try{
+					
+					estrofa = cancion.getEstrofaPorNumero(ac.getNumeroEstrofa());
+					try{
+						compas = estrofa.getCompasPorNumero(ac.getNumeroCompas());
+						
+						compas.agregarAcorde(new canciones.Acorde(ac.getAcorde().getNombre()));
+						
+					}catch(java.lang.IndexOutOfBoundsException e2){
+						compas = new canciones.Compas();
+						
+						compas.agregarAcorde(new canciones.Acorde(ac.getAcorde().getNombre()));
+						
+						estrofa.agregarCompas(compas);
+					}
+					
+				}catch(java.lang.IndexOutOfBoundsException e1){
+					estrofa = new canciones.Estrofa(ac.getNumeroEstrofa(),ac.getEstiloEstrofa().getNombre());
+					
+					compas = new canciones.Compas();
+					
+					compas.agregarAcorde(new canciones.Acorde(ac.getAcorde().getNombre()));
+					
+					estrofa.agregarCompas(compas);
+					cancion.agregarEstrofa(estrofa);
+					
+				}
+				
+			}
+		} catch (SQLException sql_e) {
+			
+			throw new PersistenciaException(" No se pudieron obtener los acordes de la cancion "+sql_e.getMessage());
+		}
+		
 	}
 
 }

@@ -14,6 +14,10 @@ create sequence duracion_id_seq start 1;
 create sequence ocurrenciasestilos_id_seq start 1;
 create sequence tempos_id_seq start 1;
 create sequence tonicas_id_seq start 1;
+-- objeto cancion
+create sequence cancion_id_seq start 1;
+create sequence cancionacordes_id_seq start 1;
+
 
 create table acordes (
 	id integer not null PRIMARY KEY DEFAULT nextval('acordes_id_seq') ,
@@ -80,5 +84,31 @@ create table tonicas(
 	estilosID integer not null references estilos(id)
 );
 alter table tonicas add constraint tonicas_unique_key unique(acordeID,estilosID);
+
+----- DATOS DE LA CANCION GUARDADA -------------------------
+
+create table cancion(
+	id integer not null PRIMARY KEY DEFAULT nextval('cancion_id_seq'),
+	nombre text,
+	tempo text,
+	duracion integer,
+	estiloPrincipalID integer  references estilos(id),
+	tonicaID integer references acordes(id),
+	comentario text ,
+	fechaCreacion date default (date(now())),
+	
+	CONSTRAINT cancion_unique_key unique(nombre,fechaCreacion)
+);
+
+create table cancionAcordes(
+        id integer not null PRIMARY KEY DEFAULT nextval('cancionacordes_id_seq'),
+	cancionID integer default null references cancion(id),
+        estiloEstrofaID integer not null references estilos(id),
+        acordeID integer default null references acordes(id),
+	numeroEstrofa integer,
+	numeroCompas integer,
+	numeroAcorde integer
+);
+
 
 commit;

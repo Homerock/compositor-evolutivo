@@ -20,7 +20,8 @@ public class Cancion {
 	private Acorde tonica ;
 	private String estiloPrincipal;
 	private ArrayList<Estrofa> estrofas;// estrofas de la cancion
-	
+	private String fechaCreacion;
+	private String comentario;
 	private ArrayList<Integer> numerosEstrofasAlteradas; // cuando es un alteracion de otra estrofa.
 
 	
@@ -75,6 +76,26 @@ public class Cancion {
 		this.setEstrofas(new ArrayList<Estrofa>());
 		this.setNumerosEstrofasAlteradas(new ArrayList<Integer>());
 		
+	}
+
+	public Cancion(
+			String nombre,
+			String tempo,
+			int duracion,
+			Acorde tonica,
+			String estiloPrincipal,
+			String comentario,
+			String fechaCreacion){
+		
+		this.setNombre(nombre);
+		this.setTempo(tempo);
+		this.setDuracion(duracion);
+		this.setTonica(tonica);
+		this.setEstiloPrincipal(estiloPrincipal);
+		this.setEstrofas(new ArrayList<Estrofa>());
+		this.setNumerosEstrofasAlteradas(new ArrayList<Integer>());
+		this.setComentario(comentario);
+		this.setFechaCreacion(fechaCreacion);
 	}
 	
 
@@ -193,6 +214,32 @@ public class Cancion {
 				+ "estrofas = " + estrofas + "]\n";
 	}
 
-	
+	public String getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(String fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	public String getComentario() {
+		return comentario;
+	}
+
+	public void setComentario(String comentario) {
+		this.comentario = comentario;
+	}
+
+	/*
+	public void agregarEstrofa(int nroEstrofa){
+		
+		
+		estrofas = this.getEstrofas();
+		
+		estrofas[nroEstrofa-1]
+		
+		
+	}
+	*/
 
 }
