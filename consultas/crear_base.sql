@@ -92,19 +92,17 @@ create table cancion(
 	nombre text,
 	tempo text,
 	duracion integer,
-	estiloPrincipalID integer  references estilos(id),
-	tonicaID integer references acordes(id),
+	estiloPrincipal text,
+	tonica text,
 	comentario text ,
-	fechaCreacion date default (date(now())),
-	
-	CONSTRAINT cancion_unique_key unique(nombre,fechaCreacion)
+	fechaCreacion date default (date(now()))
 );
 
 create table cancionAcordes(
         id integer not null PRIMARY KEY DEFAULT nextval('cancionacordes_id_seq'),
 	cancionID integer default null references cancion(id),
-        estiloEstrofaID integer not null references estilos(id),
-        acordeID integer default null references acordes(id),
+        estiloEstrofa text,
+        acorde text,
 	numeroEstrofa integer,
 	numeroCompas integer,
 	numeroAcorde integer

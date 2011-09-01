@@ -14,11 +14,11 @@ public interface Cancion extends Entity{
 	public void setDuracion(int duracion);
 	
 	
-	public Estilos getEstiloPrincipal();
-	public void setEstiloPrincipal(Estilos estiloPrincipal);
+	public String getEstiloPrincipal();
+	public void setEstiloPrincipal(String estiloPrincipal);
 	
-	public Acordes getTonica();
-	public void setTonica(Acordes tonica);
+	public String getTonica();
+	public void setTonica(String tonica);
 	
 	public String getComentario();
 	public void setComentario(String comentario);

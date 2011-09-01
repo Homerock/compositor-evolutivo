@@ -19,8 +19,8 @@ public class CancionDTO {
 			EntityManager manager, 
 			String nombre,
 			String tempo,
-			Estilos estiloPrincipal,
-			Acordes tonica,
+			String estiloPrincipal,
+			String tonica,
 			String comentario,
 			int duracion
 			) throws SQLException, ORMException {
@@ -30,8 +30,8 @@ public class CancionDTO {
 			parametros.put("nombre", nombre);
 			parametros.put("tempo", tempo);
 			parametros.put("duracion", duracion);
-			parametros.put("estiloprincipalid", estiloPrincipal.getID());
-			parametros.put("tonicaid", tonica.getID());
+			parametros.put("estiloprincipal", estiloPrincipal);
+			parametros.put("tonica", tonica);
 			parametros.put("comentario",comentario);
 			
 			manager.create(Cancion.class, parametros);

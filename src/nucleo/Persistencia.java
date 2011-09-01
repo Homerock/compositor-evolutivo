@@ -555,26 +555,24 @@ public class Persistencia {
 	public void cancionNuevaABaseDeDatos(canciones.Cancion cancion){
 		
 		try {
-			Estilos estiloPrincipal = EstilosDTO.buscar(manager, cancion.getEstiloPrincipal());
-			Acordes tonica = AcordesDTO.buscar(manager, cancion.getTonica().getNombre()); 
 			
-			CancionDTO.insertar(manager, cancion.getNombre(), cancion.getTempo(), estiloPrincipal, tonica, "algo en el otro!!!",cancion.getDuracion());
+			CancionDTO.insertar(manager, cancion.getNombreFantasia(), cancion.getTempo(), cancion.getEstiloPrincipal(), cancion.getTonica().getNombre(), cancion.getComentario(),cancion.getDuracion());
 			
 			orm.Cancion cancionInsertada = CancionDTO.buscarUltima(manager);
 			
 			ArrayList<Estrofa> estrofas = cancion.getEstrofas();
 			
 			for (int i =0 ;i<estrofas.size();i++){
-				Estilos estiloEstrofa = EstilosDTO.buscar(manager, estrofas.get(i).getEstilo());
+				
 				
 				ArrayList<Compas> compases = estrofas.get(i).getListaDeCompases();
 				for (int j=0;j<compases.size() ;j++){
 					
 					ArrayList<Acorde> acordes = compases.get(j).getAcordes();
 					for (int k =0;k<acordes.size();k++){
-						Acordes acorde = AcordesDTO.buscar(manager,acordes.get(k).getNombre());
 						
-						CancionAcordesDTO.insertar(manager, cancionInsertada, estiloEstrofa, acorde, i+1, j+1, k+1);
+						
+						CancionAcordesDTO.insertar(manager, cancionInsertada, estrofas.get(i).getEstilo(), acordes.get(k).getNombre(), i+1, j+1, k+1);
 						
 					}
 					
@@ -611,8 +609,8 @@ public class Persistencia {
 					new Cancion(cancionDB.getNombre(),
 							cancionDB.getTempo(),
 							cancionDB.getDuracion(),
-							new canciones.Acorde(cancionDB.getTonica().getNombre()),
-							cancionDB.getEstiloPrincipal().getNombre(),
+							new canciones.Acorde(cancionDB.getTonica()),
+							cancionDB.getEstiloPrincipal(),
 							cancionDB.getComentario(),
 							cancionDB.getFechaCreacion()
 						);
@@ -642,7 +640,7 @@ public class Persistencia {
 	 * @param idCancion
 	 * @throws PersistenciaException
 	 */
-	public void cancionAcordesAMemoria( canciones.Cancion cancion, int idCancion) throws PersistenciaException{
+	private void cancionAcordesAMemoria( canciones.Cancion cancion, int idCancion) throws PersistenciaException{
 		
 		try {
 			orm.CancionAcordes[] cancion_acordes = CancionAcordesDTO.seleccionarTodosPorIDCancion(manager, idCancion);
@@ -656,22 +654,22 @@ public class Persistencia {
 					try{
 						compas = estrofa.getCompasPorNumero(ac.getNumeroCompas());
 						
-						compas.agregarAcorde(new canciones.Acorde(ac.getAcorde().getNombre()));
+						compas.agregarAcorde(new canciones.Acorde(ac.getAcorde()));
 						
 					}catch(java.lang.IndexOutOfBoundsException e2){
 						compas = new canciones.Compas();
 						
-						compas.agregarAcorde(new canciones.Acorde(ac.getAcorde().getNombre()));
+						compas.agregarAcorde(new canciones.Acorde(ac.getAcorde()));
 						
 						estrofa.agregarCompas(compas);
 					}
 					
 				}catch(java.lang.IndexOutOfBoundsException e1){
-					estrofa = new canciones.Estrofa(ac.getNumeroEstrofa(),ac.getEstiloEstrofa().getNombre());
+					estrofa = new canciones.Estrofa(ac.getNumeroEstrofa(),ac.getEstiloEstrofa());
 					
 					compas = new canciones.Compas();
 					
-					compas.agregarAcorde(new canciones.Acorde(ac.getAcorde().getNombre()));
+					compas.agregarAcorde(new canciones.Acorde(ac.getAcorde()));
 					
 					estrofa.agregarCompas(compas);
 					cancion.agregarEstrofa(estrofa);

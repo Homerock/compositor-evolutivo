@@ -6,11 +6,11 @@ public interface CancionAcordes extends Entity{
 	public Cancion getCancion();
 	public void setCancion(Cancion cancion);
 	
-	public Estilos getEstiloEstrofa();
-	public void setEstiloEstrofa(Estilos estiloEstrofa);
+	public String getEstiloEstrofa();
+	public void setEstiloEstrofa(String estiloEstrofa);
 	
-	public Acordes getAcorde();
-	public void setAcorde(Acordes acorde);
+	public String getAcorde();
+	public void setAcorde(String acorde);
 	
 	public int getNumeroEstrofa();
 	public void setNumeroEstrofa(int nro); 
