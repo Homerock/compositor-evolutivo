@@ -537,7 +537,7 @@ public class Interfaz implements ItemListener{
 		Cancion cancionNueva;
 		
 		
-		@Override
+		
 		public void actionPerformed(ActionEvent e) {
 
 			if (e.getActionCommand() == SALIR) {
@@ -696,37 +696,37 @@ public class Interfaz implements ItemListener{
 
 	class Cruz implements WindowListener {
 
-		@Override
+
 		public void windowActivated(WindowEvent arg0) {
 
 		}
 
-		@Override
+
 		public void windowClosed(WindowEvent arg0) {
 
 		}
 
-		@Override
+
 		public void windowClosing(WindowEvent arg0) {
 			System.exit(0);
 		}
 
-		@Override
+
 		public void windowDeactivated(WindowEvent arg0) {
 
 		}
 
-		@Override
+
 		public void windowDeiconified(WindowEvent arg0) {
 
 		}
 
-		@Override
+
 		public void windowIconified(WindowEvent arg0) {
 
 		}
 
-		@Override
+
 		public void windowOpened(WindowEvent arg0) {
 
 		}
