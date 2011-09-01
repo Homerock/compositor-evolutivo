@@ -71,7 +71,77 @@ public class Controlador {
 		}
 		
 	}
+	
+	//#########################################################################################
+	/**
+	 * 
+	 * @param ruta
+	 */
+	//#########################################################################################
+	public void aprenderArchivo(String ruta) {
+		
+		CancionAprendida cancionAprendida = null;
+		
+		try {		
+			
+			cancionAprendida = Aprendizaje.aprenderCancion(ruta);
+			guardarCancionEnMemoria(cancionAprendida);
 
+		}catch(EstilosException ee){
+			System.err.println(ee.getMessage());
+		}catch(ValoresException ve){
+			System.err.println(ve.getMessage());
+		} catch (ArchivosException e) {
+			System.err.println(e.getMessage());
+		} catch (CancionException e) {
+			System.err.println(e.getMessage());
+		}
+		
+		// calcular acumulados
+		this.calcularAcumuladoDeMap(this.getMatrizEvolutiva());
+		this.getMiMatrizEstilos().calcularAcumulados();
+		if (DEBUG)
+			this.mostrarDatos();
+	}
+	
+	//#########################################################################################
+	/**
+	 * 
+	 * @param ruta
+	 */
+	//#########################################################################################
+	public void aprenderDirectorio(File[] listOfFiles, String path) {
+		
+		CancionAprendida cancionAprendida = null;
+		String files;
+		
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+				files = listOfFiles[i].getName();
+				System.out.println(i + " - Antes de cargar: " + path+files);
+				try{
+					
+					cancionAprendida = Aprendizaje.aprenderCancion(path+files);
+					guardarCancionEnMemoria(cancionAprendida);
+					
+				}catch(EstilosException ee){
+					System.err.println(ee.getMessage());
+				}catch(ValoresException ve){
+					System.err.println(ve.getMessage());
+				} catch (ArchivosException e) {
+					System.err.println(e.getMessage());
+				} catch (CancionException e) {
+					System.err.println(e.getMessage());
+				}
+			}
+		}
+		// calcular acumulados
+		this.calcularAcumuladoDeMap(this.getMatrizEvolutiva());
+		this.getMiMatrizEstilos().calcularAcumulados();
+		if (DEBUG)
+			this.mostrarDatos();
+	}
+	
 	//#########################################################################################
 	/**
 	 * 
@@ -108,13 +178,15 @@ public class Controlador {
 							guardarCancionEnMemoria(cancionAprendida);
 							
 						}catch(EstilosException ee){
-							System.err.println(ee.getMessage());
+							System.err.println("El formato del archivo es incorrecto" + ee.getMessage());
 						}catch(ValoresException ve){
-							System.err.println(ve.getMessage());
+							System.err.println("El formato del archivo es incorrecto" + ve.getMessage());
 						} catch (ArchivosException e) {
-							System.err.println(e.getMessage());
+							System.err.println("El formato del archivo es incorrecto" + e.getMessage());
 						} catch (CancionException e) {
-							System.err.println(e.getMessage());
+							System.err.println("El formato del archivo es incorrecto" + e.getMessage());
+						} catch(IndexOutOfBoundsException ee){
+							System.err.println("El formato del archivo es incorrecto" + ee.getMessage());
 						}
 					}
 				}
@@ -465,6 +537,24 @@ public class Controlador {
 		MatrizAcordes miMatrizAcordes = this.obtenerMatrizEnMap(estilo);
 		boolean error = false;
 		Cancion nuevaCancion = null;
+		
+		if (tempo.trim().equals("")) {
+			try {
+				tempo = this.getMiListaDeTempos().obtenerMayorValorPorEstilo(estilo);
+			} catch (ValoresException e) {
+				System.err.println(e.getMessage());
+				return;
+			}
+		}
+		if (duracion.trim().equals("")) {
+			try {
+				duracion = this.getMiListaDeDuraciones().obtenerMayorValorPorEstilo(estilo);
+			} catch (ValoresException e) {
+				System.err.println(e.getMessage());
+				return;
+			}
+		}
+		
 		try {
 			nuevaCancion = miCompositor.componerCancion(miMatrizAcordes, this.getMiMatrizEstilos(), tonica, estilo, Integer.parseInt(duracion), tempo);
 			// genero el archivo .mma que contiene a la nueva cancion 
@@ -533,6 +623,15 @@ public class Controlador {
 		int cantCompasesEstrofaA; 
 		int cantCompasesEstrofaB; 
 		int cantCompasesEnd;
+		
+		if (tempo.trim().equals("")) {
+			try {
+				tempo = this.getMiListaDeTempos().obtenerMayorValorPorEstilo(estilo);
+			} catch (ValoresException e) {
+				System.err.println(e.getMessage());
+				return;
+			}
+		}
 		
 		try {
 			nuevaCancion = new Cancion(estilo+"_"+tonica,tempo,acorde,estilo);
