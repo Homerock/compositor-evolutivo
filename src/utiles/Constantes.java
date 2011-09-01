@@ -46,5 +46,37 @@ public interface Constantes {
 	public static final String ESTRUCTURA_A = "A - A - B - A - A - B";
 	public static final String ESTRUCTURA_B = "A - B - Fill - A - B - B";
 	public static final String ESTRUCTURA_C = "A - B - B - A - B - B' - A";
+	
+	
+	// INTERFAZ GRAFICA
+	//eventos
+	public static final String SALIR = "salir";
+	public static final String ACERCA_DE = "acerca_de";
+	public static final String COMPONER = "componer";
+	public static final String APRENDER = "aprender";
+	public static final String ACTUALIZAR = "actualizar";
+	public static final String MODIFICAR_CANCION ="modificar_cancion";
+	public static final String GUARDAR_CANCION ="guardar_cancion";
+	public static final String REPRODUCIR_CANCION ="reproducir";
+	public static final String PAUSAR_CANCION ="pausar";
+	public static final String APRENDER_CANCION ="aprender_cancion";
+	
+
+	public static final int OK_ACEPTAR = -1;
+	public static final int SI_NO_OPCION = 0;
+	public static final int OPCION_SI = 0;
+	public static final int OPCION_NO = 1;
+	public static final int TABS_POSICION = 3;	//tres = abajo
+
+	public static final String TIPO_BASICO = "Básica";
+	public static final String TIPO_INTERMEDIO = "Intermedia";
+	public static final String TIPO_AVANZADO = "Avanzada";
+	// labels
+	public static final String LABEL_TONICA = "Tónica: ";
+	public static final String LABEL_ESTILO = "Estilo: ";
+	public static final String LABEL_CANT_COMPASES = "Cantidad de Compases: ";
+	public static final String LABEL_TEMPO = "Tempo: ";
+	public static final String LABEL_TIPO_CANCION = "Tipo de Canción: ";
+
 
 }

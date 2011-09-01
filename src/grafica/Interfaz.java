@@ -2,6 +2,7 @@ package grafica;
 
 
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -278,6 +279,7 @@ public class Interfaz implements ItemListener{
 
 		panelEditar = new JPanel();
 		panelEditar.setLayout(new BoxLayout(panelEditar, BoxLayout.Y_AXIS));
+		//panelEditar.setBackground(Color.WHITE);
 		labelEditar = new JLabel("VER - EDITAR");
 
 
@@ -309,7 +311,7 @@ public class Interfaz implements ItemListener{
 		// panel para la cancion
 		panelCancion = new JPanel();
 		panelCancion.setLayout(new BoxLayout(panelCancion,BoxLayout.Y_AXIS));
-	
+		//panelCancion.setBackground(Color.RED);
 		panelScrollEditar = new JScrollPane();
 		panelScrollEditar.setViewportView(panelCancion);
 		panelEditar.add(panelScrollEditar);
@@ -532,7 +534,7 @@ public class Interfaz implements ItemListener{
 		}
 	}
 
-	class ManejadorEventos implements ActionListener{
+	public class ManejadorEventos implements ActionListener{
 
 		Cancion cancionNueva;
 		

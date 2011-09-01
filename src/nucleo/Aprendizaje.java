@@ -34,7 +34,7 @@ public class Aprendizaje {
 	 * @throws CancionException 
 	 **/
 	//#########################################################################################
-	public static CancionAprendida aprenderCancion(String nombreCancion) throws EstilosException, ValoresException,ArchivosException, CancionException {
+	public static CancionAprendida aprenderCancion(String nombreCancion) throws IndexOutOfBoundsException, EstilosException, ValoresException,ArchivosException, CancionException {
 
 		// convertimos el archivo en una lista 
 		ArrayList<String> cancion = Archivos.convierteArchivoEnLista(nombreCancion);

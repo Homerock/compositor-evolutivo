@@ -52,7 +52,6 @@ public class Reproductor {
 	public void pausar(){
         // Start playing
         sequencer.stop();
-		
 	}
 	
 	
