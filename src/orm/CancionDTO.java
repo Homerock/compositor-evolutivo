@@ -24,7 +24,28 @@ public class CancionDTO {
 			String comentario,
 			int duracion
 			) throws SQLException, ORMException {
-
+		
+		boolean error=false;
+		String msgError="";
+		if(nombre == null){
+			error = true;
+			msgError = "nombre.";
+		}
+		if(comentario ==null){
+			comentario = "";
+		}
+		if (tonica ==null){
+			error = true;
+			msgError = "tonica.";
+		}
+		if(estiloPrincipal==null){
+			error = true;
+			msgError = "estilo principal.";
+		}	
+		
+		if (error)
+			throw new ORMException("Faltan datos en la cancion, falta :"+msgError);
+		
 		Map <String,Object> parametros = new HashMap<String, Object>();
 		try{
 			parametros.put("nombre", nombre);

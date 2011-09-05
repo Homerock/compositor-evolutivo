@@ -26,7 +26,6 @@ public class Cancion {
 	private ArrayList<Integer> numerosEstrofasAlteradas; // cuando es un alteracion de otra estrofa.
 
 	
-	
 	/*################################################################################################################
 	 ###################						CONSTRUCTORES				    ###################################### 
 	 ################################################################################################################# */
@@ -52,6 +51,7 @@ public class Cancion {
 	 */
 	public Cancion(String nombre,String tempo,int duracion,Acorde tonica,String estiloPrincipal){
 		this.setNombre(nombre);
+		this.setNombreFantasia(nombre);
 		this.setTempo(tempo);
 		this.setDuracion(duracion);
 		this.setTonica(tonica);
@@ -70,6 +70,7 @@ public class Cancion {
 	 */
 	public Cancion(String nombre,String tempo,Acorde tonica,String estiloPrincipal){
 		this.setNombre(nombre);
+		this.setNombreFantasia(nombre);
 		this.setTempo(tempo);
 		this.setDuracion(0);
 		this.setTonica(tonica);
@@ -89,6 +90,7 @@ public class Cancion {
 			String fechaCreacion){
 		
 		this.setNombre(nombre);
+		this.setNombreFantasia(nombre);
 		this.setTempo(tempo);
 		this.setDuracion(duracion);
 		this.setTonica(tonica);
@@ -208,6 +210,20 @@ public class Cancion {
 		return miEstrofa;
 	}
 
+	
+
+	public void actualizarContadores(){
+		int contador =0;
+		
+		for (Estrofa e : estrofas){
+			e.actualizarContadores();
+			contador = contador + e.getCantidadCompases();
+			
+		}
+		this.setDuracion(contador);
+		
+	}
+	
 	@Override
 	public String toString() {
 		return "Cancion [nombre = " + nombre + ", tempo = " + tempo + ", duracion = " + duracion + ", tonica = " 

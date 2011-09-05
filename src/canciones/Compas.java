@@ -104,6 +104,12 @@ public class Compas implements Cloneable{
 		this.modificarCompas = modificarCompas;
 	}
 
+	public void actualizarContadores() {
+		
+		cantidadAcordes = acordes.size();
+		
+	}
+
 	
 	
 }

@@ -622,7 +622,10 @@ public class Persistencia {
 			
 			while(it.hasNext()) {
 			    String clave = (String) it.next(); 
-			    cancionAcordesAMemoria(listaCanciones.get(clave), Integer.parseInt(clave));
+			    canciones.Cancion  cancionActual = listaCanciones.get(clave);
+			    cancionAcordesAMemoria(cancionActual, Integer.parseInt(clave));
+			    cancionActual.actualizarContadores();// actualizo todos los contadores de la cancion
+			    
 			}			
 			
 			
