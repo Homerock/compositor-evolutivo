@@ -153,6 +153,15 @@ public class Estrofa implements Cloneable{
 		this.nroEstrofaGemela = nroEstrofaGemela;
 	}
 
+	public void actualizarContadores() {
+		cantidadCompases = listaDeCompases.size();
+		
+		for(Compas c :listaDeCompases ){
+			c.actualizarContadores();
+			
+		}
+	}
+
 	
 	
 	
