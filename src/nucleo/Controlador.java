@@ -372,6 +372,18 @@ public class Controlador {
 		}
 	}
 	
+	public Cancion buscarCancionSeleccionada(String nombre) {
+		
+		Cancion cancion = listaCanciones.get(nombre);
+		
+		
+		
+		
+		
+		return cancion;
+		
+	}
+	
 	//#########################################################################################
 	/**
 	 * MostrarDatos

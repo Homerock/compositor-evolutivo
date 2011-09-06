@@ -349,7 +349,7 @@ public class Utiles {
 
 	//#########################################################################################
 	/**
-	 * dada una linea y un separador (token) devuelve el suiguiente token al separador.
+	 * dada una linea y un separador (token) devuelve el siguiente token al separador.
 	 * 
 	 * @param linea :"1 acorde1 / "
 	 * @param token : " "
@@ -361,6 +361,22 @@ public class Utiles {
 		try {
 			StringTokenizer tokens = new StringTokenizer(linea, token);
 			tokens.nextToken();
+			return tokens.nextToken();
+		} catch (java.util.NoSuchElementException e) {
+			return "";
+		}
+	}
+	
+	/**
+	 * 
+	 * @param linea
+	 * @param token
+	 * @return
+	 */
+	public static String obtenerCadena(String linea, String token){
+
+		try {
+			StringTokenizer tokens = new StringTokenizer(linea, token);
 			return tokens.nextToken();
 		} catch (java.util.NoSuchElementException e) {
 			return "";
