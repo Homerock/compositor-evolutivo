@@ -692,21 +692,27 @@ public class Pantalla extends JFrame {
 		panelTablaCancion.removeAll();//panel donde se muetran las etrofas
 		estrofas.clear();//lista donde estan las estrofas
 		
-		for (Estrofa e : cancionNueva.getEstrofas()){
-			TablaAcordes tablaAcordes = new TablaAcordes(e);
-			
-			estrofas.add(tablaAcordes);
-			
-			JLabel labelEstilo = new JLabel(e.getEstilo());//label del estilo
-			labelEstilo.repaint();//ver
-			panelTablaCancion.add(labelEstilo);
-			panelTablaCancion.add(tablaAcordes);
-			
+		try {
+		
+			for (Estrofa e : cancionNueva.getEstrofas()){
+				TablaAcordes tablaAcordes = new TablaAcordes(e);
+				
+				estrofas.add(tablaAcordes);
+				
+				JLabel labelEstilo = new JLabel(e.getEstilo());//label del estilo
+				labelEstilo.repaint();//ver
+				panelTablaCancion.add(labelEstilo);
+				panelTablaCancion.add(tablaAcordes);
+				
+			}
+			//panelDetalleComponer.repaint();
+			//panelScrollEditar.repaint(); 
+			//panelTablaCancion.repaint();
+			panelDetalle.updateUI();
+		
+		} catch (NullPointerException e) {
+			System.err.println(e.getMessage());
 		}
-		//panelDetalleComponer.repaint();
-		//panelScrollEditar.repaint(); 
-		//panelTablaCancion.repaint();
-		panelDetalle.updateUI();
 		
 	}
     

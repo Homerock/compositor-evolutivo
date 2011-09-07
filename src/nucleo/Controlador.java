@@ -60,6 +60,7 @@ public class Controlador {
 		this.setMiListaDeEstilosPrincipales(new ListaValores());
 		this.setListaCanciones(new HashMap<String, Cancion>());
 		
+		
 		try {
 			manejadorPersistencia = new Persistencia();
 			datosAMemoria();
