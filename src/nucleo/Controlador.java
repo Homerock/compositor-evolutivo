@@ -760,14 +760,20 @@ public class Controlador {
 	
 	/**
 	 * 
-	 * @param cancion
+	 * @param cancionNueva
+	 * @param nombreFantasia
+	 * @param comentario
 	 */
-	public void guardarCancion(String nombreFantasia, String comentario) {
+	public void guardarCancion(canciones.Cancion cancionNueva, String nombreFantasia, String comentario) {
 		
-		canciones.Cancion cancion = getCancionNueva();
-		cancion.setComentario(comentario);
-		cancion.setNombreFantasia(nombreFantasia);
-		manejadorPersistencia.cancionNuevaABaseDeDatos(cancion);
+		cancionNueva.setComentario(comentario);
+		cancionNueva.setNombreFantasia(nombreFantasia);
+		manejadorPersistencia.cancionNuevaABaseDeDatos(cancionNueva);
+		try {
+			this.getManejadorPersistencia().cancionesAMemoria(getListaCanciones());
+		} catch (PersistenciaException e) {
+			System.err.println(e.getMessage()+Controlador.class);
+		}
 		
 	}
 	

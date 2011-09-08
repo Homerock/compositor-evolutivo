@@ -3,8 +3,13 @@ package inicio;
 import java.awt.*;
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+
+import canciones.Acorde;
+import canciones.Compas;
 
 public class JPanelBackground extends JPanel {
 private static final long serialVersionUID = -3488034684833395929L;

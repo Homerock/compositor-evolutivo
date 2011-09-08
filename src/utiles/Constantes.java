@@ -57,6 +57,7 @@ public interface Constantes {
 	public static final String ACTUALIZAR = "actualizar";
 	public static final String MODIFICAR_CANCION ="modificar_cancion";
 	public static final String GUARDAR_CANCION ="guardar_cancion";
+	public static final String GUARDAR_CANCION_MODIFICADA ="guardar_cancion_modificada";
 	public static final String REPRODUCIR_CANCION ="reproducir";
 	public static final String PAUSAR_CANCION ="pausar";
 	public static final String APRENDER_CANCION ="aprender_cancion";
