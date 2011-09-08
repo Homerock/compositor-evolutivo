@@ -38,6 +38,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import nucleo.Controlador;
@@ -77,6 +78,8 @@ public class Pantalla extends JFrame {
     private JMenuItem menuHelpAbout = new JMenuItem();
     private JTextField jTextNombre;
     private JTextArea jTextComentarios;
+    private JTextField jTextNombreCanciones;
+    private JTextArea jTextComentariosCanciones;
     private JCheckBox jCheckEstructura;
     private JCheckBox jCheckTempo;
     private JCheckBox jCheckCantCompases;
@@ -111,7 +114,10 @@ public class Pantalla extends JFrame {
     private CardLayout cardLayout1 = new CardLayout();
     private JLabel jLabel2 = new JLabel();
     private JScrollPane panelAprender = new JScrollPane();
-    private JScrollPane panelCanciones = new JScrollPane();
+    private JPanel panelCanciones;
+    private JScrollPane panelArbolCanciones = new JScrollPane();
+    private JPanelBackground panelCancionesBotones;
+    
     private JScrollPane panelScrollEditar;
     
     private FileSystemModel fileSystemModel = new FileSystemModel();
@@ -132,14 +138,20 @@ public class Pantalla extends JFrame {
 	private JButton botonCanciones = new JButton();
 
 	private JCheckBox jCheckGuardar;
-	private JButton botonGuardarCancion;
+	private JCheckBox jCheckGuardarCanciones;
+	private JButton botonGuardar;
+	private JButton botonGuardarCanciones;
 	private JButton botonGenerarComposicion;
 	private JButton botonModificarCancion;
 	private JButton botonReproducirCancion;
 	private JButton botonPausarCancion;
 	private JButton botonAprenderCancion;
 	
+	DefaultMutableTreeNode nodoPadre;
+	DefaultTreeModel modelo;
+	
 	private Controlador controlador;
+	Cancion cancionNueva;
 	
 	//estrofas---->
 	ArrayList<TablaAcordes> estrofas = new ArrayList<TablaAcordes>();
@@ -245,6 +257,7 @@ public class Pantalla extends JFrame {
         
         jSplitPane2.add(panelOpciones, JSplitPane.LEFT);
         jSplitPane2.add(panelDetalle, JSplitPane.RIGHT);
+        panelDetalle.setName("panelDetalle");
         jSplitPane1.add(jSplitPane2, JSplitPane.RIGHT);
         
         panelBotones.setLayout(new GridLayout(4,1));
@@ -265,12 +278,92 @@ public class Pantalla extends JFrame {
     
     private void armarPanelCanciones(ManejadorEventos manejador) {
     	
+    	
+    	nodoPadre = new DefaultMutableTreeNode("Canciones");
+    	modelo = new DefaultTreeModel(nodoPadre);
+    	JTree tree = new JTree(modelo);
+    	
+    	cargarArbolCanciones();
+    	
+		tree.addTreeSelectionListener(new TreeSelectionListener() {
+		      public void valueChanged(TreeSelectionEvent e) {
+		        DefaultMutableTreeNode node = (DefaultMutableTreeNode) e
+		            .getPath().getLastPathComponent();
+		        String tokens = archivos.Utiles.obtenerCadena(node.toString(), " ");
+		        cancionNueva = controlador.buscarCancionSeleccionada(tokens);
+		        if (cancionNueva == null) {
+		        	return;
+		        }
+		        botonModificarCancion.setEnabled(true);
+		        botonReproducirCancion.setEnabled(true);
+		        botonPausarCancion.setEnabled(true);
+		        jCheckGuardarCanciones.setEnabled(true);
+		        actualizarPanelEditar(cancionNueva);
+		      }
+		    }); 
+		
+    	panelArbolCanciones.getViewport().add(tree, null);
+    	tree.setPreferredSize(new java.awt.Dimension(250, 461));
+    	
+    	panelCanciones = new JPanel();
+    	panelCanciones.setLayout(new GridLayout(2,1));
+    	panelCanciones.add(panelArbolCanciones);
+    	
+    	panelCancionesBotones = new JPanelBackground();
+    	try {
+    		panelCancionesBotones.setBackground(new File("./img/fondoAzul.jpg"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		BoxLayout panelCancionesBotonesLayout = new BoxLayout(panelCancionesBotones, javax.swing.BoxLayout.Y_AXIS);
+		panelCancionesBotones.setLayout(panelCancionesBotonesLayout);
+		
+		//////////////////////////////////////////////////////////////////////
+		{
+			jCheckGuardarCanciones = new JCheckBox();
+			panelCancionesBotones.add(jCheckGuardarCanciones);
+			jCheckGuardarCanciones.setName("jCheckGuardarCanciones");
+			jCheckGuardarCanciones.setText("Guardar canción");
+			jCheckGuardarCanciones.setPreferredSize(new java.awt.Dimension(100, 18));
+			jCheckGuardarCanciones.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent evt) {
+					if (jCheckGuardarCanciones.isSelected()) {
+						jTextNombreCanciones.setEnabled(true);
+						jTextComentariosCanciones.setEnabled(true);
+						botonGuardarCanciones.setEnabled(true);
+					} else {
+						jTextNombreCanciones.setEnabled(false);
+						jTextComentariosCanciones.setEnabled(false);
+						botonGuardarCanciones.setEnabled(false);
+					}
+					panelCancionesBotones.repaint();
+				}
+			});
+		}
+		
+		panelCancionesBotones.add(getJTextNombreCanciones());
+		JScrollPane scroll = new JScrollPane(getJTextComentariosCanciones());
+		//scroll.setPreferredSize(new java.awt.Dimension(898, 393));
+		panelCancionesBotones.add(scroll);
+
+		botonGuardarCanciones = getJButtonGuardarCanciones();
+		botonGuardarCanciones.addActionListener(manejador);
+		botonGuardarCanciones.setActionCommand(Constantes.GUARDAR_CANCION_MODIFICADA);
+		botonGuardarCanciones.setPreferredSize(new java.awt.Dimension(175, 27));
+		botonGuardarCanciones.setName("botonGuardarCanciones");
+		panelCancionesBotones.add(botonGuardarCanciones);
+		//////////////////////////////////////////////////////////////////////
+		
+    	panelCanciones.add(panelCancionesBotones);
+    }
+    
+    private void cargarArbolCanciones() {
+    	
     	String nombre;
     	DefaultMutableTreeNode nodoCancion;
     	
-    	DefaultMutableTreeNode padre = new DefaultMutableTreeNode("Canciones");
-    	DefaultTreeModel modelo = new DefaultTreeModel(padre);
-    	JTree tree = new JTree(modelo);
+    	nodoPadre.removeAllChildren();
+    	modelo.reload();
     	
     	Map<String, Cancion> canciones = controlador.getListaCanciones();
     	Iterator it = canciones.entrySet().iterator();
@@ -280,22 +373,9 @@ public class Pantalla extends JFrame {
 			Cancion miCancion = (Cancion) e.getValue();
 			nombre = e.getKey() + " - " + miCancion.getNombre();
 			nodoCancion=new DefaultMutableTreeNode(nombre);
-	    	modelo.insertNodeInto(nodoCancion, padre, 0);
+	    	modelo.insertNodeInto(nodoCancion, nodoPadre, 0);
 		}
     	
-		tree.addTreeSelectionListener(new TreeSelectionListener() {
-		      public void valueChanged(TreeSelectionEvent e) {
-		        DefaultMutableTreeNode node = (DefaultMutableTreeNode) e
-		            .getPath().getLastPathComponent();
-		        String tokens = archivos.Utiles.obtenerCadena(node.toString(), " ");
-		        System.out.println("You selected " + tokens);
-		        Cancion cancion = controlador.buscarCancionSeleccionada(tokens);
-		        actualizarPanelEditar(cancion);
-		      }
-		    }); 
-		
-    	panelCanciones.getViewport().add(tree, null);
-    	tree.setPreferredSize(new java.awt.Dimension(292, 461));
     }
     
     private void armarPanelBD(ManejadorEventos manejador) {
@@ -444,7 +524,7 @@ public class Pantalla extends JFrame {
 		panelComponerBotones.add(botonGenerarComposicion);
 		botonGenerarComposicion.addActionListener(manejador);
 		botonGenerarComposicion.setActionCommand(Constantes.COMPONER);
-		botonGenerarComposicion.setPreferredSize(new java.awt.Dimension(288, 27));
+		botonGenerarComposicion.setPreferredSize(new java.awt.Dimension(180, 27));
 		{
 			jCheckGuardar = new JCheckBox();
 			panelComponerBotones.add(jCheckGuardar);
@@ -455,11 +535,11 @@ public class Pantalla extends JFrame {
 					if (jCheckGuardar.isSelected()) {
 						jTextNombre.setEnabled(true);
 						jTextComentarios.setEnabled(true);
-						botonGuardarCancion.setEnabled(true);
+						botonGuardar.setEnabled(true);
 					} else {
 						jTextNombre.setEnabled(false);
 						jTextComentarios.setEnabled(false);
-						botonGuardarCancion.setEnabled(false);
+						botonGuardar.setEnabled(false);
 					}
 					panelComponerBotones.repaint();
 				}
@@ -472,12 +552,13 @@ public class Pantalla extends JFrame {
 		panelComponerBotones.add(scroll);
 		scroll.setPreferredSize(new java.awt.Dimension(898, 393));
 
-		botonGuardarCancion = getJButtonGuardarCancion();
-		panelComponerBotones.add(botonGuardarCancion);
-		botonGuardarCancion.addActionListener(manejador);
-		botonGuardarCancion.setActionCommand(Constantes.GUARDAR_CANCION);
-		botonGuardarCancion.setPreferredSize(new java.awt.Dimension(175, 27));
-		botonGuardarCancion.setName("botonGuardarCancion");
+		botonGuardar = getJButtonGuardarCancion();
+		botonGuardar.setEnabled(false);
+		panelComponerBotones.add(botonGuardar);
+		botonGuardar.addActionListener(manejador);
+		botonGuardar.setActionCommand(Constantes.GUARDAR_CANCION);
+		botonGuardar.setPreferredSize(new java.awt.Dimension(175, 27));
+		botonGuardar.setName("botonGuardarCancion");
 
 		panelComponerBotones.setPreferredSize(new java.awt.Dimension(294, 221));
 		try {
@@ -599,12 +680,21 @@ public class Pantalla extends JFrame {
 	}
 	
     private JButton getJButtonGuardarCancion() {
-		if (botonGuardarCancion == null) {
-			botonGuardarCancion = new JButton();
-			botonGuardarCancion.setText("Guardar Canción");
-			botonGuardarCancion.setVisible(true);
+		if (botonGuardar == null) {
+			botonGuardar = new JButton();
+			botonGuardar.setText("Guardar Canción");
+			botonGuardar.setVisible(true);
 		}
-		return botonGuardarCancion;
+		return botonGuardar;
+	}
+    
+    private JButton getJButtonGuardarCanciones() {
+		if (botonGuardarCanciones == null) {
+			botonGuardarCanciones = new JButton();
+			botonGuardarCanciones.setText("Guardar Canción");
+			botonGuardarCanciones.setVisible(true);
+		}
+		return botonGuardarCanciones;
 	}
 
 	private JButton getJButtonReproducirCancion() {
@@ -656,7 +746,9 @@ public class Pantalla extends JFrame {
     }
 
     private void botonComponer_actionPerformed(ActionEvent e) {
+    	vaciarPanelDetalle();
     	vaciarPanelEditar();
+    	vaciarPanelOpciones();
         CardLayout c1 = (CardLayout) panelOpciones.getLayout();
         c1.show(panelOpciones, "panelComponer");
         CardLayout c2 = (CardLayout) panelDetalle.getLayout();
@@ -671,7 +763,9 @@ public class Pantalla extends JFrame {
     }
     
     private void botonCanciones_actionPerformed(ActionEvent e) {
+    	vaciarPanelDetalle();
     	vaciarPanelEditar();
+    	vaciarPanelOpcionesCanciones();
         CardLayout c1 = (CardLayout) panelOpciones.getLayout();
         c1.show(panelOpciones, "panelCanciones");
         CardLayout c2 = (CardLayout) panelDetalle.getLayout();
@@ -723,27 +817,79 @@ public class Pantalla extends JFrame {
 		panelDetalle.updateUI();
     }
     
+    private void vaciarPanelOpciones() {
+    	
+    	tonicaText.setText("");
+    	cantCompasesText.setText("");
+    	tempoText.setText("");
+    	jTextComentarios.setText("Comentarios");
+    	jTextComentarios.setEnabled(false);
+    	jTextNombre.setText("Nombre");
+    	jTextNombre.setEnabled(false);
+    	botonGuardar.setEnabled(false);
+    	jCheckGuardar.setEnabled(false);
+    	jCheckGuardar.setSelected(false);
+    	
+    }
+    
+    private void vaciarPanelOpcionesCanciones() {
+    	
+    	jTextComentariosCanciones.setText("Comentarios");
+    	jTextComentariosCanciones.setEnabled(false);
+    	jTextNombreCanciones.setText("Nombre");
+    	jTextNombreCanciones.setEnabled(false);
+    	botonGuardarCanciones.setEnabled(false);
+    	jCheckGuardarCanciones.setEnabled(false);
+    	jCheckGuardarCanciones.setSelected(false);
+    }
+    
+    private void vaciarPanelDetalle() {
+    	
+    	botonModificarCancion.setEnabled(false);
+    	botonPausarCancion.setEnabled(false);
+    	botonReproducirCancion.setEnabled(false);
+    	jCheckGuardarCanciones.setEnabled(false);
+    }
+    
     public JTextArea getJTextComentarios() {
     	if(jTextComentarios == null) {
     		jTextComentarios = new JTextArea();
     		jTextComentarios.setName("jTextComentarios");
-    		jTextComentarios.setPreferredSize(new java.awt.Dimension(176, 210));
+    		jTextComentarios.setPreferredSize(new java.awt.Dimension(250, 210));
     	}
     	return jTextComentarios;
+    }
+    
+    public JTextArea getJTextComentariosCanciones() {
+    	if(jTextComentariosCanciones == null) {
+    		jTextComentariosCanciones = new JTextArea();
+    		jTextComentariosCanciones.setName("jTextComentariosCanciones");
+    		jTextComentariosCanciones.setPreferredSize(new java.awt.Dimension(250,210));
+    	}
+    	return jTextComentariosCanciones;
     }
     
     public JTextField getJTextNombre() {
     	if(jTextNombre == null) {
     		jTextNombre = new JTextField();
     		jTextNombre.setName("jTextNombre");
-    		jTextNombre.setPreferredSize(new java.awt.Dimension(281, 26));
+    		jTextNombre.setPreferredSize(new java.awt.Dimension(250, 26));
     	}
     	return jTextNombre;
+    }
+    
+    public JTextField getJTextNombreCanciones() {
+    	if(jTextNombreCanciones == null) {
+    		jTextNombreCanciones = new JTextField();
+    		jTextNombreCanciones.setName("jTextNombreCanciones");
+    		jTextNombreCanciones.setPreferredSize(new java.awt.Dimension(250, 26));
+    	}
+    	return jTextNombreCanciones;
     }
 
     public class ManejadorEventos implements ActionListener{
 
-		Cancion cancionNueva;
+		//Cancion cancionNueva;
 		
 		public void actionPerformed(ActionEvent e) {
 
@@ -850,7 +996,7 @@ public class Pantalla extends JFrame {
 					actualizarPanelEditar(cancionNueva);
 				}
 				botonModificarCancion.setEnabled(true);
-				botonGuardarCancion.setEnabled(true);
+				//botonGuardar.setEnabled(true);
 				botonReproducirCancion.setEnabled(true);
 				botonPausarCancion.setEnabled(true);
 				jCheckGuardar.setEnabled(true);
@@ -899,7 +1045,13 @@ public class Pantalla extends JFrame {
 			
 			if (e.getActionCommand() == Constantes.GUARDAR_CANCION){
 				
-				controlador.guardarCancion(Pantalla.this.getJTextNombre().getText(),Pantalla.this.getJTextComentarios().getText());
+				controlador.guardarCancion(cancionNueva,Pantalla.this.getJTextNombre().getText(),Pantalla.this.getJTextComentarios().getText());
+			}
+			
+			if (e.getActionCommand() == Constantes.GUARDAR_CANCION_MODIFICADA){
+				
+				controlador.guardarCancion(cancionNueva,Pantalla.this.getJTextNombreCanciones().getText(),Pantalla.this.getJTextComentariosCanciones().getText());
+				cargarArbolCanciones();
 			}
 			
 			if (e.getActionCommand() == Constantes.REPRODUCIR_CANCION){
