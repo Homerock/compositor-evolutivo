@@ -377,9 +377,7 @@ public class Controlador {
 		
 		Cancion cancion = listaCanciones.get(nombre);
 		
-		
-		
-		
+		Archivos.generarArchivo(cancion);
 		
 		return cancion;
 		
@@ -571,11 +569,13 @@ public class Controlador {
 			nuevaCancion = miCompositor.componerCancion(miMatrizAcordes, this.getMiMatrizEstilos(), tonica, estilo, Integer.parseInt(duracion), tempo);
 			// genero el archivo .mma que contiene a la nueva cancion 
 			Archivos.generarArchivo(nuevaCancion);
+			
+			
 			// cargo en la matriz la nueva cancion que compuse
-			Aprendizaje.aprenderCancion(nuevaCancion.getNombre()+ Constantes.EXTENSION_ARCHIVO);
+			//Aprendizaje.aprenderCancion(nuevaCancion.getNombre()+ Constantes.EXTENSION_ARCHIVO);
 			// vuelvo a calcular los acumulados para seguir componiendo
-			this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
-			this.getMiMatrizEstilos().calcularAcumulados();
+			//this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
+			//this.getMiMatrizEstilos().calcularAcumulados();
 			
 			
 		}  catch (AcordesException e) {
@@ -590,19 +590,8 @@ public class Controlador {
 			error = true;
 			System.err.println(e.getMessage());
 			return;
-		} catch (EstilosException e) {
-			error = true;
-			System.err.println(e.getMessage());
-			return;
-		} catch (ValoresException e) {
-			error = true;
-			System.err.println(e.getMessage());
-			return;
-		} catch (ArchivosException e) {
-			error = true;
-			System.err.println(e.getMessage());
-			return;
-		}finally{
+		} 
+		finally {
 			//seteo la cancion
 			if (!error){// si no hay error
 				this.setCancionNueva(nuevaCancion);
@@ -630,6 +619,7 @@ public class Controlador {
 		Cancion nuevaCancion = null;
 		boolean error = false;
 		
+		int duracion;
 		int cantCompasesIntro; 
 		int cantCompasesEstrofaA; 
 		int cantCompasesEstrofaB; 
@@ -652,18 +642,24 @@ public class Controlador {
 				cantCompasesEstrofaA = 4;
 				cantCompasesEstrofaB = 8;
 				cantCompasesEnd = 1;
+				duracion = cantCompasesIntro+cantCompasesEstrofaA+cantCompasesEstrofaB+cantCompasesEnd;
+				nuevaCancion.setDuracion(duracion);
 				miCompositor.armarEstructuraA(miMatrizEstilos, nuevaCancion, cantCompasesIntro, cantCompasesEstrofaA, cantCompasesEstrofaB, cantCompasesEnd);
 			} else if (estructura.equalsIgnoreCase(Constantes.ESTRUCTURA_B)) {
 				cantCompasesIntro = 2;
 				cantCompasesEstrofaA = 4;
 				cantCompasesEstrofaB = 8;
 				cantCompasesEnd = 1;
+				duracion = cantCompasesIntro+cantCompasesEstrofaA+cantCompasesEstrofaB+cantCompasesEnd;
+				nuevaCancion.setDuracion(duracion);
 				miCompositor.armarEstructuraB(miMatrizEstilos, nuevaCancion, cantCompasesIntro, cantCompasesEstrofaA, cantCompasesEstrofaB, cantCompasesEnd);
 			} else if (estructura.equalsIgnoreCase(Constantes.ESTRUCTURA_C)){
 				cantCompasesIntro = 2;
 				cantCompasesEstrofaA = 4;
 				cantCompasesEstrofaB = 8;
 				cantCompasesEnd = 1;
+				duracion = cantCompasesIntro+cantCompasesEstrofaA+cantCompasesEstrofaB+cantCompasesEnd;
+				nuevaCancion.setDuracion(duracion);
 				miCompositor.armarEstructuraC(miMatrizEstilos, nuevaCancion, cantCompasesIntro, cantCompasesEstrofaA, cantCompasesEstrofaB, cantCompasesEnd);
 			}
 
@@ -683,10 +679,10 @@ public class Controlador {
 			
 			Archivos.generarArchivo(nuevaCancion);
 			// cargo en la matriz la nueva cancion que compuse
-			Aprendizaje.aprenderCancion(nuevaCancion.getNombre()+ Constantes.EXTENSION_ARCHIVO);
+			//Aprendizaje.aprenderCancion(nuevaCancion.getNombre()+ Constantes.EXTENSION_ARCHIVO);
 			// vuelvo a calcular los acumulados para seguir componiendo
-			this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
-			this.getMiMatrizEstilos().calcularAcumulados();
+			//this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
+			//this.getMiMatrizEstilos().calcularAcumulados();
 			
 		}catch (AcordesException e) {		
 			error = true;
@@ -700,31 +696,21 @@ public class Controlador {
 			error = true;
 			System.err.println(e.getMessage());
 			return;
-		} catch (EstilosException e) {
-			error = true;
-			System.err.println(e.getMessage());
-			return;
-		} catch (ValoresException e) {
-			error = true;
-			System.err.println(e.getMessage());
-			return;
-		} catch (ArchivosException e) {
-			error = true;
-			System.err.println(e.getMessage());
-			return;
-		}finally{
+		} 
+		finally {
 			//seteo la cancion
-			if (!error){// si no hay error
+			if (!error) {// si no hay error
 				this.setCancionNueva(nuevaCancion);
-			}else{// si hay error
+			}else {// si hay error
 				this.setCancionNueva(null);
 			}
 		}
-		//System.out.println(nuevaCancion.toString());
-
-		
 	}
 	
+	/**
+	 * 
+	 * @param cancion
+	 */
 	public void modificarCancion(Cancion cancion) {
 		
 		Acorde AcordeUltimo = cancion.getTonica();
@@ -740,21 +726,15 @@ public class Controlador {
 							System.out.println("cambio acordes a compas : "+c1.toString());
 						
 					} catch (CancionException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						System.err.println(e.getMessage());
 					} catch (AcordesException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						System.err.println(e.getMessage());
 					}					
-					
 				}
 				//actualizamos el ultimo acorde
 				AcordeUltimo = c1.getUltimoAcorde();
 			}
-			
-			
 		}
-	
 		return ;
 	}
 	
@@ -775,6 +755,24 @@ public class Controlador {
 			System.err.println(e.getMessage()+Controlador.class);
 		}
 		
+		// cargo en la matriz la nueva cancion que compuse
+		try {
+			Aprendizaje.aprenderCancion(cancionNueva.getNombre()+ Constantes.EXTENSION_ARCHIVO);
+			// vuelvo a calcular los acumulados para seguir componiendo
+			String estilo = cancionNueva.getEstiloPrincipal();
+			this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
+			this.getMiMatrizEstilos().calcularAcumulados();
+		} catch (IndexOutOfBoundsException e) {
+			System.err.println(e.getMessage());
+		} catch (EstilosException e) {
+			System.err.println(e.getMessage());
+		} catch (ValoresException e) {
+			System.err.println(e.getMessage());
+		} catch (ArchivosException e) {
+			System.err.println(e.getMessage());
+		} catch (CancionException e) {
+			System.err.println(e.getMessage());
+		}
 	}
 	
 	//#########################################################################################

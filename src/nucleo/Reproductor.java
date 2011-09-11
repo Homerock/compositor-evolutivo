@@ -20,41 +20,31 @@ public class Reproductor {
 	public Reproductor (){}
 	
 	
-	public Reproductor (String archivo) {
+	public Reproductor (String archivo) throws InvalidMidiDataException, IOException, MidiUnavailableException {
 		//archivo = archivo;
-	 	try {
 	 		
 			this.sequence = MidiSystem.getSequence(new File(archivo));
 			sequencer = MidiSystem.getSequencer();
 			sequencer.open();
 			 
 	        sequencer.setSequence(sequence);
-			
-		} catch (InvalidMidiDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (MidiUnavailableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 	
 	public void reproducir(){
         // Start playing
         sequencer.start();
-		
 	}
-	
 
 	public void pausar(){
         // Start playing
         sequencer.stop();
 	}
 	
-	
+	public void detener() {
+		sequencer.stop();
+		sequencer.setMicrosecondPosition(0);
+	}
 	
 
 }

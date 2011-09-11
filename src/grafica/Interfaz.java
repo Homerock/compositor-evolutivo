@@ -618,7 +618,7 @@ public class Interfaz implements ItemListener{
 			if (e.getActionCommand() == REPRODUCIR_CANCION){
 				if(reproductor==null){
 					
-					reproductor = new Reproductor(cancionNueva.getNombre()+".mid");
+					//reproductor = new Reproductor(cancionNueva.getNombre()+".mid");
 				}
 				reproductor.reproducir();
 			}//FIN REPRODUCIR_CANCION

@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiUnavailableException;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -145,6 +147,7 @@ public class Pantalla extends JFrame {
 	private JButton botonModificarCancion;
 	private JButton botonReproducirCancion;
 	private JButton botonPausarCancion;
+	private JButton botonDetenerCancion;
 	private JButton botonAprenderCancion;
 	
 	DefaultMutableTreeNode nodoPadre;
@@ -297,8 +300,22 @@ public class Pantalla extends JFrame {
 		        botonModificarCancion.setEnabled(true);
 		        botonReproducirCancion.setEnabled(true);
 		        botonPausarCancion.setEnabled(true);
+		        botonDetenerCancion.setEnabled(true);
 		        jCheckGuardarCanciones.setEnabled(true);
 		        actualizarPanelEditar(cancionNueva);
+		        
+		        try {
+					reproductor = new Reproductor(cancionNueva.getNombre()+".mid");
+				} catch (InvalidMidiDataException e1) {
+					System.err.println(e1.getMessage());
+					reproductor = null;
+				} catch (IOException e1) {
+					System.err.println(e1.getMessage());
+					reproductor = null;
+				} catch (MidiUnavailableException e1) {
+					System.err.println(e1.getMessage());
+					reproductor = null;
+				}
 		      }
 		    }); 
 		
@@ -401,7 +418,7 @@ public class Pantalla extends JFrame {
 			e.printStackTrace();
 		}
 
-		tonicaText = new JTextField("",3);
+		tonicaText = new JTextField("",5);
 		panelComponerOpciones.add(tonicaText);
 		tonicaText.setBounds(95, 11, 57, 22);
 		tonicaText.setName("tonicaText");
@@ -419,8 +436,6 @@ public class Pantalla extends JFrame {
 		tempoText.setBounds(95, 75, 57, 22);
 		tempoText.setName("tempoText");
 
-		{
-		}
 		jComboEstructuraAvanzado = new JComboBox();
 		Pantalla.this.jComboEstructuraAvanzado.addItem(Constantes.ESTRUCTURA_A);
 		Pantalla.this.jComboEstructuraAvanzado.addItem(Constantes.ESTRUCTURA_B);
@@ -625,12 +640,19 @@ public class Pantalla extends JFrame {
 		panelReproductor.add(botonReproducirCancion);
 		botonReproducirCancion.setName("botonReproducirCancion");
 
-		//boton REPTODUCIR 
+		//boton PAUSAR
 		botonPausarCancion = getJButtonPausarCancion();
 		botonPausarCancion.addActionListener(manejador);
 		botonPausarCancion.setActionCommand(Constantes.PAUSAR_CANCION);
 		panelReproductor.add(botonPausarCancion);
 		botonPausarCancion.setName("botonPausarCancion");
+		
+		//boton DETENER
+		botonDetenerCancion = getJButtonDetenerCancion();
+		botonDetenerCancion.addActionListener(manejador);
+		botonDetenerCancion.setActionCommand(Constantes.DETENER_CANCION);
+		panelReproductor.add(botonDetenerCancion);
+		botonDetenerCancion.setName("botonDetenerCancion");
 
 		try {
 			panelDetalleComponer.setBackground(new File("./img/fondoAzul2.jpg"));
@@ -718,6 +740,16 @@ public class Pantalla extends JFrame {
 			botonPausarCancion.setVisible(true);
 		}
 		return botonPausarCancion;
+	}
+	
+	private JButton getJButtonDetenerCancion() {
+		
+		if (botonDetenerCancion == null) {
+			botonDetenerCancion= new JButton();
+			botonDetenerCancion.setIcon(new ImageIcon ("./img/stop.jpg"));
+			botonDetenerCancion.setVisible(true);
+		}
+		return botonDetenerCancion;
 	}
 	
 	private JButton getJButtonAprenderCancion() {
@@ -1037,8 +1069,8 @@ public class Pantalla extends JFrame {
 
 				}// fin si la cancionNueva no es nula
 				controlador.modificarCancion(cancionNueva);
-				actualizarPanelEditar(cancionNueva);
 				Archivos.generarArchivo(cancionNueva);
+				actualizarPanelEditar(cancionNueva);
 				reproductor=null;
 
 			}//fin MODIFICAR_CANCION
@@ -1055,19 +1087,22 @@ public class Pantalla extends JFrame {
 			}
 			
 			if (e.getActionCommand() == Constantes.REPRODUCIR_CANCION){
-				System.out.println("PLAY");
-				if(reproductor==null){
-					reproductor = new Reproductor(cancionNueva.getNombre()+".mid");
+				if (reproductor != null) {
+					reproductor.reproducir();
 				}
-				reproductor.reproducir();
 			}//FIN REPRODUCIR_CANCION
-			
 
 			if (e.getActionCommand() == Constantes.PAUSAR_CANCION){
-					System.out.println("PAUSE");
+				if (reproductor != null) {
 					reproductor.pausar();
+				}
 			}//FIN PAUSAR_CANCION
 			
+			if (e.getActionCommand() == Constantes.DETENER_CANCION){
+				if (reproductor != null) {
+					reproductor.detener();
+				}
+			}//FIN DETENER_CANCION
 						
 		}
 	}
