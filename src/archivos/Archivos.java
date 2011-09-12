@@ -165,6 +165,7 @@ public class Archivos {
 			}	
 		}
 		System.out.println("Nuevo archivo generado: " + miCancion.getNombre()+Constantes.EXTENSION_ARCHIVO);
+		//crearMMA("mma " + '\"' + miCancion.getNombre()+Constantes.EXTENSION_ARCHIVO + '\"', false);
 		crearMMA("mma " + miCancion.getNombre(), false);
 	}
 
@@ -212,6 +213,7 @@ public class Archivos {
 	//################################################################################
 	private static boolean crearMMA(String command, boolean flagbackground) {
 		
+		
 		// Definimos la cadena del interprete de comandos del sistema 
 		String commandShell=null; 
 	
@@ -231,7 +233,7 @@ public class Archivos {
 				else 
 					commandShell = "" + command ; 
 				} 
-	
+		System.out.println("-----------------------------------------Nombre: "+commandShell);
 			// Lanzamos el proceso	
 		try { 
 			Process proc = Runtime.getRuntime ().exec (commandShell); 

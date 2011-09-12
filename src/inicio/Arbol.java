@@ -34,13 +34,14 @@ public class Arbol extends JPanel {
     
     // Add a listener 
     
+    /*
     tree.addTreeSelectionListener(new TreeSelectionListener() {
       public void valueChanged(TreeSelectionEvent e) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) e
             .getPath().getLastPathComponent();
         System.out.println("You selected " + node);
       }
-    }); 
+    }); */
 
     // Lastly, put the JTree into a JScrollPane.
     JScrollPane scrollpane = new JScrollPane();
