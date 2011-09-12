@@ -114,7 +114,6 @@ public class Pantalla extends JFrame {
     private JPanelBackground panelDetalleBD;
     
     private CardLayout cardLayout1 = new CardLayout();
-    private JLabel jLabel2 = new JLabel();
     private JScrollPane panelAprender = new JScrollPane();
     private JPanel panelCanciones;
     private JScrollPane panelArbolCanciones = new JScrollPane();
@@ -149,6 +148,7 @@ public class Pantalla extends JFrame {
 	private JButton botonPausarCancion;
 	private JButton botonDetenerCancion;
 	private JButton botonAprenderCancion;
+	private JButton botonGuardarEnBD;
 	
 	DefaultMutableTreeNode nodoPadre;
 	DefaultTreeModel modelo;
@@ -227,7 +227,6 @@ public class Pantalla extends JFrame {
         });
         
         panelAprender.setAutoscrolls(true);
-        jLabel2.setText("BASE DE DATOS!!");
         menuFile.add(menuFileExit);
         menuFileExit.setName("menuFileExit");
         menuBar.add(menuFile);
@@ -297,6 +296,9 @@ public class Pantalla extends JFrame {
 		        if (cancionNueva == null) {
 		        	return;
 		        }
+		        
+		        jTextNombreCanciones.setText(cancionNueva.getNombreFantasia());
+		        jTextComentariosCanciones.setText(cancionNueva.getComentario());
 		        botonModificarCancion.setEnabled(true);
 		        botonReproducirCancion.setEnabled(true);
 		        botonPausarCancion.setEnabled(true);
@@ -398,12 +400,20 @@ public class Pantalla extends JFrame {
     private void armarPanelBD(ManejadorEventos manejador) {
     	
     	panelBD = new JPanelBackground();
-        panelBD.add(jLabel2, null);
+       
         try {
         	panelBD.setBackground(new File("./img/fondoAzul.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		botonGuardarEnBD = getJButtonGuardarEnBD();
+		botonGuardarEnBD.addActionListener(manejador);
+		botonGuardarEnBD.setActionCommand(Constantes.ACTUALIZAR);
+		panelBD.add(botonGuardarEnBD);
+		botonGenerarComposicion.setName("botonGenerarComposicion");
+		botonGenerarComposicion.setName("botonGenerarComposicion");
+
     }
     
 	private void armarPanelComponer(ManejadorEventos manejador) {
@@ -539,7 +549,7 @@ public class Pantalla extends JFrame {
 		panelComponerBotones.add(botonGenerarComposicion);
 		botonGenerarComposicion.addActionListener(manejador);
 		botonGenerarComposicion.setActionCommand(Constantes.COMPONER);
-		botonGenerarComposicion.setPreferredSize(new java.awt.Dimension(180, 27));
+		botonGenerarComposicion.setPreferredSize(new java.awt.Dimension(208, 27));
 		{
 			jCheckGuardar = new JCheckBox();
 			panelComponerBotones.add(jCheckGuardar);
@@ -683,10 +693,19 @@ public class Pantalla extends JFrame {
 		}
 	}
 	
+	private JButton getJButtonGuardarEnBD() {
+		if (botonGuardarEnBD == null) {
+			botonGuardarEnBD = new JButton();
+			botonGuardarEnBD.setText("Actualizar Base de Datos");
+			botonGuardarEnBD.setVisible(true);
+		}
+		return botonGenerarComposicion;
+	}
+	
     private JButton getJButtonGenerarComposicion() {
 		if (botonGenerarComposicion == null) {
 			botonGenerarComposicion = new JButton();
-			botonGenerarComposicion.setText("Componer Canción");
+			;
 			botonGenerarComposicion.setVisible(true);
 		}
 		return botonGenerarComposicion;

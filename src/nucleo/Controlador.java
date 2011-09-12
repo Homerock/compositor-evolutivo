@@ -377,7 +377,11 @@ public class Controlador {
 		
 		Cancion cancion = listaCanciones.get(nombre);
 		
-		Archivos.generarArchivo(cancion);
+		try {
+			Archivos.generarArchivo(cancion);
+		} catch (NullPointerException e) {
+			return null;
+		}
 		
 		return cancion;
 		

@@ -35,7 +35,8 @@ private static final long serialVersionUID = -3488034684833395929L;
        g.setColor(getBackground());
        g.fillRect(0,0,getWidth(),getHeight());
        if (imagen!=null)
-           g.drawImage(imagen, 0, 0, this);
+          // g.drawImage(imagen, 0, 0, this);
+    	   g.drawImage(imagen, 0, 0, getWidth(),getHeight(),this);
        Component c;
        for (int i = 0; i < getComponentCount(); i++) {
            c = getComponent(i);
