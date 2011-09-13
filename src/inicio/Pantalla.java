@@ -3,6 +3,7 @@ package inicio;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -17,6 +18,7 @@ import java.util.StringTokenizer;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -35,6 +37,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.border.LineBorder;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -198,28 +201,28 @@ public class Pantalla extends JFrame {
         panelOpciones.setLayout(cardLayout1);
         
        // botonAprender.setText("Aprender");
-        botonAprender.setIcon(new ImageIcon ("./img/boton1.png"));
+        botonAprender.setIcon(new ImageIcon ("./img/principalesAprender.png"));
         botonAprender.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     botonAprender_actionPerformed(e);
                 }
             });
         //botonComponer.setText("Componer");
-        botonComponer.setIcon(new ImageIcon ("./img/boton2.png"));
+        botonComponer.setIcon(new ImageIcon ("./img/principalesComponer.png"));
         botonComponer.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     botonComponer_actionPerformed(e);
                 }
             });
         //botonBD.setText("Base de datos");
-        botonBD.setIcon(new ImageIcon ("./img/boton4.png"));
+        botonBD.setIcon(new ImageIcon ("./img/principalesCerebro.png"));
         botonBD.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     botonBD_actionPerformed(e);
                 }
             });
         //botonCanciones.setText("Canciones");
-        botonCanciones.setIcon(new ImageIcon ("./img/boton3.png"));
+        botonCanciones.setIcon(new ImageIcon ("./img/principalesCanciones.png"));
         botonCanciones.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 botonCanciones_actionPerformed(e);
@@ -601,18 +604,28 @@ public class Pantalla extends JFrame {
 	private void armarPanelDetalleAprender(ManejadorEventos manejador) {
 		
     	panelDetalleAprender = new JPanelBackground();
+    	JPanelBackground panelDetalleAprenderBoton = new JPanelBackground();
     	
     	try {
-    		panelDetalleAprender.setBackground(new File("./img/fondoAzul2.jpg"));
+    		panelDetalleAprender.setBackground(new File("./img/fondoAzul.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		BoxLayout panelDetalleAprenderLayout = new BoxLayout(panelDetalleAprender, javax.swing.BoxLayout.Y_AXIS);
+		panelDetalleAprender.setLayout(panelDetalleAprenderLayout);
     	
 		//boton REPTODUCIR 
 		botonAprenderCancion = getJButtonAprenderCancion();
 		botonAprenderCancion.addActionListener(manejador);
 		botonAprenderCancion.setActionCommand(Constantes.APRENDER_CANCION);
-		panelDetalleAprender.add(botonAprenderCancion);
+		panelDetalleAprenderBoton.add(botonAprenderCancion);
+		panelDetalleAprender.add(panelDetalleAprenderBoton);
+		panelDetalleAprenderBoton.setName("panelDetalleAprenderBoton");
+
+		ImageIcon imagenAprender = new ImageIcon("./img/aprender.png");
+		JLabel etiqueta = new JLabel(imagenAprender);
+		panelDetalleAprender.add(etiqueta);
+		
 		
 	}
 
@@ -687,10 +700,14 @@ public class Pantalla extends JFrame {
 		panelDetalleBD = new JPanelBackground();
 		
 		try {
-			panelDetalleBD.setBackground(new File("./img/fondoAzul2.jpg"));
+			panelDetalleBD.setBackground(new File("./img/fondoAzul.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		ImageIcon imagenBase = new ImageIcon("./img/base.png");
+		JLabel etiqueta = new JLabel(imagenBase);
+		panelDetalleBD.add(etiqueta);
 	}
 	
 	private JButton getJButtonGuardarEnBD() {
@@ -699,7 +716,7 @@ public class Pantalla extends JFrame {
 			botonGuardarEnBD.setText("Actualizar Base de Datos");
 			botonGuardarEnBD.setVisible(true);
 		}
-		return botonGenerarComposicion;
+		return botonGuardarEnBD;
 	}
 	
     private JButton getJButtonGenerarComposicion() {
@@ -714,8 +731,10 @@ public class Pantalla extends JFrame {
     private JButton getJButtonModificarCancion() {
 		if (botonModificarCancion == null) {
 			botonModificarCancion = new JButton();
-			botonModificarCancion.setText("Modificar Canción");
 			botonModificarCancion.setVisible(true);
+			botonModificarCancion.setText("Modificar canción");
+			//botonModificarCancion.setIcon(new ImageIcon ("./img/botonModificar.png"));
+			
 		}
 		return botonModificarCancion;
 	}
@@ -790,6 +809,10 @@ public class Pantalla extends JFrame {
     }
 
     private void botonAprender_actionPerformed(ActionEvent e) {
+    	botonAprender.setBackground(Color.gray);
+    	botonComponer.setBackground(null);
+    	botonCanciones.setBackground(null);
+    	botonBD.setBackground(null);
         CardLayout c1 = (CardLayout) panelOpciones.getLayout();
         c1.show(panelOpciones, "panelAprender");
         CardLayout c2 = (CardLayout) panelDetalle.getLayout();
@@ -800,6 +823,10 @@ public class Pantalla extends JFrame {
     	vaciarPanelDetalle();
     	vaciarPanelEditar();
     	vaciarPanelOpciones();
+    	botonAprender.setBackground(null);
+    	botonComponer.setBackground(Color.gray);
+    	botonCanciones.setBackground(null);
+    	botonBD.setBackground(null);
         CardLayout c1 = (CardLayout) panelOpciones.getLayout();
         c1.show(panelOpciones, "panelComponer");
         CardLayout c2 = (CardLayout) panelDetalle.getLayout();
@@ -807,6 +834,10 @@ public class Pantalla extends JFrame {
     }
 
     private void botonBD_actionPerformed(ActionEvent e) {
+    	botonAprender.setBackground(null);
+    	botonComponer.setBackground(null);
+    	botonCanciones.setBackground(null);
+    	botonBD.setBackground(Color.gray);
         CardLayout c1 = (CardLayout) panelOpciones.getLayout();
         c1.show(panelOpciones, "panelBD");
         CardLayout c2 = (CardLayout) panelDetalle.getLayout();
@@ -817,6 +848,10 @@ public class Pantalla extends JFrame {
     	vaciarPanelDetalle();
     	vaciarPanelEditar();
     	vaciarPanelOpcionesCanciones();
+    	botonAprender.setBackground(null);
+    	botonComponer.setBackground(null);
+    	botonCanciones.setBackground(Color.gray);
+    	botonBD.setBackground(null);
         CardLayout c1 = (CardLayout) panelOpciones.getLayout();
         c1.show(panelOpciones, "panelCanciones");
         CardLayout c2 = (CardLayout) panelDetalle.getLayout();
@@ -1043,13 +1078,29 @@ public class Pantalla extends JFrame {
 				// cuando se termino la composicion
 				// mostrar la cancion que se compuso en editar
 				cancionNueva = controlador.getCancionNueva();
-				if (cancionNueva!=null){
-					actualizarPanelEditar(cancionNueva);
+				
+				if (cancionNueva == null){
+					return;
+				}
+				actualizarPanelEditar(cancionNueva);
+				Archivos.generarArchivo(cancionNueva);
+				try {
+					reproductor = new Reproductor(cancionNueva.getNombre()+".mid");
+				} catch (InvalidMidiDataException e1) {
+					System.err.println(e1.getMessage());
+					reproductor = null;
+				} catch (IOException e1) {
+					System.err.println(e1.getMessage());
+					reproductor = null;
+				} catch (MidiUnavailableException e1) {
+					System.err.println(e1.getMessage());
+					reproductor = null;
 				}
 				botonModificarCancion.setEnabled(true);
 				//botonGuardar.setEnabled(true);
 				botonReproducirCancion.setEnabled(true);
 				botonPausarCancion.setEnabled(true);
+				botonDetenerCancion.setEnabled(true);
 				jCheckGuardar.setEnabled(true);
 			}
 
@@ -1088,9 +1139,23 @@ public class Pantalla extends JFrame {
 
 				}// fin si la cancionNueva no es nula
 				controlador.modificarCancion(cancionNueva);
+				if (cancionNueva == null){
+					return;
+				}
 				Archivos.generarArchivo(cancionNueva);
 				actualizarPanelEditar(cancionNueva);
-				reproductor=null;
+				try {
+					reproductor = new Reproductor(cancionNueva.getNombre()+".mid");
+				} catch (InvalidMidiDataException e1) {
+					System.err.println(e1.getMessage());
+					reproductor = null;
+				} catch (IOException e1) {
+					System.err.println(e1.getMessage());
+					reproductor = null;
+				} catch (MidiUnavailableException e1) {
+					System.err.println(e1.getMessage());
+					reproductor = null;
+				}
 
 			}//fin MODIFICAR_CANCION
 			
