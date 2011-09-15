@@ -1,8 +1,11 @@
 package nucleo;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.CodeSource;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -42,8 +45,21 @@ public class Persistencia {
 		Properties prop = new Properties();
 		
 		try {
-			FileInputStream fis = new FileInputStream("conexion.properties");
+			
+			CodeSource codeSource = Persistencia.class.getProtectionDomain().getCodeSource();
+			File jarFile;
+			
+			
+			jarFile = new File(codeSource.getLocation().toURI().getPath());
+			
+			File jarDir = jarFile.getParentFile();
+			File propFile = new File(jarDir, "conexion.properties");
+			FileInputStream fis = new FileInputStream(propFile);
 			prop.load(fis);
+			
+			
+			//FileInputStream fis = new FileInputStream("conexion.properties");
+			//prop.load(fis);
 
 			String user  = prop.getProperty("user");
 			String password = prop.getProperty("password");
@@ -53,8 +69,13 @@ public class Persistencia {
 			
 			fis.close();		
 			
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
 		}catch(FileNotFoundException e){	
-			throw new PersistenciaException("No existe el archivo de configuracion - "+Persistencia.class);
+			
+			throw new PersistenciaException("No existe el archivo de configuracion (recuerde ponerlo en el mismo directorio) - "+Persistencia.class);
 		} catch(IOException e) {
 			
 			e.printStackTrace();
