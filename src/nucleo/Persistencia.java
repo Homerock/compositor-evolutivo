@@ -53,7 +53,7 @@ public class Persistencia {
 			jarFile = new File(codeSource.getLocation().toURI().getPath());
 			
 			File jarDir = jarFile.getParentFile();
-			File propFile = new File(jarDir, "conexion.properties");
+			File propFile = new File(jarDir, "config/conexion.properties");
 			FileInputStream fis = new FileInputStream(propFile);
 			prop.load(fis);
 			
