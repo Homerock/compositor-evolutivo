@@ -22,9 +22,6 @@ import canciones.Estrofa;
 import excepciones.ArchivosException;
 
 public class Archivos {
-	
-	
-	
 
 	/**
 	 * 
@@ -142,8 +139,15 @@ public class Archivos {
 		ArrayList<Estrofa> todasLasEstrofas = miCancion.getEstrofas();
 		int linea = 1;
 		
-		// preguntar si el nombre de la cancion ya existe en el directorio, si existe agregarle un numero
-		// ejemplo: rock_Am_1 volver a preguntar a ver si este tambien existe
+		String nombre = Utiles.reemplazarEspaciosDeString(miCancion.getNombre());
+		String sFichero = "./"+nombre+Constantes.EXTENSION_ARCHIVO;
+		File fichero = new File(sFichero);
+		if (fichero.exists()) {
+			// el archivo ya existe, le cambio el nombre
+			miCancion.setNombre(nombre+System.currentTimeMillis());
+		} else {
+			miCancion.setNombre(nombre);
+		}
 		
 		escribirArchivo(miCancion.getNombre()+Constantes.EXTENSION_ARCHIVO, "Tempo " + miCancion.getTempo(), false);
 		escribirArchivo(miCancion.getNombre()+Constantes.EXTENSION_ARCHIVO, "", true);

@@ -1,4 +1,4 @@
-package inicio;
+package GUI;
 
 import nucleo.Controlador;
 

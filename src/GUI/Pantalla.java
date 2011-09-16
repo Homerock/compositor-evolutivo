@@ -1,4 +1,4 @@
-package inicio;
+package GUI;
 
 
 import java.awt.BorderLayout;
@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -152,11 +153,11 @@ public class Pantalla extends JFrame {
 	private JButton botonDetenerCancion;
 	private JButton botonAprenderCancion;
 	private JButton botonGuardarEnBD;
-	private JButton botonCancionesAMemoria;
 	
 	DefaultMutableTreeNode nodoPadre;
 	DefaultTreeModel modelo;
 	
+	private Imagenes misImagenes;
 	private Controlador controlador;
 	Cancion cancionNueva;
 	
@@ -173,6 +174,7 @@ public class Pantalla extends JFrame {
     public Pantalla(Controlador miControlador) {
     	
     	controlador = miControlador;
+    	misImagenes = new Imagenes();
     	
         try {
             jbInit();
@@ -209,29 +211,28 @@ public class Pantalla extends JFrame {
         //jPanel1.setLayout(verticalFlowLayout1);
         panelOpciones.setLayout(cardLayout1);
         
-       // botonAprender.setText("Aprender");
-        botonAprender.setIcon(new ImageIcon ("./img/principalesAprender.png"));
+        botonAprender.setIcon(new ImageIcon(misImagenes.getImagenURL(Constantes.BOTON_APRENDER)));
         botonAprender.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     botonAprender_actionPerformed(e);
                 }
             });
         //botonComponer.setText("Componer");
-        botonComponer.setIcon(new ImageIcon ("./img/principalesComponer.png"));
+        botonComponer.setIcon(new ImageIcon(misImagenes.getImagenURL(Constantes.BOTON_COMPONER)));
         botonComponer.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     botonComponer_actionPerformed(e);
                 }
             });
         //botonBD.setText("Base de datos");
-        botonBD.setIcon(new ImageIcon ("./img/principalesCerebro.png"));
+        botonBD.setIcon(new ImageIcon(misImagenes.getImagenURL(Constantes.BOTON_CEREBRO)));
         botonBD.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     botonBD_actionPerformed(e);
                 }
             });
         //botonCanciones.setText("Canciones");
-        botonCanciones.setIcon(new ImageIcon ("./img/principalesCanciones.png"));
+        botonCanciones.setIcon(new ImageIcon(misImagenes.getImagenURL(Constantes.BOTON_CANCIONES)));
         botonCanciones.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 botonCanciones_actionPerformed(e);
@@ -349,7 +350,7 @@ public class Pantalla extends JFrame {
     	
     	panelCancionesBotones = new JPanelBackground();
     	try {
-    		panelCancionesBotones.setBackground(new File("./img/fondoAzul.jpg"));
+    		panelCancionesBotones.setBackground(misImagenes.getImagenURL(Constantes.FONDO_1));
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
@@ -426,11 +427,9 @@ public class Pantalla extends JFrame {
     private void armarPanelBD(ManejadorEventos manejador) {
     	
     	panelBD = new JPanelBackground();
-    	BoxLayout panelBDLayout = new BoxLayout(panelBD, javax.swing.BoxLayout.Y_AXIS);
-    	panelBD.setLayout(panelBDLayout);
     	
         try {
-        	panelBD.setBackground(new File("./img/fondoAzul.jpg"));
+        	panelBD.setBackground(misImagenes.getImagenURL(Constantes.FONDO_1));
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
@@ -439,11 +438,6 @@ public class Pantalla extends JFrame {
 		botonGuardarEnBD.addActionListener(manejador);
 		botonGuardarEnBD.setActionCommand(Constantes.ACTUALIZAR);
 		panelBD.add(botonGuardarEnBD);
-		
-		botonCancionesAMemoria = getJButtonCancionesAMemoria();
-		//botonCancionesAMemoria.addActionListener(manejador);
-		//botonCancionesAMemoria.setActionCommand(Constantes.ACTUALIZAR);
-		panelBD.add(botonCancionesAMemoria);
     }
     
     /**
@@ -457,7 +451,7 @@ public class Pantalla extends JFrame {
 		
 		try {
 			panelComponerOpciones.setLayout(null);
-			panelComponerOpciones.setBackground(new File("./img/fondoAzul.jpg"));
+			panelComponerOpciones.setBackground(misImagenes.getImagenURL(Constantes.FONDO_1));
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
@@ -622,7 +616,7 @@ public class Pantalla extends JFrame {
 
 		panelComponerBotones.setPreferredSize(new java.awt.Dimension(294, 221));
 		try {
-			panelComponerBotones.setBackground(new File("./img/fondoAzul.jpg"));
+			panelComponerBotones.setBackground(misImagenes.getImagenURL(Constantes.FONDO_1));
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
@@ -643,7 +637,7 @@ public class Pantalla extends JFrame {
     	JPanelBackground panelDetalleAprenderBoton = new JPanelBackground();
     	
     	try {
-    		panelDetalleAprender.setBackground(new File("./img/fondoAzul.jpg"));
+    		panelDetalleAprender.setBackground(misImagenes.getImagenURL(Constantes.FONDO_1));
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
@@ -658,10 +652,14 @@ public class Pantalla extends JFrame {
 		panelDetalleAprender.add(panelDetalleAprenderBoton);
 		panelDetalleAprenderBoton.setName("panelDetalleAprenderBoton");
 
-		ImageIcon imagenAprender = new ImageIcon("./img/ImgAprender.png");
-		JLabel etiqueta = new JLabel(imagenAprender);
-		panelDetalleAprender.add(etiqueta);
-		
+		ImageIcon imagenAprender;
+		try {
+			imagenAprender = new ImageIcon(misImagenes.getImagenURL(Constantes.IMAGEN_APRENDER));
+			JLabel etiqueta = new JLabel(imagenAprender);
+			panelDetalleAprender.add(etiqueta);
+		} catch (MalformedURLException e) {
+			System.err.println(e.getMessage());
+		}
 		
 	}
 
@@ -718,11 +716,11 @@ public class Pantalla extends JFrame {
 		botonDetenerCancion.setName("botonDetenerCancion");
 
 		try {
-			panelDetalleComponer.setBackground(new File("./img/fondoAzul2.jpg"));
-			panelModificar.setBackground(new File("./img/fondoAzulInv2.jpg"));
+			panelDetalleComponer.setBackground(misImagenes.getImagenURL(Constantes.FONDO_2));
+			panelModificar.setBackground(misImagenes.getImagenURL(Constantes.FONDO_3));
 			//panelTablaCancion.setBackground(new File("./img/fondoAzul2.jpg"));
 			//panelTablaCancion.setPreferredSize(new java.awt.Dimension(525, 348));
-			panelReproductor.setBackground(new File("./img/fondoAzulInv2.jpg"));
+			panelReproductor.setBackground(misImagenes.getImagenURL(Constantes.FONDO_3));
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
@@ -743,27 +741,20 @@ public class Pantalla extends JFrame {
 		panelDetalleBD = new JPanelBackground();
 		
 		try {
-			panelDetalleBD.setBackground(new File("./img/fondoAzul.jpg"));
+			panelDetalleBD.setBackground(misImagenes.getImagenURL(Constantes.FONDO_1));
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
 		
-		ImageIcon imagenBase = new ImageIcon("./img/ImgCerebro.png");
-		JLabel etiqueta = new JLabel(imagenBase);
-		panelDetalleBD.add(etiqueta);
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	private JButton getJButtonCancionesAMemoria() {
-		if (botonCancionesAMemoria == null) {
-			botonCancionesAMemoria = new JButton();
-			botonCancionesAMemoria.setText("Cargar canciones en memoria");
-			botonCancionesAMemoria.setVisible(true);
+		ImageIcon imagenBase;
+		try {
+			imagenBase = new ImageIcon(misImagenes.getImagenURL(Constantes.IMAGEN_CEREBRO));
+			JLabel etiqueta = new JLabel(imagenBase);
+			panelDetalleBD.add(etiqueta);
+		} catch (MalformedURLException e) {
+			System.err.println(e.getMessage());
 		}
-		return botonCancionesAMemoria;
+		
 	}
 	
 	/**
@@ -841,7 +832,11 @@ public class Pantalla extends JFrame {
 		
 		if (botonReproducirCancion == null) {
 			botonReproducirCancion = new JButton();
-			botonReproducirCancion.setIcon(new ImageIcon ("./img/play.jpg"));
+			try {
+				botonReproducirCancion.setIcon(new ImageIcon (misImagenes.getImagenURL(Constantes.BOTON_PLAY)));
+			} catch (MalformedURLException e) {
+				System.err.println(e.getMessage());
+			}
 			//botonReproducirCancion.setText("Reproducir");
 			botonReproducirCancion.setVisible(true);
 		}
@@ -856,7 +851,11 @@ public class Pantalla extends JFrame {
 		
 		if (botonPausarCancion == null) {
 			botonPausarCancion= new JButton();
-			botonPausarCancion.setIcon(new ImageIcon ("./img/pause.jpg"));
+			try {
+				botonPausarCancion.setIcon(new ImageIcon (misImagenes.getImagenURL(Constantes.BOTON_PAUSE)));
+			} catch (MalformedURLException e) {
+				System.err.println(e.getMessage());
+			}
 			//botonPausarCancion.setText("Pausa");
 			botonPausarCancion.setVisible(true);
 		}
@@ -871,7 +870,11 @@ public class Pantalla extends JFrame {
 		
 		if (botonDetenerCancion == null) {
 			botonDetenerCancion= new JButton();
-			botonDetenerCancion.setIcon(new ImageIcon ("./img/stop.jpg"));
+			try {
+				botonDetenerCancion.setIcon(new ImageIcon (misImagenes.getImagenURL(Constantes.BOTON_STOP)));
+			} catch (MalformedURLException e) {
+				System.err.println(e.getMessage());
+			}
 			botonDetenerCancion.setVisible(true);
 		}
 		return botonDetenerCancion;

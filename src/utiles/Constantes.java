@@ -79,5 +79,20 @@ public interface Constantes {
 	public static final String LABEL_TEMPO = "Tempo: ";
 	public static final String LABEL_TIPO_CANCION = "Tipo de Canción: ";
 
-
+	//Imagenes
+	public static final String BOTON_APRENDER = "img/principalesAprender.png";
+	public static final String BOTON_COMPONER = "img/principalesComponer.png";
+	public static final String BOTON_CANCIONES = "img/principalesCanciones.png";
+	public static final String BOTON_CEREBRO = "img/principalesCerebro.png";
+	
+	public static final String BOTON_PLAY = "img/play.jpg";
+	public static final String BOTON_PAUSE = "img/pause.jpg";
+	public static final String BOTON_STOP = "img/stop.jpg";
+	
+	public static final String FONDO_1 = "img/fondoAzul.jpg";
+	public static final String FONDO_2 = "img/fondoAzul2.jpg";
+	public static final String FONDO_3 = "img/fondoAzulInv2.jpg";
+	
+	public static final String IMAGEN_APRENDER = "img/ImgAprender.png";
+	public static final String IMAGEN_CEREBRO = "img/ImgCerebro.png";
 }
