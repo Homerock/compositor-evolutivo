@@ -516,4 +516,23 @@ public class Utiles {
 		}
 		return num;
 	}
+	
+	public static String reemplazarEspaciosDeString(String texto) {
+		
+		String cadena = "";
+		String espacio = " ";
+		
+		for (int i=0; i<texto.length();i++) {
+			
+			if (texto.charAt(i) == espacio.charAt(0)) {
+				cadena = cadena + "_";
+			} else {
+				cadena = cadena + texto.charAt(i);
+			}
+			
+		}
+			
+		
+		return cadena;
+	}
 }
