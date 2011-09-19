@@ -17,6 +17,8 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import utiles.FuncionesComunes;
+
 /**
  * Display a file system in a JTree view
  * 
@@ -28,7 +30,7 @@ public class Arbol extends JPanel {
 	public JTree tree;
   public Arbol(File dir) {
     setLayout(new BorderLayout());
-
+    
     // Make a tree list with all the nodes, and make it a JTree
     tree = new JTree(addNodes(null, dir));
     
@@ -106,7 +108,7 @@ public class Arbol extends JPanel {
     Container cp = frame.getContentPane();
 
     if (av.length == 0) {
-      cp.add(new Arbol(new File("/home/pazos/compositor-evolutivo")));
+      cp.add(new Arbol(new File(FuncionesComunes.getPathOS())));
     } else {
       cp.setLayout(new BoxLayout(cp, BoxLayout.X_AXIS));
       for (int i = 0; i < av.length; i++)  

@@ -53,6 +53,7 @@ import nucleo.Reproductor;
 import org.jdesktop.application.Application;
 
 import utiles.Constantes;
+import utiles.FuncionesComunes;
 import archivos.Archivos;
 import archivos.Reconocedor;
 import canciones.Cancion;
@@ -127,7 +128,8 @@ public class Pantalla extends JFrame {
     
     private FileSystemModel fileSystemModel = new FileSystemModel();
     //private JTree fileTree = new JTree(fileSystemModel);
-    private Arbol fileTree = new Arbol(new File("/home"));
+    //private Arbol fileTree = new Arbol(new File("/home"));
+    private Arbol fileTree = new Arbol(new File(FuncionesComunes.getPathOS()));
     private JTree fileTreeCanciones = new JTree();
     
 	private JComboBox jComboEstilo;
