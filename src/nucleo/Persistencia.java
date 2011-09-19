@@ -36,7 +36,7 @@ import excepciones.PersistenciaException;
 
 import net.java.ao.EntityManager;
 
-public class Persistencia {
+public class Persistencia implements Runnable {
 	
 	private EntityManager manager;
 	private boolean DEBUG = true;
@@ -696,15 +696,18 @@ public class Persistencia {
 					compas.agregarAcorde(new canciones.Acorde(ac.getAcorde()));
 					
 					estrofa.agregarCompas(compas);
-					cancion.agregarEstrofa(estrofa);
-					
+					cancion.agregarEstrofa(estrofa);	
 				}
-				
 			}
 		} catch (SQLException sql_e) {
 			
 			throw new PersistenciaException(" No se pudieron obtener los acordes de la cancion "+sql_e.getMessage());
-		}
+		}	
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
 		
 	}
 
