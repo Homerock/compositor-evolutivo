@@ -283,6 +283,8 @@ public class Pantalla extends JFrame {
         panelBotones.add(botonCanciones, null);
         panelBotones.add(botonBD, null);
         
+        botonComponer.setBackground(Color.gray);
+        
         jSplitPane1.add(panelBotones, JSplitPane.LEFT);
         this.getContentPane().add(jSplitPane1, BorderLayout.CENTER);
         Application.getInstance().getContext().getResourceMap(getClass()).injectComponents(getContentPane());
@@ -1073,6 +1075,7 @@ public class Pantalla extends JFrame {
     	botonModificarCancion.setEnabled(false);
     	botonPausarCancion.setEnabled(false);
     	botonReproducirCancion.setEnabled(false);
+    	botonDetenerCancion.setEnabled(false);
     	jCheckGuardarCanciones.setEnabled(false);
     }
     
@@ -1318,10 +1321,11 @@ public class Pantalla extends JFrame {
 			if (e.getActionCommand() == Constantes.GUARDAR_CANCION){
 				
 				controlador.guardarCancion(cancionNueva,Pantalla.this.getJTextNombre().getText(),Pantalla.this.getJTextComentarios().getText());
+				cargarArbolCanciones();
 			}
 			
 			if (e.getActionCommand() == Constantes.GUARDAR_CANCION_MODIFICADA){
-				
+				// esto hay q cambiarlo porque no guarda en las matrices
 				controlador.guardarCancion(cancionNueva,Pantalla.this.getJTextNombreCanciones().getText(),Pantalla.this.getJTextComentariosCanciones().getText());
 				cargarArbolCanciones();
 			}

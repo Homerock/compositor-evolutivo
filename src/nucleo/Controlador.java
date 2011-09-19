@@ -764,6 +764,7 @@ public class Controlador {
 			Aprendizaje.aprenderCancion(cancionNueva.getNombre()+ Constantes.EXTENSION_ARCHIVO);
 			// vuelvo a calcular los acumulados para seguir componiendo
 			String estilo = cancionNueva.getEstiloPrincipal();
+			
 			this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
 			this.getMiMatrizEstilos().calcularAcumulados();
 		} catch (IndexOutOfBoundsException e) {
