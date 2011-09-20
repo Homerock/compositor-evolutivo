@@ -169,8 +169,8 @@ public class Archivos {
 			}	
 		}
 		System.out.println("Nuevo archivo generado: " + miCancion.getNombre()+Constantes.EXTENSION_ARCHIVO);
-		//crearMMA("mma " + '\"' + miCancion.getNombre()+Constantes.EXTENSION_ARCHIVO + '\"', false);
-		crearMMA("mma " + miCancion.getNombre(), false);
+
+		crearMIDI(miCancion.getNombre(), false);
 	}
 
 	//#########################################################################################
@@ -215,7 +215,7 @@ public class Archivos {
 	 * @param flagbackground: valor boolean para determinar si el comando se ejecuta en background (solo en linux)
 	 **/
 	//################################################################################
-	private static boolean crearMMA(String command, boolean flagbackground) {
+	private static boolean crearMIDI(String nombreArchivo, boolean flagbackground) {
 		
 		
 		// Definimos la cadena del interprete de comandos del sistema 
@@ -225,28 +225,28 @@ public class Archivos {
 		String osName = System.getProperty ( "os.name" ); 
 	
 		// Cargamos la cadena del interprete de comandos según el sistema operativo y el comando a ejecutar 
-		if ( osName.equals ("Windows XP") ) 
-			commandShell = "cmd.exe /C " + command; 
-		else 
-			if ( osName.equals ("Windows 95") || osName.equals ("Windows 98") ) 
-				commandShell = "start " + command; 
-			else { 
-					// 	En UNIX y LUNUX podemos lanzar el proceso en background sufijandolo con & 
-				if (flagbackground) 
-					commandShell = "" + command +" &" ; 
-				else 
-					commandShell = "" + command ; 
-				} 
-		System.out.println("-----------------------------------------Nombre: "+commandShell);
+		if ( osName.startsWith("Windows") ) {
+			String curDir =  System.getProperty("user.dir");
+			commandShell = "cmd /c C:\\MMA\\python.exe C:\\MMA\\MMA.py  \""+curDir+'\\'+ nombreArchivo+".mma\"";
+			System.out.println(commandShell);
+		}else{ 
+			// 	En UNIX y LUNIX podemos lanzar el proceso en background sufijandolo con & 
+			if (flagbackground) 
+				commandShell = "mma " + nombreArchivo +" &" ; 
+			else 
+				commandShell = "mma " + nombreArchivo ;
+		}
 			// Lanzamos el proceso	
 		try { 
 			Process proc = Runtime.getRuntime ().exec (commandShell); 
 			BufferedReader brStdOut = new BufferedReader(new InputStreamReader(proc.getInputStream())); 
 			BufferedReader brStdErr = new BufferedReader(new InputStreamReader(proc.getErrorStream())); 
 			String str=null; 
+			/*
 			while ((str = brStdOut.readLine())!=null) { 
 				System.out.println (str); 
 			} 
+			*/
 			brStdOut.close(); 
 			brStdErr.close(); 
 			} catch (IOException eproc) { 
