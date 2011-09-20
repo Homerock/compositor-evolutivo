@@ -61,28 +61,37 @@ public class Arbol extends JPanel {
     }
     Vector ol = new Vector();
     String[] tmp = dir.list();
-    for (int i = 0; i < tmp.length; i++)
-      ol.addElement(tmp[i]);
+    
+    for (int i = 0; i < tmp.length; i++){
+    	if(tmp[i]!=null)
+    	ol.addElement(tmp[i]);
+    }
     Collections.sort(ol, String.CASE_INSENSITIVE_ORDER);
     File f;
     Vector files = new Vector();
     // Make two passes, one for Dirs and one for Files. This is #1.
     for (int i = 0; i < ol.size(); i++) {
-      String thisObject = (String) ol.elementAt(i);
-      String newPath;
-      if (thisObject.startsWith(".")) {
-    	  continue;
-      }
-      if (curPath.equals("."))
-        newPath = thisObject;
-      else
-        newPath = curPath + File.separator + thisObject;
-    	 
-      if ((f = new File(newPath)).isDirectory())
-    		addNodes(curDir, f);
-      else
-    	if (!thisObject.startsWith(".")) {
-    		files.addElement(thisObject);
+    	try{	
+	      String thisObject = (String) ol.elementAt(i);
+	      String newPath;
+	      
+	       
+	      if (thisObject.startsWith(".") ) {
+	    	  continue;
+	      }
+	      if (curPath.equals("."))
+	        newPath = thisObject;
+	      else
+	        newPath = curPath + File.separator + thisObject;
+	    	 
+	      if ((f = new File(newPath)).isDirectory())
+	    		addNodes(curDir, f);
+	      else
+	    	if (!thisObject.startsWith(".")) {
+	    		files.addElement(thisObject);
+	    	}
+    	}catch(NullPointerException e ){
+    		continue;
     	}
     }
     // Pass two: for files.

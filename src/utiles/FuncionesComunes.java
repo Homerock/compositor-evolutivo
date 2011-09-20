@@ -12,10 +12,10 @@ public class FuncionesComunes {
 	              
 	      // Cargamos la cadena del interprete de comandos según el sistema operativo y el comando a ejecutar 
 	      if ( osName.equals ("Windows XP") ) 
-	          ruta = "c:\\"; 
+	          ruta = "C:\\"; 
 	      else 
 	          if ( osName.equals ("Windows 95") || osName.equals ("Windows 98") ) 
-	                ruta = "c:\\";  
+	                ruta = "C:\\";  
 	          else { 
 	                ruta = "/home";
 	        } 
