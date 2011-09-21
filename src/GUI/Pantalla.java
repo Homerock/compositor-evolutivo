@@ -948,7 +948,7 @@ public class Pantalla extends JFrame {
 	 * @param e
 	 */
     void helpAbout_ActionPerformed(ActionEvent e) {
-        JOptionPane.showMessageDialog(this, new About(), "About", JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(this, new About(), "Acerca de...", JOptionPane.PLAIN_MESSAGE);
     }
 
     /**
@@ -1217,11 +1217,10 @@ public class Pantalla extends JFrame {
 				} catch (PersistenciaException e1) {
 					System.err.println(e1.getMessage());
 				}
+				JOptionPane.showConfirmDialog(Pantalla.this, "Se actualiz\u00F3 la base de datos","Cerebro", Constantes.OK_ACEPTAR);
 			}
 
 			if (e.getActionCommand() == Constantes.APRENDER_CANCION) {
-
-				System.out.println("Aprender");
 				
 				try {
 					TreePath treePath = fileTree.tree.getSelectionPath();
@@ -1231,6 +1230,7 @@ public class Pantalla extends JFrame {
 					int j = obPadre.length-1;
 					padre = padre+obPadre[j];
 					
+					int cant = 0;
 					String ruta="";
 					int i = ob.length-1;
 					ruta = ruta+ob[i];
@@ -1239,22 +1239,26 @@ public class Pantalla extends JFrame {
 					File folder = new File(path);
 					File[] listOfFiles = folder.listFiles();
 					if (listOfFiles == null) {
-						System.out.println("es archivo");
-						controlador.aprenderArchivo(padre+"/"+ruta);
+						cant = controlador.aprenderArchivo(padre+"/"+ruta);
 					} else {
-						System.out.println("es directorio");
-						controlador.aprenderDirectorio(listOfFiles, path);
+						cant = controlador.aprenderDirectorio(listOfFiles, path);
 					}
 			
-					//cargarCombo();
-					JOptionPane.showConfirmDialog(Pantalla.this, "Cancion aprendida!!","Aprender", Constantes.OK_ACEPTAR);
+					if (cant > 0) {
+						if (cant == 1)
+							JOptionPane.showConfirmDialog(Pantalla.this, "Canci\u00F3n aprendida!!","Aprender", Constantes.OK_ACEPTAR);
+						else
+							JOptionPane.showConfirmDialog(Pantalla.this, cant + " Canciones aprendidas!!","Aprender", Constantes.OK_ACEPTAR);
+					} else {
+						JOptionPane.showConfirmDialog(Pantalla.this, "El formato de los archivos es incorrecto","Aprender", Constantes.OK_ACEPTAR);
+					}
+					
 				} catch (NullPointerException eNull) {
-					System.err.println(eNull.getMessage());
+					JOptionPane.showConfirmDialog(Pantalla.this, "No se seleccion\u00F3 ningun archivo","Aprender", Constantes.OK_ACEPTAR);
 				}
 			}
 			
-			if (e.getActionCommand() == Constantes.COMPONER) {
-				
+			if (e.getActionCommand() == Constantes.COMPONER) {		
 				
 				String tonica = (String) Pantalla.this.jComboTonica.getSelectedItem();
 				String estilo = (String) Pantalla.this.jComboEstilo.getSelectedItem();
@@ -1262,12 +1266,8 @@ public class Pantalla extends JFrame {
 				String duracion = cantCompasesText.getText();
 				String estructura = (String) Pantalla.this.jComboEstructuraAvanzado.getSelectedItem();
 
-				if (tonica.trim().equals("") || estilo == null) {
+				if (tonica == null || estilo == null) {
 					JOptionPane.showConfirmDialog(Pantalla.this, "Falta ingresar datos","Componer", Constantes.OK_ACEPTAR);
-					return;
-				}
-				if (!Reconocedor.esAcordeValido(tonica)) {
-					JOptionPane.showConfirmDialog(Pantalla.this, "El acorde de tonica es incorrecto","Componer", Constantes.OK_ACEPTAR);
 					return;
 				}
 				
@@ -1368,12 +1368,14 @@ public class Pantalla extends JFrame {
 				
 				controlador.guardarCancion(cancionNueva,Pantalla.this.getJTextNombre().getText(),Pantalla.this.getJTextComentarios().getText());
 				cargarArbolCanciones();
+				JOptionPane.showConfirmDialog(Pantalla.this, "se guard\u00F3 la base de datos","Componer", Constantes.OK_ACEPTAR);
 			}
 			
 			if (e.getActionCommand() == Constantes.GUARDAR_CANCION_MODIFICADA){
 				// esto hay q cambiarlo porque no guarda en las matrices
 				controlador.guardarCancion(cancionNueva,Pantalla.this.getJTextNombreCanciones().getText(),Pantalla.this.getJTextComentariosCanciones().getText());
 				cargarArbolCanciones();
+				JOptionPane.showConfirmDialog(Pantalla.this, "Canci\u00F3n guardada en la base de datos","Canciones", Constantes.OK_ACEPTAR);
 			}
 			
 			if (e.getActionCommand() == Constantes.REPRODUCIR_CANCION){

@@ -80,7 +80,7 @@ public class Controlador {
 	 * @param ruta
 	 */
 	//#########################################################################################
-	public void aprenderArchivo(String ruta) {
+	public int aprenderArchivo(String ruta) {
 		
 		CancionAprendida cancionAprendida = null;
 		
@@ -91,12 +91,16 @@ public class Controlador {
 
 		}catch(EstilosException ee){
 			System.err.println(ee.getMessage());
+			return 0;
 		}catch(ValoresException ve){
 			System.err.println(ve.getMessage());
+			return 0;
 		} catch (ArchivosException e) {
 			System.err.println(e.getMessage());
+			return 0;
 		} catch (CancionException e) {
 			System.err.println(e.getMessage());
+			return 0;
 		}
 		
 		// calcular acumulados
@@ -104,6 +108,8 @@ public class Controlador {
 		this.getMiMatrizEstilos().calcularAcumulados();
 		if (DEBUG)
 			this.mostrarDatos();
+		
+		return 1;
 	}
 	
 	//#########################################################################################
@@ -112,10 +118,11 @@ public class Controlador {
 	 * @param ruta
 	 */
 	//#########################################################################################
-	public void aprenderDirectorio(File[] listOfFiles, String path) {
+	public int aprenderDirectorio(File[] listOfFiles, String path) {
 		
 		CancionAprendida cancionAprendida = null;
 		String files;
+		int cant = 0;
 		
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
@@ -125,6 +132,7 @@ public class Controlador {
 					
 					cancionAprendida = Aprendizaje.aprenderCancion(path+files);
 					guardarCancionEnMemoria(cancionAprendida);
+					cant++;
 					
 				}catch(EstilosException ee){
 					System.err.println(ee.getMessage());
@@ -142,6 +150,8 @@ public class Controlador {
 		this.getMiMatrizEstilos().calcularAcumulados();
 		if (DEBUG)
 			this.mostrarDatos();
+		
+		return cant;
 	}
 	
 	//#########################################################################################
