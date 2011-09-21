@@ -9,6 +9,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -90,8 +92,10 @@ public class Pantalla extends JFrame {
     private JCheckBox jCheckEstructura;
     private JCheckBox jCheckTempo;
     private JCheckBox jCheckCantCompases;
-    private JCheckBox jCheckEstilo;
-    private JCheckBox jCheckTonica;
+    //private JCheckBox jCheckEstilo;
+    //private JCheckBox jCheckTonica;
+    private JLabel jLabelTonica;
+    private JLabel jLabelEstilo;
     private JLabel statusBar = new JLabel();
     //private ImageIcon imageOpen = new ImageIcon(Pantalla.class.getResource("openfile.gif"));
     //private ImageIcon imageClose = new ImageIcon(Pantalla.class.getResource("closefile.gif"));
@@ -110,6 +114,8 @@ public class Pantalla extends JFrame {
     // paneles de la opcion componer
     private JPanel panelComponer = new JPanel();
     private JPanelBackground panelDetalleComponer;
+    private JPanelBackground panelImagenComponer;
+    private JPanelBackground panelImagenCanciones;
     private JPanelBackground panelComponerOpciones;
     private JPanelBackground panelComponerBotones;
     private JPanel panelTablaCancion;		//panel para ver la cancion que se esta componiendo
@@ -119,23 +125,25 @@ public class Pantalla extends JFrame {
     private JPanelBackground panelDetalleBD;
     
     private CardLayout cardLayout1 = new CardLayout();
-    private JScrollPane panelAprender = new JScrollPane();
+    
+    private JPanel panelAprender;
+    private JScrollPane panelArbolAprender = new JScrollPane();
+    private JPanelBackground panelAprenderBotones;
+    
     private JPanel panelCanciones;
     private JScrollPane panelArbolCanciones = new JScrollPane();
     private JPanelBackground panelCancionesBotones;
     
     private JScrollPane panelScrollEditar;
     
-    private FileSystemModel fileSystemModel = new FileSystemModel();
-    //private JTree fileTree = new JTree(fileSystemModel);
-    //private Arbol fileTree = new Arbol(new File("/home"));
     private Arbol fileTree = new Arbol(new File(FuncionesComunes.getPathOS()));
-    private JTree fileTreeCanciones = new JTree();
+    //private JTree fileTreeCanciones = new JTree();
     
 	private JComboBox jComboEstilo;
+	private JComboBox jComboTonica;
 	private JComboBox jComboEstructuraAvanzado;
 	//input de text
-	private JTextField tonicaText;
+	//private JTextField tonicaText;
 	private JTextField cantCompasesText;
 	private JTextField tempoText;
 	
@@ -240,8 +248,7 @@ public class Pantalla extends JFrame {
                 botonCanciones_actionPerformed(e);
             }
         });
-        
-        panelAprender.setAutoscrolls(true);
+
         menuFile.add(menuFileExit);
         menuFileExit.setName("menuFileExit");
         menuBar.add(menuFile);
@@ -258,11 +265,13 @@ public class Pantalla extends JFrame {
         armarPanelDetalleComponer(manejador);
         armarPanelDetalleAprender(manejador);
         armarPanelDetalleBD();
+        panelDetalle.add(panelImagenComponer, "panelImagenComponer");
+        panelDetalle.add(panelImagenCanciones, "panelImagenCanciones");
         panelDetalle.add(panelDetalleComponer, "panelDetalleComponer");
         panelDetalle.add(panelDetalleAprender, "panelDetalleAprender");
         panelDetalle.add(panelDetalleBD, "panelDetalleBD");
         
-        armarPanelAprender();
+        armarPanelAprender(manejador);
         armarPanelComponer(manejador);
         armarPanelBD(manejador);
         armarPanelCanciones(manejador);
@@ -293,9 +302,30 @@ public class Pantalla extends JFrame {
     /**
      * 
      */
-    private void armarPanelAprender() {
+    private void armarPanelAprender(ManejadorEventos manejador) {
     	
-    	panelAprender.getViewport().add(fileTree, null);
+    	panelArbolAprender.getViewport().add(fileTree, null);
+    	
+    	panelAprender = new JPanel();
+    	//panelAprender.setLayout(new GridLayout(2,1));
+    	BoxLayout panelAprenderLayout = new BoxLayout(panelAprender, javax.swing.BoxLayout.Y_AXIS);
+    	panelAprender.setLayout(panelAprenderLayout);
+    	panelAprender.add(panelArbolAprender);
+    	
+    	panelAprenderBotones = new JPanelBackground();
+    	try {
+    		panelAprenderBotones.setBackground(misImagenes.getImagenURL(Constantes.FONDO_3));
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		botonAprenderCancion = getJButtonAprenderCancion();
+		botonAprenderCancion.addActionListener(manejador);
+		botonAprenderCancion.setActionCommand(Constantes.APRENDER_CANCION);
+		panelAprenderBotones.add(botonAprenderCancion);
+		panelAprenderBotones.setName("panelDetalleAprenderBoton");
+		
+		panelAprender.add(panelAprenderBotones);
     }
     
     /**
@@ -342,6 +372,9 @@ public class Pantalla extends JFrame {
 					System.err.println(e1.getMessage());
 					reproductor = null;
 				}
+				
+				CardLayout c2 = (CardLayout) panelDetalle.getLayout();
+		        c2.show(panelDetalle, "panelDetalleComponer");
 		      }
 		    }); 
 		
@@ -354,7 +387,7 @@ public class Pantalla extends JFrame {
     	
     	panelCancionesBotones = new JPanelBackground();
     	try {
-    		panelCancionesBotones.setBackground(misImagenes.getImagenURL(Constantes.FONDO_1));
+    		panelCancionesBotones.setBackground(misImagenes.getImagenURL(Constantes.FONDO_3));
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
@@ -433,7 +466,7 @@ public class Pantalla extends JFrame {
     	panelBD = new JPanelBackground();
     	
         try {
-        	panelBD.setBackground(misImagenes.getImagenURL(Constantes.FONDO_1));
+        	panelBD.setBackground(misImagenes.getImagenURL(Constantes.FONDO_3));
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
@@ -455,19 +488,29 @@ public class Pantalla extends JFrame {
 		
 		try {
 			panelComponerOpciones.setLayout(null);
-			panelComponerOpciones.setBackground(misImagenes.getImagenURL(Constantes.FONDO_1));
+			panelComponerOpciones.setBackground(misImagenes.getImagenURL(Constantes.FONDO_3));
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
 
-		tonicaText = new JTextField("",5);
-		panelComponerOpciones.add(tonicaText);
-		tonicaText.setBounds(95, 11, 57, 22);
-		tonicaText.setName("tonicaText");
+		//tonicaText = new JTextField("",5);
+		//panelComponerOpciones.add(tonicaText);
+		//tonicaText.setBounds(95, 11, 57, 22);
+		//tonicaText.setName("tonicaText");
+		
+		jComboTonica = new JComboBox();
+		panelComponerOpciones.add(jComboTonica);
+		//jComboTonica.setBounds(95, 11, 57, 22);
+		jComboTonica.setBounds(95, 44, 80, 22);
+		jComboTonica.setName("tonicaText");
+		
 		jComboEstilo = new JComboBox();
 		panelComponerOpciones.add(jComboEstilo);
-		jComboEstilo.setBounds(95, 44, 149, 22);
+		//jComboEstilo.setBounds(95, 44, 149, 22);
+		jComboEstilo.setBounds(95, 11, 150, 22);
 		jComboEstilo.setName("jComboEstilo");
+		jComboEstilo.addActionListener(manejador);
+		jComboEstilo.setActionCommand(Constantes.CAMBIA_ESTILO);
 
 		cantCompasesText = new JTextField("",3);
 		panelComponerOpciones.add(cantCompasesText);
@@ -485,38 +528,19 @@ public class Pantalla extends JFrame {
 		panelComponerOpciones.add(jComboEstructuraAvanzado);
 		jComboEstructuraAvanzado.setBounds(125, 141, 167, 22);
 		jComboEstructuraAvanzado.setName("jComboEstructuraAvanzado");
-		{
-			jCheckTonica = new JCheckBox();
-			panelComponerOpciones.add(jCheckTonica);
-			jCheckTonica.setBounds(9, 12, 81, 19);
-			jCheckTonica.setName("jCheckTonica");
-			jCheckTonica.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent evt) {
-					if (jCheckTonica.isSelected()) {
-						tonicaText.setEnabled(true);
-					} else {
-						tonicaText.setEnabled(false);
-					}
-					panelComponerOpciones.repaint();
-				}
-			});
-		}
-		{
-			jCheckEstilo = new JCheckBox();
-			panelComponerOpciones.add(jCheckEstilo);
-			jCheckEstilo.setBounds(9, 45, 74, 19);
-			jCheckEstilo.setName("jCheckEstilo");
-			jCheckEstilo.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent evt) {
-					if (jCheckEstilo.isSelected()) {
-						jComboEstilo.setEnabled(true);
-					} else {
-						jComboEstilo.setEnabled(false);
-					}
-					panelComponerOpciones.repaint();
-				}
-			});
-		}
+		
+		jLabelTonica = new JLabel();
+		panelComponerOpciones.add(jLabelTonica);
+		jLabelTonica.setBounds(31, 45, 74, 19);
+		jLabelTonica.setName("jLabelTonica");
+		jLabelTonica.setText("Tónica");
+				
+		jLabelEstilo = new JLabel();
+		panelComponerOpciones.add(jLabelEstilo);
+		jLabelEstilo.setBounds(31, 12, 81, 19);
+		jLabelEstilo.setName("jLabelEstilo");
+		jLabelEstilo.setText("Estilo");
+				
 		{
 			jCheckCantCompases = new JCheckBox();
 			panelComponerOpciones.add(jCheckCantCompases);
@@ -620,7 +644,7 @@ public class Pantalla extends JFrame {
 
 		panelComponerBotones.setPreferredSize(new java.awt.Dimension(294, 221));
 		try {
-			panelComponerBotones.setBackground(misImagenes.getImagenURL(Constantes.FONDO_1));
+			panelComponerBotones.setBackground(misImagenes.getImagenURL(Constantes.FONDO_3));
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
@@ -630,7 +654,7 @@ public class Pantalla extends JFrame {
 		panelComponer.add(panelComponerBotones);
 		
 	}
-
+	
 	/**
 	 * 
 	 * @param manejador
@@ -638,23 +662,15 @@ public class Pantalla extends JFrame {
 	private void armarPanelDetalleAprender(ManejadorEventos manejador) {
 		
     	panelDetalleAprender = new JPanelBackground();
-    	JPanelBackground panelDetalleAprenderBoton = new JPanelBackground();
+    	//JPanelBackground panelDetalleAprenderBoton = new JPanelBackground();
     	
     	try {
     		panelDetalleAprender.setBackground(misImagenes.getImagenURL(Constantes.FONDO_1));
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
-		BoxLayout panelDetalleAprenderLayout = new BoxLayout(panelDetalleAprender, javax.swing.BoxLayout.Y_AXIS);
-		panelDetalleAprender.setLayout(panelDetalleAprenderLayout);
-    	
-		//boton REPTODUCIR 
-		botonAprenderCancion = getJButtonAprenderCancion();
-		botonAprenderCancion.addActionListener(manejador);
-		botonAprenderCancion.setActionCommand(Constantes.APRENDER_CANCION);
-		panelDetalleAprenderBoton.add(botonAprenderCancion);
-		panelDetalleAprender.add(panelDetalleAprenderBoton);
-		panelDetalleAprenderBoton.setName("panelDetalleAprenderBoton");
+		//BoxLayout panelDetalleAprenderLayout = new BoxLayout(panelDetalleAprender, javax.swing.BoxLayout.Y_AXIS);
+		//panelDetalleAprender.setLayout(panelDetalleAprenderLayout);
 
 		ImageIcon imagenAprender;
 		try {
@@ -672,6 +688,27 @@ public class Pantalla extends JFrame {
 	 * @param manejador
 	 */
 	private void armarPanelDetalleComponer(ManejadorEventos manejador) {
+		
+		panelImagenComponer = new JPanelBackground();
+		panelImagenCanciones = new JPanelBackground();
+		
+		ImageIcon imagenComponer;
+		try {
+			imagenComponer = new ImageIcon(misImagenes.getImagenURL(Constantes.IMAGEN_COMPONER));
+			JLabel etiqueta = new JLabel(imagenComponer);
+			panelImagenComponer.add(etiqueta);
+		} catch (MalformedURLException e) {
+			System.err.println(e.getMessage());
+		}
+		
+		ImageIcon imagenCanciones;
+		try {
+			imagenCanciones = new ImageIcon(misImagenes.getImagenURL(Constantes.IMAGEN_CANCIONES));
+			JLabel etiqueta = new JLabel(imagenCanciones);
+			panelImagenCanciones.add(etiqueta);
+		} catch (MalformedURLException e) {
+			System.err.println(e.getMessage());
+		}
 		
 		panelDetalleComponer = new JPanelBackground();
 		BoxLayout panelDetalleComponerLayout = new BoxLayout(panelDetalleComponer, javax.swing.BoxLayout.Y_AXIS);
@@ -720,10 +757,9 @@ public class Pantalla extends JFrame {
 		botonDetenerCancion.setName("botonDetenerCancion");
 
 		try {
-			panelDetalleComponer.setBackground(misImagenes.getImagenURL(Constantes.FONDO_2));
+			panelImagenComponer.setBackground(misImagenes.getImagenURL(Constantes.FONDO_1));
+			panelImagenCanciones.setBackground(misImagenes.getImagenURL(Constantes.FONDO_1));
 			panelModificar.setBackground(misImagenes.getImagenURL(Constantes.FONDO_3));
-			//panelTablaCancion.setBackground(new File("./img/fondoAzul2.jpg"));
-			//panelTablaCancion.setPreferredSize(new java.awt.Dimension(525, 348));
 			panelReproductor.setBackground(misImagenes.getImagenURL(Constantes.FONDO_3));
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
@@ -937,6 +973,7 @@ public class Pantalla extends JFrame {
     	vaciarPanelDetalle();
     	vaciarPanelEditar();
     	vaciarPanelOpciones();
+    	cargarCombo();
     	botonAprender.setBackground(null);
     	botonComponer.setBackground(Color.gray);
     	botonCanciones.setBackground(null);
@@ -944,7 +981,7 @@ public class Pantalla extends JFrame {
         CardLayout c1 = (CardLayout) panelOpciones.getLayout();
         c1.show(panelOpciones, "panelComponer");
         CardLayout c2 = (CardLayout) panelDetalle.getLayout();
-        c2.show(panelDetalle, "panelDetalleComponer");
+        c2.show(panelDetalle, "panelImagenComponer");
     }
 
     /**
@@ -977,7 +1014,7 @@ public class Pantalla extends JFrame {
         CardLayout c1 = (CardLayout) panelOpciones.getLayout();
         c1.show(panelOpciones, "panelCanciones");
         CardLayout c2 = (CardLayout) panelDetalle.getLayout();
-        c2.show(panelDetalle, "panelDetalleComponer");
+        c2.show(panelDetalle, "panelImagenCanciones");
     }
     
     /**
@@ -989,6 +1026,24 @@ public class Pantalla extends JFrame {
 		jComboEstilo.removeAllItems();
 		for (String estilo : lista) { 
 			Pantalla.this.jComboEstilo.addItem(estilo);
+		}
+	}
+    
+    /**
+     * 
+     */
+    public void cargarComboTonicas() {
+    	
+    	String estilo = (String) Pantalla.this.jComboEstilo.getSelectedItem();
+    	if (estilo == null) {
+    		return;
+    	}
+    	
+		ArrayList<String> lista = controlador.getComboTonicas(estilo);
+
+		jComboTonica.removeAllItems();
+		for (String tonica : lista) { 
+			Pantalla.this.jComboTonica.addItem(tonica);
 		}
 	}
     
@@ -1040,7 +1095,7 @@ public class Pantalla extends JFrame {
      */
     private void vaciarPanelOpciones() {
     	
-    	tonicaText.setText("");
+    	//tonicaText.setText("");
     	cantCompasesText.setText("");
     	tempoText.setText("");
     	jTextComentarios.setText("Comentarios");
@@ -1137,6 +1192,10 @@ public class Pantalla extends JFrame {
 		//Cancion cancionNueva;
 		
 		public void actionPerformed(ActionEvent e) {
+			
+			if (e.getActionCommand() == Constantes.CAMBIA_ESTILO) {
+				cargarComboTonicas();
+			}
 
 			if (e.getActionCommand() == Constantes.SALIR) {
 				int resultado = JOptionPane.showConfirmDialog(Pantalla.this, "Desea salir?","Salir", Constantes.SI_NO_OPCION);
@@ -1185,35 +1244,15 @@ public class Pantalla extends JFrame {
 					controlador.aprenderDirectorio(listOfFiles, path);
 				}
 		
-				cargarCombo();
+				//cargarCombo();
 				JOptionPane.showConfirmDialog(Pantalla.this, "Canción aprendida!!","Aprender", Constantes.OK_ACEPTAR);
-				/*
-				
-				File file = (File) fileTree.getLastSelectedPathComponent();
-				
-				System.out.println(file.getPath());
-		        
-		        String path = file.getPath()+"/";
-				File folder = new File(path);
-				File[] listOfFiles = folder.listFiles();
-				if (listOfFiles == null) {
-					System.out.println("es archivo");
-					controlador.aprenderArchivo(file.getPath());
-				} else {
-					System.out.println("es directorio");
-					controlador.aprenderDirectorio(listOfFiles, path);
-				}
-		
-				cargarCombo();
-				JOptionPane.showConfirmDialog(Pantalla.this, "Canción aprendida!!","Aprender", Constantes.OK_ACEPTAR);
-			*/
 			
 			}
 			
 			if (e.getActionCommand() == Constantes.COMPONER) {
 				
 				
-				String tonica = Pantalla.this.tonicaText.getText();
+				String tonica = (String) Pantalla.this.jComboTonica.getSelectedItem();
 				String estilo = (String) Pantalla.this.jComboEstilo.getSelectedItem();
 				String tempo = Pantalla.this.tempoText.getText();
 				String duracion = cantCompasesText.getText();
@@ -1242,7 +1281,7 @@ public class Pantalla extends JFrame {
 					return;
 				}
 				actualizarPanelEditar(cancionNueva);
-				Archivos.generarArchivo(cancionNueva);
+				//Archivos.generarArchivo(cancionNueva); //esto ya lo hace el metodo componer
 				try {
 					reproductor = new Reproductor(cancionNueva.getNombre()+".mid");
 				} catch (InvalidMidiDataException e1) {
@@ -1261,6 +1300,9 @@ public class Pantalla extends JFrame {
 				botonPausarCancion.setEnabled(true);
 				botonDetenerCancion.setEnabled(true);
 				jCheckGuardar.setEnabled(true);
+				
+				CardLayout c2 = (CardLayout) panelDetalle.getLayout();
+		        c2.show(panelDetalle, "panelDetalleComponer");
 			}
 
 			if (e.getActionCommand() == Constantes.MODIFICAR_CANCION ) {
@@ -1462,7 +1504,6 @@ public class Pantalla extends JFrame {
 
 		}	//Fin de clase MiTablaAcordes
 	}
-    
 
 }
  

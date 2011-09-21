@@ -37,7 +37,6 @@ public class Inicio {
 
     public static void main(String[] args) {
         try {
-        	System.gc();
           //  UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         	UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (Exception e) {

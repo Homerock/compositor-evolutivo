@@ -16,6 +16,7 @@ import canciones.Compas;
 import canciones.Estrofa;
 
 import net.java.ao.EntityManager;
+import estructura.AcordesFila;
 import estructura.ListaValores;
 import estructura.MatrizAcordes;
 import estructura.MatrizEstilos;
@@ -373,6 +374,11 @@ public class Controlador {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param nombre
+	 * @return
+	 */
 	public Cancion buscarCancionSeleccionada(String nombre) {
 		
 		Cancion cancion = listaCanciones.get(nombre);
@@ -793,6 +799,27 @@ public class Controlador {
 		for (Valores val : listaValores) {
 			miLista.add(val.getEstilo());
 		}
+		return miLista;
+	}
+	
+	//#########################################################################################
+	/**
+	 * getComboTonica
+	 **/
+	//#########################################################################################
+	public ArrayList<String> getComboTonicas(String estilo) {
+
+		MatrizAcordes miMatrizAcordes = this.getMatrizEvolutiva().get(estilo);
+		ArrayList<String> miLista = new ArrayList<String>();
+
+		Iterator it = miMatrizAcordes.getMisAcordes().entrySet().iterator();
+
+		//tengo que iterar para calcular los acumulados de todas la matrices del map
+		while (it.hasNext()) {
+			Map.Entry e = (Map.Entry)it.next();
+			miLista.add((String) e.getKey());
+		}
+		
 		return miLista;
 	}
 	
