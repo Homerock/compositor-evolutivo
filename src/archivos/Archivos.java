@@ -242,11 +242,11 @@ public class Archivos {
 			BufferedReader brStdOut = new BufferedReader(new InputStreamReader(proc.getInputStream())); 
 			BufferedReader brStdErr = new BufferedReader(new InputStreamReader(proc.getErrorStream())); 
 			String str=null; 
-			/*
+			
 			while ((str = brStdOut.readLine())!=null) { 
 				System.out.println (str); 
 			} 
-			*/
+			
 			brStdOut.close(); 
 			brStdErr.close(); 
 			} catch (IOException eproc) { 
