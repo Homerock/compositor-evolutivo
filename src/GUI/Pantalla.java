@@ -399,7 +399,7 @@ public class Pantalla extends JFrame {
 			jCheckGuardarCanciones = new JCheckBox();
 			panelCancionesBotones.add(jCheckGuardarCanciones);
 			jCheckGuardarCanciones.setName("jCheckGuardarCanciones");
-			jCheckGuardarCanciones.setText("Guardar canción");
+			jCheckGuardarCanciones.setText("Guardar cancion");
 			jCheckGuardarCanciones.setPreferredSize(new java.awt.Dimension(100, 18));
 			jCheckGuardarCanciones.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent evt) {
@@ -533,7 +533,7 @@ public class Pantalla extends JFrame {
 		panelComponerOpciones.add(jLabelTonica);
 		jLabelTonica.setBounds(31, 45, 74, 19);
 		jLabelTonica.setName("jLabelTonica");
-		jLabelTonica.setText("Tónica");
+		jLabelTonica.setText("Tonica");
 				
 		jLabelEstilo = new JLabel();
 		panelComponerOpciones.add(jLabelEstilo);
@@ -831,7 +831,7 @@ public class Pantalla extends JFrame {
 		if (botonModificarCancion == null) {
 			botonModificarCancion = new JButton();
 			botonModificarCancion.setVisible(true);
-			botonModificarCancion.setText("Modificar canción");
+			botonModificarCancion.setText("Modificar cancion");
 			//botonModificarCancion.setIcon(new ImageIcon ("./img/botonModificar.png"));
 			
 		}
@@ -845,7 +845,7 @@ public class Pantalla extends JFrame {
     private JButton getJButtonGuardarCancion() {
 		if (botonGuardar == null) {
 			botonGuardar = new JButton();
-			botonGuardar.setText("Guardar Canción");
+			botonGuardar.setText("Guardar cancion");
 			botonGuardar.setVisible(true);
 		}
 		return botonGuardar;
@@ -858,7 +858,7 @@ public class Pantalla extends JFrame {
     private JButton getJButtonGuardarCanciones() {
 		if (botonGuardarCanciones == null) {
 			botonGuardarCanciones = new JButton();
-			botonGuardarCanciones.setText("Guardar Canción");
+			botonGuardarCanciones.setText("Guardar cancion");
 			botonGuardarCanciones.setVisible(true);
 		}
 		return botonGuardarCanciones;
@@ -928,7 +928,7 @@ public class Pantalla extends JFrame {
 		
 		if (botonAprenderCancion == null) {
 			botonAprenderCancion= new JButton();
-			botonAprenderCancion.setText("Aprender canción");
+			botonAprenderCancion.setText("Aprender cancion");
 			botonAprenderCancion.setVisible(true);
 		}
 		return botonAprenderCancion;
@@ -1222,31 +1222,34 @@ public class Pantalla extends JFrame {
 
 				System.out.println("Aprender");
 				
-				TreePath treePath = fileTree.tree.getSelectionPath();
-				Object[] ob = treePath.getPath();
-				Object[] obPadre = treePath.getParentPath().getPath();
-				String padre="";
-				int j = obPadre.length-1;
-				padre = padre+obPadre[j];
-				
-				String ruta="";
-				int i = ob.length-1;
-				ruta = ruta+ob[i];
-				
-				String path = ruta+"/";
-				File folder = new File(path);
-				File[] listOfFiles = folder.listFiles();
-				if (listOfFiles == null) {
-					System.out.println("es archivo");
-					controlador.aprenderArchivo(padre+"/"+ruta);
-				} else {
-					System.out.println("es directorio");
-					controlador.aprenderDirectorio(listOfFiles, path);
-				}
-		
-				//cargarCombo();
-				JOptionPane.showConfirmDialog(Pantalla.this, "Canción aprendida!!","Aprender", Constantes.OK_ACEPTAR);
+				try {
+					TreePath treePath = fileTree.tree.getSelectionPath();
+					Object[] ob = treePath.getPath();
+					Object[] obPadre = treePath.getParentPath().getPath();
+					String padre="";
+					int j = obPadre.length-1;
+					padre = padre+obPadre[j];
+					
+					String ruta="";
+					int i = ob.length-1;
+					ruta = ruta+ob[i];
+					
+					String path = ruta+"/";
+					File folder = new File(path);
+					File[] listOfFiles = folder.listFiles();
+					if (listOfFiles == null) {
+						System.out.println("es archivo");
+						controlador.aprenderArchivo(padre+"/"+ruta);
+					} else {
+						System.out.println("es directorio");
+						controlador.aprenderDirectorio(listOfFiles, path);
+					}
 			
+					//cargarCombo();
+					JOptionPane.showConfirmDialog(Pantalla.this, "Cancion aprendida!!","Aprender", Constantes.OK_ACEPTAR);
+				} catch (NullPointerException eNull) {
+					System.err.println(eNull.getMessage());
+				}
 			}
 			
 			if (e.getActionCommand() == Constantes.COMPONER) {
