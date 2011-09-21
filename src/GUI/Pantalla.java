@@ -323,6 +323,7 @@ public class Pantalla extends JFrame {
 		botonAprenderCancion.addActionListener(manejador);
 		botonAprenderCancion.setActionCommand(Constantes.APRENDER_CANCION);
 		panelAprenderBotones.add(botonAprenderCancion);
+		botonAprenderCancion.setName("botonAprenderCancion");
 		panelAprenderBotones.setName("panelDetalleAprenderBoton");
 		
 		panelAprender.add(panelAprenderBotones);
@@ -399,7 +400,7 @@ public class Pantalla extends JFrame {
 			jCheckGuardarCanciones = new JCheckBox();
 			panelCancionesBotones.add(jCheckGuardarCanciones);
 			jCheckGuardarCanciones.setName("jCheckGuardarCanciones");
-			jCheckGuardarCanciones.setText("Guardar cancion");
+			;
 			jCheckGuardarCanciones.setPreferredSize(new java.awt.Dimension(100, 18));
 			jCheckGuardarCanciones.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent evt) {
@@ -533,7 +534,7 @@ public class Pantalla extends JFrame {
 		panelComponerOpciones.add(jLabelTonica);
 		jLabelTonica.setBounds(31, 45, 74, 19);
 		jLabelTonica.setName("jLabelTonica");
-		jLabelTonica.setText("Tonica");
+		;
 				
 		jLabelEstilo = new JLabel();
 		panelComponerOpciones.add(jLabelEstilo);
@@ -831,7 +832,7 @@ public class Pantalla extends JFrame {
 		if (botonModificarCancion == null) {
 			botonModificarCancion = new JButton();
 			botonModificarCancion.setVisible(true);
-			botonModificarCancion.setText("Modificar cancion");
+			;
 			//botonModificarCancion.setIcon(new ImageIcon ("./img/botonModificar.png"));
 			
 		}
@@ -845,7 +846,7 @@ public class Pantalla extends JFrame {
     private JButton getJButtonGuardarCancion() {
 		if (botonGuardar == null) {
 			botonGuardar = new JButton();
-			botonGuardar.setText("Guardar cancion");
+			;
 			botonGuardar.setVisible(true);
 		}
 		return botonGuardar;
@@ -858,7 +859,7 @@ public class Pantalla extends JFrame {
     private JButton getJButtonGuardarCanciones() {
 		if (botonGuardarCanciones == null) {
 			botonGuardarCanciones = new JButton();
-			botonGuardarCanciones.setText("Guardar cancion");
+			;
 			botonGuardarCanciones.setVisible(true);
 		}
 		return botonGuardarCanciones;
@@ -928,7 +929,7 @@ public class Pantalla extends JFrame {
 		
 		if (botonAprenderCancion == null) {
 			botonAprenderCancion= new JButton();
-			botonAprenderCancion.setText("Aprender cancion");
+			;
 			botonAprenderCancion.setVisible(true);
 		}
 		return botonAprenderCancion;
