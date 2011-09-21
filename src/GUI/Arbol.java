@@ -33,17 +33,6 @@ public class Arbol extends JPanel {
     
     // Make a tree list with all the nodes, and make it a JTree
     tree = new JTree(addNodes(null, dir));
-    
-    // Add a listener 
-    
-    /*
-    tree.addTreeSelectionListener(new TreeSelectionListener() {
-      public void valueChanged(TreeSelectionEvent e) {
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) e
-            .getPath().getLastPathComponent();
-        System.out.println("You selected " + node);
-      }
-    }); */
 
     // Lastly, put the JTree into a JScrollPane.
     JScrollPane scrollpane = new JScrollPane();
