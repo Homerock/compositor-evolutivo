@@ -62,6 +62,7 @@ public interface Constantes {
 	public static final String PAUSAR_CANCION ="pausar";
 	public static final String APRENDER_CANCION ="aprender_cancion";
 	public static final String DETENER_CANCION ="detener_cancion";
+	public static final String CAMBIA_ESTILO ="cambia_estilo";
 
 	public static final int OK_ACEPTAR = -1;
 	public static final int SI_NO_OPCION = 0;
@@ -85,14 +86,17 @@ public interface Constantes {
 	public static final String BOTON_CANCIONES = "img/principalesCanciones.png";
 	public static final String BOTON_CEREBRO = "img/principalesCerebro.png";
 	
-	public static final String BOTON_PLAY = "img/play.jpg";
-	public static final String BOTON_PAUSE = "img/pause.jpg";
-	public static final String BOTON_STOP = "img/stop.jpg";
+	public static final String BOTON_PLAY = "img/play.png";
+	public static final String BOTON_PAUSE = "img/pause.png";
+	public static final String BOTON_STOP = "img/stop.png";
 	
-	public static final String FONDO_1 = "img/fondoAzul.jpg";
-	public static final String FONDO_2 = "img/fondoAzul2.jpg";
-	public static final String FONDO_3 = "img/fondoAzulInv2.jpg";
+	
+	public static final String FONDO_1 = "img/fondo1.jpg";
+	public static final String FONDO_2 = "img/fondo2.png";
+	public static final String FONDO_3 = "img/fondo3.png";
 	
 	public static final String IMAGEN_APRENDER = "img/ImgAprender.png";
 	public static final String IMAGEN_CEREBRO = "img/ImgCerebro.png";
+	public static final String IMAGEN_COMPONER = "img/ImgComponer.png";
+	public static final String IMAGEN_CANCIONES = "img/ImgCanciones.png";
 }
