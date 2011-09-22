@@ -362,6 +362,9 @@ public class Pantalla extends JFrame {
 		        actualizarPanelEditar(cancionNueva);
 		        
 		        try {
+		        	if (reproductor != null) {
+						reproductor.detener();
+					}
 					reproductor = new Reproductor(cancionNueva.getNombre()+".mid");
 				} catch (InvalidMidiDataException e1) {
 					System.err.println(e1.getMessage());
@@ -960,6 +963,9 @@ public class Pantalla extends JFrame {
     	botonComponer.setBackground(null);
     	botonCanciones.setBackground(null);
     	botonBD.setBackground(null);
+    	if (reproductor != null) {
+			reproductor.detener();
+		}
         CardLayout c1 = (CardLayout) panelOpciones.getLayout();
         c1.show(panelOpciones, "panelAprender");
         CardLayout c2 = (CardLayout) panelDetalle.getLayout();
@@ -979,6 +985,9 @@ public class Pantalla extends JFrame {
     	botonComponer.setBackground(Color.gray);
     	botonCanciones.setBackground(null);
     	botonBD.setBackground(null);
+    	if (reproductor != null) {
+			reproductor.detener();
+		}
         CardLayout c1 = (CardLayout) panelOpciones.getLayout();
         c1.show(panelOpciones, "panelComponer");
         CardLayout c2 = (CardLayout) panelDetalle.getLayout();
@@ -994,6 +1003,9 @@ public class Pantalla extends JFrame {
     	botonComponer.setBackground(null);
     	botonCanciones.setBackground(null);
     	botonBD.setBackground(Color.gray);
+    	if (reproductor != null) {
+			reproductor.detener();
+		}
         CardLayout c1 = (CardLayout) panelOpciones.getLayout();
         c1.show(panelOpciones, "panelBD");
         CardLayout c2 = (CardLayout) panelDetalle.getLayout();
@@ -1012,6 +1024,9 @@ public class Pantalla extends JFrame {
     	botonComponer.setBackground(null);
     	botonCanciones.setBackground(Color.gray);
     	botonBD.setBackground(null);
+    	if (reproductor != null) {
+			reproductor.detener();
+		}
         CardLayout c1 = (CardLayout) panelOpciones.getLayout();
         c1.show(panelOpciones, "panelCanciones");
         CardLayout c2 = (CardLayout) panelDetalle.getLayout();
@@ -1056,9 +1071,12 @@ public class Pantalla extends JFrame {
 
 		panelTablaCancion.removeAll();//panel donde se muetran las etrofas
 		estrofas.clear();//lista donde estan las estrofas
+		JLabel labelTempo = new JLabel("Tempo: "+cancionNueva.getTempo());
+		JLabel labelEspacio = new JLabel("\n");
 		
 		try {
-		
+			panelTablaCancion.add(labelTempo);
+			panelTablaCancion.add(labelEspacio);
 			for (Estrofa e : cancionNueva.getEstrofas()){
 				TablaAcordes tablaAcordes = new TablaAcordes(e);
 				
@@ -1287,6 +1305,9 @@ public class Pantalla extends JFrame {
 				actualizarPanelEditar(cancionNueva);
 				//Archivos.generarArchivo(cancionNueva); //esto ya lo hace el metodo componer
 				try {
+					if (reproductor != null) {
+						reproductor.detener();
+					}
 					reproductor = new Reproductor(cancionNueva.getNombre()+".mid");
 				} catch (InvalidMidiDataException e1) {
 					System.err.println(e1.getMessage());
@@ -1350,6 +1371,9 @@ public class Pantalla extends JFrame {
 				Archivos.generarArchivo(cancionNueva);
 				actualizarPanelEditar(cancionNueva);
 				try {
+					if (reproductor != null) {
+						reproductor.detener();
+					}
 					reproductor = new Reproductor(cancionNueva.getNombre()+".mid");
 				} catch (InvalidMidiDataException e1) {
 					System.err.println(e1.getMessage());
@@ -1366,14 +1390,14 @@ public class Pantalla extends JFrame {
 			
 			if (e.getActionCommand() == Constantes.GUARDAR_CANCION){
 				
-				controlador.guardarCancion(cancionNueva,Pantalla.this.getJTextNombre().getText(),Pantalla.this.getJTextComentarios().getText());
+				controlador.guardarCancionCompuesta(cancionNueva,Pantalla.this.getJTextNombre().getText(),Pantalla.this.getJTextComentarios().getText());
 				cargarArbolCanciones();
-				JOptionPane.showConfirmDialog(Pantalla.this, "se guard\u00F3 la base de datos","Componer", Constantes.OK_ACEPTAR);
+				JOptionPane.showConfirmDialog(Pantalla.this, "Canci\u00F3n guardada en la base de datos","Componer", Constantes.OK_ACEPTAR);
 			}
 			
 			if (e.getActionCommand() == Constantes.GUARDAR_CANCION_MODIFICADA){
 				// esto hay q cambiarlo porque no guarda en las matrices
-				controlador.guardarCancion(cancionNueva,Pantalla.this.getJTextNombreCanciones().getText(),Pantalla.this.getJTextComentariosCanciones().getText());
+				controlador.guardarCanciones(cancionNueva,Pantalla.this.getJTextNombreCanciones().getText(),Pantalla.this.getJTextComentariosCanciones().getText());
 				cargarArbolCanciones();
 				JOptionPane.showConfirmDialog(Pantalla.this, "Canci\u00F3n guardada en la base de datos","Canciones", Constantes.OK_ACEPTAR);
 			}

@@ -395,6 +395,7 @@ public class Controlador {
 		
 		try {
 			Archivos.generarArchivo(cancion);
+			aprenderArchivo(cancion.getNombre()+Constantes.EXTENSION_ARCHIVO);
 		} catch (NullPointerException e) {
 			return null;
 		}
@@ -759,12 +760,12 @@ public class Controlador {
 	}
 	
 	/**
-	 * 
+	 * Guarda una cancion generada por composicion asi como sus modificaciones
 	 * @param cancionNueva
 	 * @param nombreFantasia
 	 * @param comentario
 	 */
-	public void guardarCancion(canciones.Cancion cancionNueva, String nombreFantasia, String comentario) {
+	public void guardarCancionCompuesta(canciones.Cancion cancionNueva, String nombreFantasia, String comentario) {
 		
 		cancionNueva.setComentario(comentario);
 		cancionNueva.setNombreFantasia(nombreFantasia);
@@ -795,6 +796,26 @@ public class Controlador {
 			System.err.println(e.getMessage());
 		}
 	}
+	
+	/**
+	 * Guarda una nueva version de una cancion previamente levantada de la base de datos
+	 * En la opcion Canciones del menu
+	 * @param cancionNueva
+	 * @param nombreFantasia
+	 * @param comentario
+	 */
+	public void guardarCanciones(canciones.Cancion cancionNueva, String nombreFantasia, String comentario) {
+		
+		cancionNueva.setComentario(comentario);
+		cancionNueva.setNombreFantasia(nombreFantasia);
+		manejadorPersistencia.cancionNuevaABaseDeDatos(cancionNueva);
+		try {
+			this.getManejadorPersistencia().cancionesAMemoria(getListaCanciones());
+		} catch (PersistenciaException e) {
+			System.err.println(e.getMessage()+Controlador.class);
+		}
+	}
+	
 	
 	//#########################################################################################
 	/**
