@@ -140,14 +140,24 @@ public class Archivos {
 		int linea = 1;
 		
 		String nombre = Utiles.reemplazarEspaciosDeString(miCancion.getNombre());
-		String sFichero = "./"+nombre+Constantes.EXTENSION_ARCHIVO;
+		String sFichero = nombre+Constantes.EXTENSION_ARCHIVO;
 		File fichero = new File(sFichero);
+		
+		while(fichero.exists()) {
+			nombre = nombre+"_";
+			sFichero = nombre+Constantes.EXTENSION_ARCHIVO;
+			fichero = new File(sFichero);
+			
+		}
+		miCancion.setNombre(nombre);
+		
+		/*
 		if (fichero.exists()) {
 			// el archivo ya existe, le cambio el nombre
 			miCancion.setNombre(nombre+System.currentTimeMillis());
 		} else {
 			miCancion.setNombre(nombre);
-		}
+		}*/
 		
 		escribirArchivo(miCancion.getNombre()+Constantes.EXTENSION_ARCHIVO, "Tempo " + miCancion.getTempo(), false);
 		escribirArchivo(miCancion.getNombre()+Constantes.EXTENSION_ARCHIVO, "", true);

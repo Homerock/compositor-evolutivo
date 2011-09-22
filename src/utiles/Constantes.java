@@ -95,8 +95,9 @@ public interface Constantes {
 	public static final String FONDO_2 = "img/fondo2.png";
 	public static final String FONDO_3 = "img/fondo3.png";
 	
-	public static final String IMAGEN_APRENDER = "img/ImgAprender.png";
-	public static final String IMAGEN_CEREBRO = "img/ImgCerebro.png";
-	public static final String IMAGEN_COMPONER = "img/ImgComponer.png";
-	public static final String IMAGEN_CANCIONES = "img/ImgCanciones.png";
+	public static final String IMAGEN_APRENDER = "img/aprender.png";
+	public static final String IMAGEN_CEREBRO = "img/cerebro.png";
+	public static final String IMAGEN_COMPONER = "img/componer.png";
+	public static final String IMAGEN_CANCIONES = "img/canciones.png";
+	public static final String IMAGEN_ACERCA = "img/acerca.png";
 }
