@@ -84,6 +84,7 @@ public class Pantalla extends JFrame {
     private JMenu menuFile = new JMenu();
     private JMenuItem menuFileExit = new JMenuItem();
     private JMenu menuHelp = new JMenu();
+    private JMenuItem menuHelpAyuda = new JMenuItem();
     private JMenuItem menuHelpAbout = new JMenuItem();
     private JTextField jTextNombre;
     private JTextArea jTextComentarios;
@@ -96,10 +97,7 @@ public class Pantalla extends JFrame {
     //private JCheckBox jCheckTonica;
     private JLabel jLabelTonica;
     private JLabel jLabelEstilo;
-    private JLabel statusBar = new JLabel();
-    //private ImageIcon imageOpen = new ImageIcon(Pantalla.class.getResource("openfile.gif"));
-    //private ImageIcon imageClose = new ImageIcon(Pantalla.class.getResource("closefile.gif"));
-    //private ImageIcon imageHelp = new ImageIcon(Pantalla.class.getResource("help.gif"));
+    //private JLabel statusBar = new JLabel();
     private JSplitPane jSplitPane1 = new JSplitPane();
     private JSplitPane jSplitPane2 = new JSplitPane();
     
@@ -211,14 +209,21 @@ public class Pantalla extends JFrame {
             }
         });
         menuHelp.setText("Ayuda");
+        
+        menuHelpAyuda.setText("Ayuda");
+        menuHelpAyuda.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                helpAyuda_ActionPerformed(ae);
+            }
+        });
+        
         menuHelpAbout.setText("Acerca de...");
         menuHelpAbout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 helpAbout_ActionPerformed(ae);
             }
         });
-        statusBar.setText("");
-        //jPanel1.setLayout(verticalFlowLayout1);
+       // statusBar.setText("");
         panelOpciones.setLayout(cardLayout1);
         
         botonAprender.setIcon(new ImageIcon(misImagenes.getImagenURL(Constantes.BOTON_APRENDER)));
@@ -227,37 +232,35 @@ public class Pantalla extends JFrame {
                     botonAprender_actionPerformed(e);
                 }
             });
-        //botonComponer.setText("Componer");
         botonComponer.setIcon(new ImageIcon(misImagenes.getImagenURL(Constantes.BOTON_COMPONER)));
         botonComponer.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     botonComponer_actionPerformed(e);
                 }
             });
-        //botonBD.setText("Base de datos");
-        botonBD.setIcon(new ImageIcon(misImagenes.getImagenURL(Constantes.BOTON_CEREBRO)));
-        botonBD.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    botonBD_actionPerformed(e);
-                }
-            });
-        //botonCanciones.setText("Canciones");
         botonCanciones.setIcon(new ImageIcon(misImagenes.getImagenURL(Constantes.BOTON_CANCIONES)));
         botonCanciones.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 botonCanciones_actionPerformed(e);
             }
         });
+        botonBD.setIcon(new ImageIcon(misImagenes.getImagenURL(Constantes.BOTON_CEREBRO)));
+        botonBD.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    botonBD_actionPerformed(e);
+                }
+            });
 
         menuFile.add(menuFileExit);
         menuFileExit.setName("menuFileExit");
         menuBar.add(menuFile);
-        menuFile.setName("menuFile");
+        menuHelp.add(menuHelpAyuda);
+        menuHelpAbout.setName("menuHelpAyuda");
         menuHelp.add(menuHelpAbout);
         menuHelpAbout.setName("menuHelpAbout");
         menuBar.add(menuHelp);
         menuHelp.setName("menuHelp");
-        this.getContentPane().add(statusBar, BorderLayout.SOUTH);
+        //this.getContentPane().add(statusBar, BorderLayout.SOUTH);
         
         ManejadorEventos manejador = new ManejadorEventos();
         
@@ -943,7 +946,10 @@ public class Pantalla extends JFrame {
 	 * @param e
 	 */
 	void fileExit_ActionPerformed(ActionEvent e) {
-        System.exit(0);
+		int resultado = JOptionPane.showConfirmDialog(Pantalla.this, "Desea salir?","Salir", Constantes.SI_NO_OPCION);
+		if (resultado == Constantes.OPCION_SI) {
+			System.exit(0);
+		}
     }
 
 	/**
@@ -952,6 +958,14 @@ public class Pantalla extends JFrame {
 	 */
     void helpAbout_ActionPerformed(ActionEvent e) {
         JOptionPane.showMessageDialog(this, new About(), "Acerca de...", JOptionPane.PLAIN_MESSAGE);
+    }
+
+    /**
+	 * 
+	 * @param e
+	 */
+    void helpAyuda_ActionPerformed(ActionEvent e) {
+        JOptionPane.showMessageDialog(this, new Ayuda(), "Ayuda", JOptionPane.PLAIN_MESSAGE);
     }
 
     /**
