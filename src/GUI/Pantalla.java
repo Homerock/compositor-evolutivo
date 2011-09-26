@@ -1244,12 +1244,12 @@ public class Pantalla extends JFrame {
 			if (e.getActionCommand() == Constantes.ACTUALIZAR) {
 				try {
 					controlador.memoriaABaseDeDatos();
+					JOptionPane.showConfirmDialog(Pantalla.this, "Se actualiz\u00F3 la base de datos","Cerebro", Constantes.OK_ACEPTAR);
 				} catch (ORMException e1) {
 					System.err.println(e1.getMessage());
 				} catch (PersistenciaException e1) {
 					System.err.println(e1.getMessage());
 				}
-				JOptionPane.showConfirmDialog(Pantalla.this, "Se actualiz\u00F3 la base de datos","Cerebro", Constantes.OK_ACEPTAR);
 			}
 
 			if (e.getActionCommand() == Constantes.APRENDER_CANCION) {
@@ -1404,16 +1404,19 @@ public class Pantalla extends JFrame {
 			
 			if (e.getActionCommand() == Constantes.GUARDAR_CANCION){
 				
-				controlador.guardarCancionCompuesta(cancionNueva,Pantalla.this.getJTextNombre().getText(),Pantalla.this.getJTextComentarios().getText());
-				cargarArbolCanciones();
-				JOptionPane.showConfirmDialog(Pantalla.this, "Canci\u00F3n guardada en la base de datos","Componer", Constantes.OK_ACEPTAR);
+				if (controlador.guardarCancionCompuesta(cancionNueva,Pantalla.this.getJTextNombre().getText(),Pantalla.this.getJTextComentarios().getText())) {
+					cargarArbolCanciones();
+					JOptionPane.showConfirmDialog(Pantalla.this, "Canci\u00F3n guardada en la base de datos","Componer", Constantes.OK_ACEPTAR);
+				}
+				
 			}
 			
 			if (e.getActionCommand() == Constantes.GUARDAR_CANCION_MODIFICADA){
 				// esto hay q cambiarlo porque no guarda en las matrices
-				controlador.guardarCanciones(cancionNueva,Pantalla.this.getJTextNombreCanciones().getText(),Pantalla.this.getJTextComentariosCanciones().getText());
-				cargarArbolCanciones();
-				JOptionPane.showConfirmDialog(Pantalla.this, "Canci\u00F3n guardada en la base de datos","Canciones", Constantes.OK_ACEPTAR);
+				if (controlador.guardarCanciones(cancionNueva,Pantalla.this.getJTextNombreCanciones().getText(),Pantalla.this.getJTextComentariosCanciones().getText())) {
+					cargarArbolCanciones();
+					JOptionPane.showConfirmDialog(Pantalla.this, "Canci\u00F3n guardada en la base de datos","Canciones", Constantes.OK_ACEPTAR);
+				}
 			}
 			
 			if (e.getActionCommand() == Constantes.REPRODUCIR_CANCION){
