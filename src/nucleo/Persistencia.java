@@ -70,15 +70,11 @@ public class Persistencia implements Runnable {
 			fis.close();		
 			
 		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			
-		}catch(FileNotFoundException e){	
-			
-			throw new PersistenciaException("No existe el archivo de configuracion (recuerde ponerlo en el mismo directorio) - "+Persistencia.class);
+			System.err.println(e.getMessage());
+		} catch(FileNotFoundException e){	
+			throw new PersistenciaException("No existe el archivo de configuracion (recuerde ponerlo en el directorio config) - "+Persistencia.class);
 		} catch(IOException e) {
-			
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		}
 	}
 
@@ -603,11 +599,9 @@ public class Persistencia implements Runnable {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		} catch (ORMException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		}
 		
 	}

@@ -58,7 +58,7 @@ public class CancionDTO {
 			manager.create(Cancion.class, parametros);
 			
 		}catch(PSQLException e){
-			throw new ORMException("la cancion "+nombre+", para el dia de hoy , ya existe.");
+			throw new ORMException("No se pudo insertar la cancion "+nombre);
 		}
 		return;
 	}

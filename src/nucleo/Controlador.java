@@ -41,7 +41,7 @@ public class Controlador {
 	private Map<String, MatrizAcordes> MatrizEvolutiva;
 	private Map<String, Cancion> listaCanciones;
 	
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 	private Persistencia manejadorPersistencia = null;
 	
 	private Cancion cancionNueva=null;
@@ -765,36 +765,44 @@ public class Controlador {
 	 * @param nombreFantasia
 	 * @param comentario
 	 */
-	public void guardarCancionCompuesta(canciones.Cancion cancionNueva, String nombreFantasia, String comentario) {
-		
-		cancionNueva.setComentario(comentario);
-		cancionNueva.setNombreFantasia(nombreFantasia);
-		manejadorPersistencia.cancionNuevaABaseDeDatos(cancionNueva);
+	public boolean guardarCancionCompuesta(canciones.Cancion cancionNueva, String nombreFantasia, String comentario) {
+				
 		try {
+			cancionNueva.setComentario(comentario);
+			cancionNueva.setNombreFantasia(nombreFantasia);
+			manejadorPersistencia.cancionNuevaABaseDeDatos(cancionNueva);
+			
 			this.getManejadorPersistencia().cancionesAMemoria(getListaCanciones());
-		} catch (PersistenciaException e) {
-			System.err.println(e.getMessage()+Controlador.class);
-		}
-		
-		// cargo en la matriz la nueva cancion que compuse
-		try {
+			
+			// cargo en la matriz la nueva cancion que compuse
 			Aprendizaje.aprenderCancion(cancionNueva.getNombre()+ Constantes.EXTENSION_ARCHIVO);
 			// vuelvo a calcular los acumulados para seguir componiendo
 			String estilo = cancionNueva.getEstiloPrincipal();
 			
 			this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
 			this.getMiMatrizEstilos().calcularAcumulados();
+			
 		} catch (IndexOutOfBoundsException e) {
 			System.err.println(e.getMessage());
+			return false;
 		} catch (EstilosException e) {
 			System.err.println(e.getMessage());
+			return false;
 		} catch (ValoresException e) {
 			System.err.println(e.getMessage());
+			return false;
 		} catch (ArchivosException e) {
 			System.err.println(e.getMessage());
+			return false;
 		} catch (CancionException e) {
 			System.err.println(e.getMessage());
+			return false;
+		} catch (PersistenciaException e) {
+			System.err.println(e.getMessage());
+			return false;
 		}
+		
+		return true;
 	}
 	
 	/**
@@ -804,16 +812,18 @@ public class Controlador {
 	 * @param nombreFantasia
 	 * @param comentario
 	 */
-	public void guardarCanciones(canciones.Cancion cancionNueva, String nombreFantasia, String comentario) {
+	public boolean guardarCanciones(canciones.Cancion cancionNueva, String nombreFantasia, String comentario) {
 		
-		cancionNueva.setComentario(comentario);
-		cancionNueva.setNombreFantasia(nombreFantasia);
-		manejadorPersistencia.cancionNuevaABaseDeDatos(cancionNueva);
 		try {
+			cancionNueva.setComentario(comentario);
+			cancionNueva.setNombreFantasia(nombreFantasia);
+			manejadorPersistencia.cancionNuevaABaseDeDatos(cancionNueva);
 			this.getManejadorPersistencia().cancionesAMemoria(getListaCanciones());
 		} catch (PersistenciaException e) {
 			System.err.println(e.getMessage()+Controlador.class);
+			return false;
 		}
+		return true;
 	}
 	
 	
