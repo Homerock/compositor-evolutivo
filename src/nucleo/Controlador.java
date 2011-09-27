@@ -1,6 +1,7 @@
 package nucleo;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -800,6 +801,12 @@ public class Controlador {
 		} catch (PersistenciaException e) {
 			System.err.println(e.getMessage());
 			return false;
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+			return false;
+		} catch (ORMException e) {
+			System.err.println(e.getMessage());
+			return false;
 		}
 		
 		return true;
@@ -814,12 +821,21 @@ public class Controlador {
 	 */
 	public boolean guardarCanciones(canciones.Cancion cancionNueva, String nombreFantasia, String comentario) {
 		
+		cancionNueva.setComentario(comentario);
+		cancionNueva.setNombreFantasia(nombreFantasia);
+		
+		int cant = getListaCanciones().size()+2;
+		// guardo la cancion en la lista en memoria
+		getListaCanciones().put(String.valueOf(cant), cancionNueva);
+		
+		//guardo la cancion directamente a la base de datos
 		try {
-			cancionNueva.setComentario(comentario);
-			cancionNueva.setNombreFantasia(nombreFantasia);
 			manejadorPersistencia.cancionNuevaABaseDeDatos(cancionNueva);
-			this.getManejadorPersistencia().cancionesAMemoria(getListaCanciones());
-		} catch (PersistenciaException e) {
+			//this.getManejadorPersistencia().cancionesAMemoria(getListaCanciones());
+		} catch (SQLException e) {
+			System.err.println(e.getMessage()+Controlador.class);
+			return false;
+		} catch (ORMException e) {
 			System.err.println(e.getMessage()+Controlador.class);
 			return false;
 		}

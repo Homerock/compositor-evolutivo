@@ -569,9 +569,8 @@ public class Persistencia implements Runnable {
 		}
 	}
 	
-	public void cancionNuevaABaseDeDatos(canciones.Cancion cancion){
+	public void cancionNuevaABaseDeDatos(canciones.Cancion cancion) throws SQLException, ORMException{
 		
-		try {
 			
 			CancionDTO.insertar(manager, cancion.getNombreFantasia(), cancion.getTempo(), cancion.getEstiloPrincipal(), cancion.getTonica().getNombre(), cancion.getComentario(),cancion.getDuracion());
 			
@@ -579,7 +578,7 @@ public class Persistencia implements Runnable {
 			
 			ArrayList<Estrofa> estrofas = cancion.getEstrofas();
 			
-			for (int i =0 ;i<estrofas.size();i++){
+			for (int i =0 ;i<estrofas.size();i++) {
 				
 				
 				ArrayList<Compas> compases = estrofas.get(i).getListaDeCompases();
@@ -597,13 +596,6 @@ public class Persistencia implements Runnable {
 				}
 				
 			}
-
-		} catch (SQLException e) {
-			System.err.println(e.getMessage());
-		} catch (ORMException e) {
-			System.err.println(e.getMessage());
-		}
-		
 	}
 	    
 	
