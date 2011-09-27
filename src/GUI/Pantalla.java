@@ -464,6 +464,15 @@ public class Pantalla extends JFrame {
     	
     }
     
+    private void agregarCancionAlArbol(String nombre) {
+    	
+    	int cant = controlador.getListaCanciones().size()+1;
+    	
+    	DefaultMutableTreeNode nodoCancion=new DefaultMutableTreeNode(String.valueOf(cant)+" - "+nombre);
+    	modelo.insertNodeInto(nodoCancion, nodoPadre, 0);
+    	
+    }
+    
     /**
      * 
      * @param manejador
@@ -1413,8 +1422,10 @@ public class Pantalla extends JFrame {
 			
 			if (e.getActionCommand() == Constantes.GUARDAR_CANCION_MODIFICADA){
 				// esto hay q cambiarlo porque no guarda en las matrices
-				if (controlador.guardarCanciones(cancionNueva,Pantalla.this.getJTextNombreCanciones().getText(),Pantalla.this.getJTextComentariosCanciones().getText())) {
-					cargarArbolCanciones();
+				boolean resultado = controlador.guardarCanciones(cancionNueva,Pantalla.this.getJTextNombreCanciones().getText(),Pantalla.this.getJTextComentariosCanciones().getText()); 
+				//cargarArbolCanciones();
+				agregarCancionAlArbol(cancionNueva.getNombreFantasia());
+				if (resultado) {
 					JOptionPane.showConfirmDialog(Pantalla.this, "Canci\u00F3n guardada en la base de datos","Canciones", Constantes.OK_ACEPTAR);
 				}
 			}
