@@ -139,7 +139,7 @@ public class Archivos {
 		ArrayList<Estrofa> todasLasEstrofas = miCancion.getEstrofas();
 		int linea = 1;
 		
-		String nombre = Utiles.reemplazarEspaciosDeString(miCancion.getNombre());
+		String nombre = Utiles.reemplazarEspaciosDeString(miCancion.getNombreArchivo());
 		String sFichero = nombre+Constantes.EXTENSION_ARCHIVO;
 		File fichero = new File(sFichero);
 		
@@ -149,7 +149,7 @@ public class Archivos {
 			fichero = new File(sFichero);
 			
 		}
-		miCancion.setNombre(nombre);
+		miCancion.setNombreArchivo(nombre);
 		
 		/*
 		if (fichero.exists()) {
@@ -159,12 +159,12 @@ public class Archivos {
 			miCancion.setNombre(nombre);
 		}*/
 		
-		escribirArchivo(miCancion.getNombre()+Constantes.EXTENSION_ARCHIVO, "Tempo " + miCancion.getTempo(), false);
-		escribirArchivo(miCancion.getNombre()+Constantes.EXTENSION_ARCHIVO, "", true);
+		escribirArchivo(miCancion.getNombreArchivo()+Constantes.EXTENSION_ARCHIVO, "Tempo " + miCancion.getTempo(), false);
+		escribirArchivo(miCancion.getNombreArchivo()+Constantes.EXTENSION_ARCHIVO, "", true);
 		
 		for (Estrofa est : todasLasEstrofas) {
 			
-			escribirArchivo(miCancion.getNombre()+Constantes.EXTENSION_ARCHIVO, "Groove " + est.getEstilo(), true);
+			escribirArchivo(miCancion.getNombreArchivo()+Constantes.EXTENSION_ARCHIVO, "Groove " + est.getEstilo(), true);
 			
 			ArrayList<Compas> todosLosCompases = est.getListaDeCompases();
 		
@@ -174,13 +174,13 @@ public class Archivos {
 				for (Acorde ac : todosLosAcordes) {
 					compas = compas + " " + ac.getNombre();
 				}
-				escribirArchivo(miCancion.getNombre()+Constantes.EXTENSION_ARCHIVO, linea + compas, true);
+				escribirArchivo(miCancion.getNombreArchivo()+Constantes.EXTENSION_ARCHIVO, linea + compas, true);
 				linea++;
 			}	
 		}
-		System.out.println("Nuevo archivo generado: " + miCancion.getNombre()+Constantes.EXTENSION_ARCHIVO);
+		System.out.println("Nuevo archivo generado: " + miCancion.getNombreArchivo()+Constantes.EXTENSION_ARCHIVO);
 
-		crearMIDI(miCancion.getNombre(), false);
+		crearMIDI(miCancion.getNombreArchivo(), false);
 	}
 
 	//#########################################################################################

@@ -14,7 +14,7 @@ public class Cancion {
 	 ###################							ATRIBUTOS					###################################### 
 	 ################################################################################################################# */
 
-	private String nombre;	//nombre de archivo mma
+	private String nombreArchivo;	//nombre de archivo mma
 	private String nombreFantasia;	//nombre para guardar en la BD
 	private String tempo;
 	private int duracion;// cantidad de compases de toda la cancion
@@ -31,7 +31,8 @@ public class Cancion {
 	 ################################################################################################################# */
 
 	public Cancion(){
-		this.setNombre(null);
+		this.setNombreArchivo(null);
+		this.setNombreFantasia(null);
 		this.setTempo(null);
 		this.setDuracion(0);
 		this.setTonica(new Acorde());
@@ -50,7 +51,7 @@ public class Cancion {
 	 * @param estiloPrincipal
 	 */
 	public Cancion(String nombre,String tempo,int duracion,Acorde tonica,String estiloPrincipal){
-		this.setNombre(nombre);
+		this.setNombreArchivo(nombre);
 		this.setNombreFantasia(nombre);
 		this.setTempo(tempo);
 		this.setDuracion(duracion);
@@ -69,7 +70,7 @@ public class Cancion {
 	 * @param estiloPrincipal
 	 */
 	public Cancion(String nombre,String tempo,Acorde tonica,String estiloPrincipal){
-		this.setNombre(nombre);
+		this.setNombreArchivo(nombre);
 		this.setNombreFantasia(nombre);
 		this.setTempo(tempo);
 		this.setDuracion(0);
@@ -89,7 +90,7 @@ public class Cancion {
 			String comentario,
 			String fechaCreacion){
 		
-		this.setNombre(nombre);
+		this.setNombreArchivo(nombre);
 		this.setNombreFantasia(nombre);
 		this.setTempo(tempo);
 		this.setDuracion(duracion);
@@ -110,12 +111,12 @@ public class Cancion {
 		this.getEstrofas().add(miEstrofa);
 	}
 	
-	public String getNombre() {
-		return nombre;
+	public String getNombreArchivo() {
+		return nombreArchivo;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setNombreArchivo(String nombre) {
+		this.nombreArchivo = nombre;
 	}
 
 	public String getTempo() {
@@ -226,7 +227,7 @@ public class Cancion {
 	
 	@Override
 	public String toString() {
-		return "Cancion [nombre = " + nombre + ", tempo = " + tempo + ", duracion = " + duracion + ", tonica = " 
+		return "Cancion [nombre = " + nombreFantasia + ", tempo = " + tempo + ", duracion = " + duracion + ", tonica = " 
 				+ tonica + ", estiloPrincipal = " + estiloPrincipal + "\n"
 				+ "estrofas = " + estrofas + "]\n";
 	}
