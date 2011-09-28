@@ -33,6 +33,9 @@ public class Reproductor {
 	
 	public void reproducir(){
         // Start playing
+		if (sequencer.getMicrosecondPosition() == sequencer.getMicrosecondLength()) {
+			detener();
+		}
         sequencer.start();
 	}
 

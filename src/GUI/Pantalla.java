@@ -368,7 +368,7 @@ public class Pantalla extends JFrame {
 		        	if (reproductor != null) {
 						reproductor.detener();
 					}
-					reproductor = new Reproductor(cancionNueva.getNombre()+".mid");
+					reproductor = new Reproductor(cancionNueva.getNombreArchivo()+".mid");
 				} catch (InvalidMidiDataException e1) {
 					System.err.println(e1.getMessage());
 					reproductor = null;
@@ -457,7 +457,7 @@ public class Pantalla extends JFrame {
 		while (it.hasNext()) {
 			Map.Entry e = (Map.Entry)it.next();
 			Cancion miCancion = (Cancion) e.getValue();
-			nombre = e.getKey() + " - " + miCancion.getNombre();
+			nombre = e.getKey() + " - " + miCancion.getNombreFantasia();
 			nodoCancion=new DefaultMutableTreeNode(nombre);
 	    	modelo.insertNodeInto(nodoCancion, nodoPadre, 0);
 		}
@@ -1331,7 +1331,7 @@ public class Pantalla extends JFrame {
 					if (reproductor != null) {
 						reproductor.detener();
 					}
-					reproductor = new Reproductor(cancionNueva.getNombre()+".mid");
+					reproductor = new Reproductor(cancionNueva.getNombreArchivo()+".mid");
 				} catch (InvalidMidiDataException e1) {
 					System.err.println(e1.getMessage());
 					reproductor = null;
@@ -1397,7 +1397,7 @@ public class Pantalla extends JFrame {
 					if (reproductor != null) {
 						reproductor.detener();
 					}
-					reproductor = new Reproductor(cancionNueva.getNombre()+".mid");
+					reproductor = new Reproductor(cancionNueva.getNombreArchivo()+".mid");
 				} catch (InvalidMidiDataException e1) {
 					System.err.println(e1.getMessage());
 					reproductor = null;
@@ -1413,17 +1413,16 @@ public class Pantalla extends JFrame {
 			
 			if (e.getActionCommand() == Constantes.GUARDAR_CANCION){
 				
-				if (controlador.guardarCancionCompuesta(cancionNueva,Pantalla.this.getJTextNombre().getText(),Pantalla.this.getJTextComentarios().getText())) {
-					cargarArbolCanciones();
-					JOptionPane.showConfirmDialog(Pantalla.this, "Canci\u00F3n guardada en la base de datos","Componer", Constantes.OK_ACEPTAR);
+				boolean resultado = controlador.guardarCancionCompuesta(cancionNueva,Pantalla.this.getJTextNombre().getText(),Pantalla.this.getJTextComentarios().getText());
+				agregarCancionAlArbol(cancionNueva.getNombreFantasia());
+				if (resultado) {
+					JOptionPane.showConfirmDialog(Pantalla.this, "Canci\u00F3n guardada en la base de datos","Canciones", Constantes.OK_ACEPTAR);
 				}
-				
 			}
 			
 			if (e.getActionCommand() == Constantes.GUARDAR_CANCION_MODIFICADA){
-				// esto hay q cambiarlo porque no guarda en las matrices
+				
 				boolean resultado = controlador.guardarCanciones(cancionNueva,Pantalla.this.getJTextNombreCanciones().getText(),Pantalla.this.getJTextComentariosCanciones().getText()); 
-				//cargarArbolCanciones();
 				agregarCancionAlArbol(cancionNueva.getNombreFantasia());
 				if (resultado) {
 					JOptionPane.showConfirmDialog(Pantalla.this, "Canci\u00F3n guardada en la base de datos","Canciones", Constantes.OK_ACEPTAR);

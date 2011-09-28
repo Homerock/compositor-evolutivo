@@ -396,7 +396,7 @@ public class Controlador {
 		
 		try {
 			Archivos.generarArchivo(cancion);
-			aprenderArchivo(cancion.getNombre()+Constantes.EXTENSION_ARCHIVO);
+			aprenderArchivo(cancion.getNombreArchivo()+Constantes.EXTENSION_ARCHIVO);
 		} catch (NullPointerException e) {
 			return null;
 		}
@@ -508,7 +508,7 @@ public class Controlador {
 			// genero el archivo .mma que contiene a la nueva cancion 
 			Archivos.generarArchivo(nuevaCancion);
 			// cargo en la matriz la nueva cancion que compuse
-			Aprendizaje.aprenderCancion(nuevaCancion.getNombre()+Constantes.EXTENSION_ARCHIVO);
+			Aprendizaje.aprenderCancion(nuevaCancion.getNombreArchivo()+Constantes.EXTENSION_ARCHIVO);
 			// vuelvo a calcular los acumulados para seguir componiendo
 			this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
 			this.getMiMatrizEstilos().calcularAcumulados();
@@ -767,16 +767,20 @@ public class Controlador {
 	 * @param comentario
 	 */
 	public boolean guardarCancionCompuesta(canciones.Cancion cancionNueva, String nombreFantasia, String comentario) {
-				
-		try {
-			cancionNueva.setComentario(comentario);
-			cancionNueva.setNombreFantasia(nombreFantasia);
-			manejadorPersistencia.cancionNuevaABaseDeDatos(cancionNueva);
 			
-			this.getManejadorPersistencia().cancionesAMemoria(getListaCanciones());
+		cancionNueva.setComentario(comentario);
+		cancionNueva.setNombreFantasia(nombreFantasia);
+		
+		int cant = getListaCanciones().size()+2;
+		// guardo la cancion en la lista en memoria
+		getListaCanciones().put(String.valueOf(cant), cancionNueva);
+		
+		try {
+			manejadorPersistencia.cancionNuevaABaseDeDatos(cancionNueva);
+			//this.getManejadorPersistencia().cancionesAMemoria(getListaCanciones());
 			
 			// cargo en la matriz la nueva cancion que compuse
-			Aprendizaje.aprenderCancion(cancionNueva.getNombre()+ Constantes.EXTENSION_ARCHIVO);
+			Aprendizaje.aprenderCancion(cancionNueva.getNombreArchivo()+ Constantes.EXTENSION_ARCHIVO);
 			// vuelvo a calcular los acumulados para seguir componiendo
 			String estilo = cancionNueva.getEstiloPrincipal();
 			
@@ -796,9 +800,6 @@ public class Controlador {
 			System.err.println(e.getMessage());
 			return false;
 		} catch (CancionException e) {
-			System.err.println(e.getMessage());
-			return false;
-		} catch (PersistenciaException e) {
 			System.err.println(e.getMessage());
 			return false;
 		} catch (SQLException e) {

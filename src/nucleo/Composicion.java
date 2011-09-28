@@ -79,7 +79,7 @@ public class Composicion {
 		// ese bardo es solo un debug
 		if (DEBUG) {
 			ArrayList<Estrofa> todasLasEstrofas = nuevaCancion.getEstrofas();
-			System.out.println("CANCION: " + nuevaCancion.getNombre());
+			System.out.println("CANCION: " + nuevaCancion.getNombreFantasia());
 			for (Estrofa est : todasLasEstrofas) {
 				System.out.println("----------------Num de estrofa: " + est.getNumeroEstrofa() + " --- " + "Estilo: " + est.getEstilo() + "--------------------");
 				ArrayList<Compas> todosLosCompases = est.getListaDeCompases();
