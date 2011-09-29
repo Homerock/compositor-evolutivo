@@ -16,8 +16,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiUnavailableException;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -42,6 +46,7 @@ import canciones.Estrofa;
 import excepciones.ORMException;
 import excepciones.PersistenciaException;
 
+import midiPlayer.MIDIPlayer;
 import nucleo.Controlador;
 import nucleo.Reproductor;
 import utiles.Constantes;
@@ -93,9 +98,9 @@ public class Interfaz implements ItemListener{
 	private JMenuItem subOpcion4_1;	//about
 	private JTabbedPane pestania;
 	private JButton botonComponer;
-	private JButton botonModificarCancion;
-	private JButton botonReproducirCancion;
-	private JButton botonPausarCancion;
+//	private JButton botonModificarCancion;
+//	private JButton botonReproducirCancion;
+//	private JButton botonPausarCancion;
 
 	private JPanel card;
 	private JPanel panelComponer;	//Panel componer
@@ -122,7 +127,8 @@ public class Interfaz implements ItemListener{
 	ArrayList<TablaAcordes> estrofas = new ArrayList<TablaAcordes>() ;
 	
 	boolean DEBUG=false;
-	Reproductor reproductor=null;
+	MIDIPlayer panelMidi;
+	//Reproductor reproductor=null;
 	
 	
 	public Interfaz(Controlador miControlador) {
@@ -142,6 +148,7 @@ public class Interfaz implements ItemListener{
 		pestania = new JTabbedPane(TABS_POSICION);
 		controlador = miControlador;
 		crearFrame();
+		panelMidi.checker.start();
 	}
 
 	public void crearFrame() {
@@ -285,7 +292,7 @@ public class Interfaz implements ItemListener{
 
 		panelEditar.add(labelEditar);
 
-		
+		/*
 		
 		//boton 
 		botonModificarCancion = getJButtonModificarCancion();
@@ -305,7 +312,7 @@ public class Interfaz implements ItemListener{
 		botonPausarCancion.setActionCommand(PAUSAR_CANCION);
 		panelEditar.add(botonPausarCancion);
 		
-		
+		*/
 		
 		
 		// panel para la cancion
@@ -315,6 +322,9 @@ public class Interfaz implements ItemListener{
 		panelScrollEditar = new JScrollPane();
 		panelScrollEditar.setViewportView(panelCancion);
 		panelEditar.add(panelScrollEditar);
+		
+		panelMidi = new MIDIPlayer();
+		panelEditar.add(panelMidi);
 
 	}
 	
@@ -489,6 +499,8 @@ public class Interfaz implements ItemListener{
 		}
 		return botonComponer;
 	}
+	
+	/*
 
 	private JButton getJButtonModificarCancion() {
 		if (botonModificarCancion == null) {
@@ -521,7 +533,7 @@ public class Interfaz implements ItemListener{
 		return botonPausarCancion;
 	}
 		
-	
+	*/
 	
 	public void cargarCombo() {
 		ArrayList<String> lista = controlador.getComboEstilos();
@@ -609,16 +621,27 @@ public class Interfaz implements ItemListener{
 				
 				actualizarPanelEditar(cancionNueva);
 				Archivos.generarArchivo(cancionNueva);
-				reproductor=null;
+//				reproductor=null;
 
 			}//fin MODIFICAR_CANCION
 			
-			
+/*			
 			
 			if (e.getActionCommand() == REPRODUCIR_CANCION){
 				if(reproductor==null){
 					
-					//reproductor = new Reproductor(cancionNueva.getNombre()+".mid");
+					try {
+						reproductor = new Reproductor(cancionNueva.getNombreArchivo()+".mid");
+					} catch (InvalidMidiDataException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (MidiUnavailableException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 				reproductor.reproducir();
 			}//FIN REPRODUCIR_CANCION
@@ -628,7 +651,7 @@ public class Interfaz implements ItemListener{
 					reproductor.pausar();
 			}//FIN 
 			
-			
+*/			
 			
 			if (e.getActionCommand() == COMPONER) {
 				String tipoComposicion = (String) jComboTipoComposicion.getSelectedItem();
@@ -689,7 +712,10 @@ public class Interfaz implements ItemListener{
 				// mostrar la cancion quese compuso en editar
 				cancionNueva = controlador.getCancionNueva();
 				if (cancionNueva!=null){
+					File f = new File(cancionNueva.getNombreArchivo()+".mid");
+					panelMidi.addSong(f);
 					actualizarPanelEditar(cancionNueva);
+					
 				}
 
 			}

@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -49,6 +51,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 
+import midiPlayer.MIDIPlayer;
 import nucleo.Controlador;
 import nucleo.Reproductor;
 
@@ -65,19 +68,6 @@ import estructura.MatrizAcordes;
 import excepciones.ORMException;
 import excepciones.PersistenciaException;
 
-
-/**
-* This code was edited or generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
-* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
-* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
-*/
 public class Pantalla extends JFrame {
     private BorderLayout layoutMain = new BorderLayout();
     private JMenuBar menuBar = new JMenuBar();
@@ -173,7 +163,8 @@ public class Pantalla extends JFrame {
 	ArrayList<TablaAcordes> estrofas = new ArrayList<TablaAcordes>();
 	
 	boolean DEBUG=false;
-	Reproductor reproductor=null;
+	//Reproductor reproductor=null;
+	private MIDIPlayer panelMidi;
 	
 	/**
 	 * 
@@ -300,6 +291,8 @@ public class Pantalla extends JFrame {
         jSplitPane1.add(panelBotones, JSplitPane.LEFT);
         this.getContentPane().add(jSplitPane1, BorderLayout.CENTER);
         Application.getInstance().getContext().getResourceMap(getClass()).injectComponents(getContentPane());
+ 
+        panelMidi.checker.start();
     }
 
     /**
@@ -308,7 +301,7 @@ public class Pantalla extends JFrame {
     private void armarPanelAprender(ManejadorEventos manejador) {
     	
     	panelArbolAprender.getViewport().add(fileTree, null);
-    	
+ 
     	panelAprender = new JPanel();
     	//panelAprender.setLayout(new GridLayout(2,1));
     	BoxLayout panelAprenderLayout = new BoxLayout(panelAprender, javax.swing.BoxLayout.Y_AXIS);
@@ -363,7 +356,13 @@ public class Pantalla extends JFrame {
 		        botonDetenerCancion.setEnabled(true);
 		        jCheckGuardarCanciones.setEnabled(true);
 		        actualizarPanelEditar(cancionNueva);
+		        File f = new File(cancionNueva.getNombreArchivo()+".mid");
 		        
+		        if (panelMidi.getDevice().getSequencer() != null) {
+		        	panelMidi.addSong(f);
+		        }
+				
+		       /*
 		        try {
 		        	if (reproductor != null) {
 						reproductor.detener();
@@ -379,7 +378,7 @@ public class Pantalla extends JFrame {
 					System.err.println(e1.getMessage());
 					reproductor = null;
 				}
-				
+				*/
 				CardLayout c2 = (CardLayout) panelDetalle.getLayout();
 		        c2.show(panelDetalle, "panelDetalleComponer");
 		      }
@@ -749,7 +748,9 @@ public class Pantalla extends JFrame {
 		
 		
 		JPanelBackground panelReproductor = new JPanelBackground();
+		
 		panelReproductor.setLayout(new FlowLayout());
+		
 		
 		//boton REPTODUCIR 
 		botonReproducirCancion = getJButtonReproducirCancion();
@@ -771,7 +772,7 @@ public class Pantalla extends JFrame {
 		botonDetenerCancion.setActionCommand(Constantes.DETENER_CANCION);
 		panelReproductor.add(botonDetenerCancion);
 		botonDetenerCancion.setName("botonDetenerCancion");
-
+		
 		try {
 			panelImagenComponer.setBackground(misImagenes.getImagenURL(Constantes.FONDO_1));
 			panelImagenCanciones.setBackground(misImagenes.getImagenURL(Constantes.FONDO_1));
@@ -786,7 +787,11 @@ public class Pantalla extends JFrame {
 		
 		panelDetalleComponer.add(panelModificar);
 		panelDetalleComponer.add(panelScrollEditar);
-		panelDetalleComponer.add(panelReproductor);
+		
+/*		panelDetalleComponer.add(panelReproductor);
+		*/
+		panelMidi = new MIDIPlayer();
+		panelDetalleComponer.add(panelMidi);
 	}
 		
 	/**
@@ -986,9 +991,13 @@ public class Pantalla extends JFrame {
     	botonComponer.setBackground(null);
     	botonCanciones.setBackground(null);
     	botonBD.setBackground(null);
-    	if (reproductor != null) {
+   
+    	if (panelMidi.getDevice().getSequencer() != null) {
+    		panelMidi.getDevice().stop();
+    	}
+/*    	if (reproductor != null) {
 			reproductor.detener();
-		}
+		}*/
         CardLayout c1 = (CardLayout) panelOpciones.getLayout();
         c1.show(panelOpciones, "panelAprender");
         CardLayout c2 = (CardLayout) panelDetalle.getLayout();
@@ -1008,9 +1017,13 @@ public class Pantalla extends JFrame {
     	botonComponer.setBackground(Color.gray);
     	botonCanciones.setBackground(null);
     	botonBD.setBackground(null);
-    	if (reproductor != null) {
+    	
+    	if (panelMidi.getDevice().getSequencer() != null) {
+    		panelMidi.getDevice().stop();
+    	}
+/*    	if (reproductor != null) {
 			reproductor.detener();
-		}
+		}*/
         CardLayout c1 = (CardLayout) panelOpciones.getLayout();
         c1.show(panelOpciones, "panelComponer");
         CardLayout c2 = (CardLayout) panelDetalle.getLayout();
@@ -1026,9 +1039,13 @@ public class Pantalla extends JFrame {
     	botonComponer.setBackground(null);
     	botonCanciones.setBackground(null);
     	botonBD.setBackground(Color.gray);
-    	if (reproductor != null) {
+    	
+    	if (panelMidi.getDevice().getSequencer() != null) {
+    		panelMidi.getDevice().stop();
+    	}
+/*    	if (reproductor != null) {
 			reproductor.detener();
-		}
+		}*/
         CardLayout c1 = (CardLayout) panelOpciones.getLayout();
         c1.show(panelOpciones, "panelBD");
         CardLayout c2 = (CardLayout) panelDetalle.getLayout();
@@ -1047,9 +1064,13 @@ public class Pantalla extends JFrame {
     	botonComponer.setBackground(null);
     	botonCanciones.setBackground(Color.gray);
     	botonBD.setBackground(null);
-    	if (reproductor != null) {
+    	
+    	if (panelMidi.getDevice().getSequencer() != null) {
+    		panelMidi.getDevice().stop();
+    	}
+/*    	if (reproductor != null) {
 			reproductor.detener();
-		}
+		}*/
         CardLayout c1 = (CardLayout) panelOpciones.getLayout();
         c1.show(panelOpciones, "panelCanciones");
         CardLayout c2 = (CardLayout) panelDetalle.getLayout();
@@ -1327,7 +1348,12 @@ public class Pantalla extends JFrame {
 				}
 				actualizarPanelEditar(cancionNueva);
 				//Archivos.generarArchivo(cancionNueva); //esto ya lo hace el metodo componer
-				try {
+				File f = new File(cancionNueva.getNombreArchivo()+".mid");
+		        
+		        if (panelMidi.getDevice().getSequencer() != null) {
+		        	panelMidi.addSong(f);
+		        }
+/*				try {
 					if (reproductor != null) {
 						reproductor.detener();
 					}
@@ -1341,7 +1367,7 @@ public class Pantalla extends JFrame {
 				} catch (MidiUnavailableException e1) {
 					System.err.println(e1.getMessage());
 					reproductor = null;
-				}
+				}*/
 				botonModificarCancion.setEnabled(true);
 				//botonGuardar.setEnabled(true);
 				botonReproducirCancion.setEnabled(true);
@@ -1393,7 +1419,14 @@ public class Pantalla extends JFrame {
 				}
 				Archivos.generarArchivo(cancionNueva);
 				actualizarPanelEditar(cancionNueva);
-				try {
+				
+				File f = new File(cancionNueva.getNombreArchivo()+".mid");
+		        
+		        if (panelMidi.getDevice().getSequencer() != null) {
+		        	panelMidi.addSong(f);
+		        }
+				
+/*				try {
 					if (reproductor != null) {
 						reproductor.detener();
 					}
@@ -1407,7 +1440,7 @@ public class Pantalla extends JFrame {
 				} catch (MidiUnavailableException e1) {
 					System.err.println(e1.getMessage());
 					reproductor = null;
-				}
+				}*/
 
 			}//fin MODIFICAR_CANCION
 			
@@ -1428,7 +1461,7 @@ public class Pantalla extends JFrame {
 					JOptionPane.showConfirmDialog(Pantalla.this, "Canci\u00F3n guardada en la base de datos","Canciones", Constantes.OK_ACEPTAR);
 				}
 			}
-			
+/*			
 			if (e.getActionCommand() == Constantes.REPRODUCIR_CANCION){
 				if (reproductor != null) {
 					reproductor.reproducir();
@@ -1446,7 +1479,7 @@ public class Pantalla extends JFrame {
 					reproductor.detener();
 				}
 			}//FIN DETENER_CANCION
-						
+						*/
 		}
 	}
     

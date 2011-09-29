@@ -44,8 +44,7 @@ public class MIDIPlayerGUI extends JFrame
         
         pane.add(midiP,BorderLayout.CENTER);
         
-        System.out.println("printtt");
-        setSize(700, 98);
+        setSize(700, 600);
         setResizable(true);
         setVisible(true);
         

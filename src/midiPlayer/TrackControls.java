@@ -23,14 +23,14 @@ public class TrackControls extends JPanel implements MouseListener,
     {
         super();
         this.p = p;
-        this.seq = p.p.getSequencer();
+        this.seq = p.getDevice().getSequencer();
         
         p.addPlayerListener(this);
         
         addMouseListener(this);
         addMouseMotionListener(this);
-        setSize(new Dimension(200, 400));
-        setPreferredSize(new Dimension(200, 400));
+        setSize(new Dimension(100, 100));
+        setPreferredSize(new Dimension(100, 100));
         
         toggles = new LinkedList<Integer>();
     }

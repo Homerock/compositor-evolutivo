@@ -62,6 +62,7 @@ public interface Constantes {
 	public static final String PAUSAR_CANCION ="pausar";
 	public static final String APRENDER_CANCION ="aprender_cancion";
 	public static final String DETENER_CANCION ="detener_cancion";
+	public static final String OPCIONES_AVANZADAS ="opciones_avanzadas";
 	public static final String CAMBIA_ESTILO ="cambia_estilo";
 
 	public static final int OK_ACEPTAR = -1;
