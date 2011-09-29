@@ -17,7 +17,7 @@ public class TempoSlider extends JSlider implements ChangeListener,
     {
         super(10, 240, 120);
         this.p = p;
-        this.seq = p.p.getSequencer();
+        this.seq = p.getDevice().getSequencer();
         this.slid = p.slid;
         this.tempoLabel = tempoLabel;
         addChangeListener(this);

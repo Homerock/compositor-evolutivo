@@ -3,66 +3,159 @@ package midiPlayer;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.Vector;
 
 import javax.sound.midi.Sequence;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class MIDIPlayer extends JPanel {
+import utiles.Constantes;
 
-	public PlayingDevice p;
+import GUI.Imagenes;
+import GUI.JPanelBackground;
+import GUI.Pantalla.ManejadorEventos;
+
+public class MIDIPlayer extends JPanelBackground {
+
+	Imagenes misImagenes = new Imagenes();
+	ManejadorEventosMidi manejador = new ManejadorEventosMidi();
+	private JButton botonPlay;
+	private JButton botonStop;
+	private JButton botonPause;
+	private JButton botonAvanzado;
+	
+	public PlayingDevice device;
 	public AdvancedControls ac;
     public SequenceItem sequenceItemActual;
     public Checker checker;
     public PositSlider slid;
     //public AdvancedControls ac;
     private Vector<MIDIPlayerListener> events;
-    private boolean acShow = false,
-                    acActive = true;
+
 	
 	public MIDIPlayer()
     {
-		p = new PlayingDevice();
+		device = new PlayingDevice();
         sequenceItemActual = null;
         events = new Vector<MIDIPlayerListener>();
         
-        this.setLayout(new BorderLayout());
-        slid = new PositSlider(p.getSequencer(), this);
-        checker = new Checker(p.getSequencer(), slid);
+        //this.setLayout(new GridLayout(2,1));
         
-        JPanel buttnz = new JPanel(new FlowLayout());
-        buttnz.add(new AdvancedButton(this));
-        buttnz.add(new PlayButton(p));
-        buttnz.add(new PauseButton(p));
-        buttnz.add(new StopButton(p));
-     
-        JPanel corner = new JPanel(new FlowLayout());
+        BoxLayout panelMidiLayout = new BoxLayout(this, javax.swing.BoxLayout.Y_AXIS);
+        this.setLayout(panelMidiLayout);
         
-        corner.add(new BrowseButton(this));
+        slid = new PositSlider(device.getSequencer(), this);
+        checker = new Checker(device.getSequencer(), slid);
         
-        JPanel middle = new JPanel(new BorderLayout());
-        middle.add(buttnz, BorderLayout.WEST);
-        middle.add(corner, BorderLayout.EAST);
+        JPanelBackground buttnz = new JPanelBackground();
+        buttnz.setLayout(new FlowLayout());
         
-        this.add(slid, BorderLayout.NORTH);
-        this.add(middle, BorderLayout.CENTER);
+        botonPlay = getJButtonPlay();
+        botonPlay.addActionListener(manejador);
+		botonPlay.setActionCommand(Constantes.REPRODUCIR_CANCION);
+		
+		botonStop = getJButtonStop();
+        botonStop.addActionListener(manejador);
+		botonStop.setActionCommand(Constantes.DETENER_CANCION);
+		
+		botonPause = getJButtonPause();
+        botonPause.addActionListener(manejador);
+		botonPause.setActionCommand(Constantes.PAUSAR_CANCION);
+		
+		botonAvanzado = getJButtonAvanzado();
+        botonAvanzado.addActionListener(manejador);
+		botonAvanzado.setActionCommand(Constantes.OPCIONES_AVANZADAS);
+        
+		buttnz.add(botonAvanzado);
+        buttnz.add(botonPlay);
+        buttnz.add(botonPause);
+        buttnz.add(botonStop);
+        
+        JLabel label = new JLabel("	");
+        
+        this.add(label);
+        this.add(slid);
+        this.add(buttnz);
         ac = new AdvancedControls(this);
-        this.add(ac, BorderLayout.SOUTH);
       
+        try {
+        	buttnz.setBackground(misImagenes.getImagenURL(Constantes.FONDO_3));
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
+        
         setVisible(true);
-        
-        
+
     }
+	
+	private JButton getJButtonPlay() {
+		if (botonPlay == null) {
+			botonPlay = new JButton();
+			try {
+				botonPlay.setIcon(new ImageIcon(misImagenes.getImagenURL(Constantes.BOTON_PLAY)));
+			} catch (MalformedURLException e) {
+				System.err.println(e.getMessage());
+			}
+			botonPlay.setVisible(true);
+		}
+		return botonPlay;
+	}
+	
+	private JButton getJButtonStop() {
+		if (botonStop == null) {
+			botonStop = new JButton();
+			try {
+				botonStop.setIcon(new ImageIcon(misImagenes.getImagenURL(Constantes.BOTON_STOP)));
+			} catch (MalformedURLException e) {
+				System.err.println(e.getMessage());
+			}
+			botonStop.setVisible(true);
+		}
+		return botonStop;
+	}
+	
+	private JButton getJButtonPause() {
+		if (botonPause == null) {
+			botonPause = new JButton();
+			try {
+				botonPause.setIcon(new ImageIcon(misImagenes.getImagenURL(Constantes.BOTON_PAUSE)));
+			} catch (MalformedURLException e) {
+				System.err.println(e.getMessage());
+			}
+			botonPause.setVisible(true);
+		}
+		return botonPause;
+	}
+	
+	private JButton getJButtonAvanzado() {
+		if (botonAvanzado == null) {
+			botonAvanzado = new JButton();
+			try {
+				botonAvanzado.setIcon(new ImageIcon(misImagenes.getImagenURL(Constantes.BOTON_PAUSE)));
+			} catch (MalformedURLException e) {
+				System.err.println(e.getMessage());
+			}
+			botonAvanzado.setVisible(true);
+		}
+		return botonAvanzado;
+	}
+	
 	
 	public void addSong(File f)
     {
@@ -74,7 +167,7 @@ public class MIDIPlayer extends JPanel {
 				try {
 					seq = PlayingDevice.loadSequence(f);
 					checker.setSong(seq.getTickLength());
-	                p.setSequence(seq);
+					device.setSequence(seq);
 	                for(Iterator<MIDIPlayerListener> i = events.iterator(); i.hasNext();)
 	                {
 	                    MIDIPlayerListener cur = i.next();
@@ -87,7 +180,7 @@ public class MIDIPlayer extends JPanel {
     
     public void songEnded()
     {
-        p.stop();
+    	device.stop();
     }
     
     public void playSong()
@@ -106,7 +199,7 @@ public class MIDIPlayer extends JPanel {
         if(seq == null)
             return;
         checker.setSong(seq.getTickLength());
-        p.setSequence(seq);
+        device.setSequence(seq);
         for(Iterator<MIDIPlayerListener> i = events.iterator(); i.hasNext();)
         {
             MIDIPlayerListener cur = i.next();
@@ -115,10 +208,16 @@ public class MIDIPlayer extends JPanel {
     }
     public void slideAdvanced(boolean show)
     {
+    	
+    	//JOptionPane.showMessageDialog(this,ac,"Acerca de...", -1);
+    	JOptionPane.showOptionDialog(this, ac, "Pistas de la canci\u00F3n", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+
+    	/*
         acShow = show;
         Point location = getLocation();
         ac.setLocation(location.x+(getWidth()-ac.getWidth())/2, location.y+getHeight());
         ac.setVisible(show);
+        */
     }
     //------------------------------------
     public void addPlayerListener(MIDIPlayerListener lll)
@@ -128,7 +227,42 @@ public class MIDIPlayer extends JPanel {
    
     public Sequence getCurrentSequence()
     {
-        return p.getSequence();
+        return device.getSequence();
     }
+
+	public PlayingDevice getDevice() {
+		return device;
+	}
+
+	public void setDevice(PlayingDevice device) {
+		this.device = device;
+	}
+	
+	/**
+	 * 
+	 *
+	 */
+	public class ManejadorEventosMidi implements ActionListener{
+
+		public void actionPerformed(ActionEvent e) {
+			
+			if (e.getActionCommand() == Constantes.REPRODUCIR_CANCION) {
+				getDevice().play();
+			}
+			
+			if (e.getActionCommand() == Constantes.PAUSAR_CANCION) {
+				getDevice().pause();
+			}
+			
+			if (e.getActionCommand() == Constantes.DETENER_CANCION) {
+				getDevice().stop();
+			}
+			
+			if (e.getActionCommand() == Constantes.OPCIONES_AVANZADAS) {
+				slideAdvanced(true);
+			}
+			
+		}
+	}
 	
 }

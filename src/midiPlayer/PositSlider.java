@@ -30,7 +30,7 @@ public class PositSlider extends JPanel
         factor = 1.0;
         isPlaying = false;
         prevT = System.currentTimeMillis();
-        setPreferredSize(new Dimension(200, 20));
+        setPreferredSize(new Dimension(200, 30));
         addMouseListener(new MouseAdapter()
         {
             public void mousePressed(MouseEvent e)
