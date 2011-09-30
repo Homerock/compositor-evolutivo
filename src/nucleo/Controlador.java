@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
+
 import javax.swing.JFileChooser;
 
 import archivos.Archivos;
@@ -47,6 +49,9 @@ public class Controlador {
 	
 	private Cancion cancionNueva=null;
 	
+	private WindowHandler handler = null;
+	private Logger logger = null;
+	
 	//#########################################################################################
 	/**
 	 * constructor
@@ -62,6 +67,9 @@ public class Controlador {
 		this.setMiListaDeEstilosPrincipales(new ListaValores());
 		this.setListaCanciones(new HashMap<String, Cancion>());
 		
+		handler = WindowHandler.getInstance();
+    	logger = Logger.getLogger("Homerock");
+	    logger.addHandler(handler);
 		
 		try {
 			manejadorPersistencia = new Persistencia();
@@ -75,6 +83,22 @@ public class Controlador {
 		
 	}
 	
+	public void mostrarVentana() {
+		handler.mostrarVentana();
+	}
+	
+	public void ocultarVentana() {
+		handler.ocultarVentana();
+	}
+	
+	public void logInfo(String mensaje) {
+	  	logger.info(mensaje);
+	}
+	  
+	public void logWarning(String mensaje) {
+	  	logger.warning(mensaje);
+	}
+
 	//#########################################################################################
 	/**
 	 * 
@@ -91,16 +115,16 @@ public class Controlador {
 			guardarCancionEnMemoria(cancionAprendida);
 
 		}catch(EstilosException ee){
-			System.err.println(ee.getMessage());
+			logWarning(ee.getMessage());
 			return 0;
 		}catch(ValoresException ve){
-			System.err.println(ve.getMessage());
+			logWarning(ve.getMessage());
 			return 0;
-		} catch (ArchivosException e) {
-			System.err.println(e.getMessage());
+		} catch (ArchivosException ae) {
+			logWarning(ae.getMessage());
 			return 0;
-		} catch (CancionException e) {
-			System.err.println(e.getMessage());
+		} catch (CancionException ce) {
+			logWarning(ce.getMessage());
 			return 0;
 		}
 		
@@ -128,7 +152,7 @@ public class Controlador {
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
 				files = listOfFiles[i].getName();
-				System.out.println(i + " - Antes de cargar: " + path+files);
+				logInfo("Archivo a cargar: "+path+files);
 				try{
 					
 					cancionAprendida = Aprendizaje.aprenderCancion(path+files);
@@ -136,13 +160,13 @@ public class Controlador {
 					cant++;
 					
 				}catch(EstilosException ee){
-					System.err.println(ee.getMessage());
+					logWarning(ee.getMessage());
 				}catch(ValoresException ve){
-					System.err.println(ve.getMessage());
-				} catch (ArchivosException e) {
-					System.err.println(e.getMessage());
-				} catch (CancionException e) {
-					System.err.println(e.getMessage());
+					logWarning(ve.getMessage());
+				} catch (ArchivosException ae) {
+					logWarning(ae.getMessage());
+				} catch (CancionException ce) {
+					logWarning(ce.getMessage());
 				}
 			}
 		}
@@ -490,13 +514,13 @@ public class Controlador {
 		try {
 			tempo = this.getMiListaDeTempos().obtenerMayorValorPorEstilo(estilo);
 		} catch (ValoresException e) {
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return;
 		}
 		try {
 			duracion = this.getMiListaDeDuraciones().obtenerMayorValorPorEstilo(estilo);
 		} catch (ValoresException e) {
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return;
 		}
 
@@ -515,27 +539,27 @@ public class Controlador {
 			
 		}  catch (AcordesException e) {
 			error = true;
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return;	
 		}  catch (CancionException e) {
 			error = true;
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return;
 		} catch (NumberFormatException e) {
 			error = true;
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return;
 		} catch (EstilosException e) {
 			error = true;
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return;
 		} catch (ValoresException e) {
 			error = true;
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return;
 		} catch (ArchivosException e) {
 			error = true;
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return;
 			
 		}finally{
@@ -574,7 +598,7 @@ public class Controlador {
 			try {
 				tempo = this.getMiListaDeTempos().obtenerMayorValorPorEstilo(estilo);
 			} catch (ValoresException e) {
-				System.err.println(e.getMessage());
+				logWarning(e.getMessage());
 				return;
 			}
 		}
@@ -582,7 +606,7 @@ public class Controlador {
 			try {
 				duracion = this.getMiListaDeDuraciones().obtenerMayorValorPorEstilo(estilo);
 			} catch (ValoresException e) {
-				System.err.println(e.getMessage());
+				logWarning(e.getMessage());
 				return;
 			}
 		}
@@ -602,15 +626,15 @@ public class Controlador {
 			
 		}  catch (AcordesException e) {
 			error = true;
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return;
 		}  catch (CancionException e) {
 			error = true;
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return;
 		} catch (NumberFormatException e) {
 			error = true;
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return;
 		} 
 		finally {
@@ -651,7 +675,7 @@ public class Controlador {
 			try {
 				tempo = this.getMiListaDeTempos().obtenerMayorValorPorEstilo(estilo);
 			} catch (ValoresException e) {
-				System.err.println(e.getMessage());
+				logWarning(e.getMessage());
 				return;
 			}
 		}
@@ -708,15 +732,15 @@ public class Controlador {
 			
 		}catch (AcordesException e) {		
 			error = true;
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return;
 		}  catch (CancionException e) {
 			error = true;
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return;
 		} catch (NumberFormatException e) {
 			error = true;
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return;
 		} 
 		finally {
@@ -748,9 +772,9 @@ public class Controlador {
 							System.out.println("cambio acordes a compas : "+c1.toString());
 						
 					} catch (CancionException e) {
-						System.err.println(e.getMessage());
+						logWarning(e.getMessage());
 					} catch (AcordesException e) {
-						System.err.println(e.getMessage());
+						logWarning(e.getMessage());
 					}					
 				}
 				//actualizamos el ultimo acorde
@@ -788,25 +812,25 @@ public class Controlador {
 			this.getMiMatrizEstilos().calcularAcumulados();
 			
 		} catch (IndexOutOfBoundsException e) {
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return false;
 		} catch (EstilosException e) {
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return false;
 		} catch (ValoresException e) {
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return false;
 		} catch (ArchivosException e) {
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return false;
 		} catch (CancionException e) {
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return false;
 		} catch (SQLException e) {
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return false;
 		} catch (ORMException e) {
-			System.err.println(e.getMessage());
+			logWarning(e.getMessage());
 			return false;
 		}
 		
@@ -834,10 +858,10 @@ public class Controlador {
 			manejadorPersistencia.cancionNuevaABaseDeDatos(cancionNueva);
 			//this.getManejadorPersistencia().cancionesAMemoria(getListaCanciones());
 		} catch (SQLException e) {
-			System.err.println(e.getMessage()+Controlador.class);
+			logWarning(e.getMessage());
 			return false;
 		} catch (ORMException e) {
-			System.err.println(e.getMessage()+Controlador.class);
+			logWarning(e.getMessage());
 			return false;
 		}
 		return true;
@@ -947,6 +971,14 @@ public class Controlador {
 
 	public void setListaCanciones(Map<String, Cancion> listaCanciones) {
 		this.listaCanciones = listaCanciones;
+	}
+	
+	public WindowHandler getHandler() {
+		return handler;
+	}
+
+	public void setHandler(WindowHandler handler) {
+		this.handler = handler;
 	}
 
 }

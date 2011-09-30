@@ -29,7 +29,7 @@ public class TrackControls extends JPanel implements MouseListener,
         
         addMouseListener(this);
         addMouseMotionListener(this);
-        setSize(new Dimension(100, 100));
+        setSize(new Dimension(100, 50));
         setPreferredSize(new Dimension(100, 100));
         
         toggles = new LinkedList<Integer>();
@@ -59,7 +59,7 @@ public class TrackControls extends JPanel implements MouseListener,
         g.setColor(Color.black);
         for(int i = 0; i < tracks; i++)
         {
-            g.drawString("Track #"+(i+1), 10, 20+trackSpace*i);
+            g.drawString("Pista #"+(i+1), 10, 20+trackSpace*i);
             g.drawString("Mute", 100+instSpace, 20+trackSpace*i);
             g.drawString("Solo", 150+instSpace, 20+trackSpace*i);
             g.draw(new Rectangle2D.Double(93+instSpace, trackSpace*i+5, 40, 20));

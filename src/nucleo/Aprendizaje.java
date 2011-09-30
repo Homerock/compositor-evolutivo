@@ -70,7 +70,7 @@ public class Aprendizaje {
 		}
 		
 		if(tempo.trim().length()==0){
-			throw new CancionException("La cancion NO tiene tempo definido ."+Archivos.class);
+			throw new CancionException("La cancion NO tiene tempo definido.");
 		}
 		
 		return tempo;

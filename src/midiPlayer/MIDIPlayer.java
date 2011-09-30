@@ -87,9 +87,6 @@ public class MIDIPlayer extends JPanelBackground {
         buttnz.add(botonPause);
         buttnz.add(botonStop);
         
-        JLabel label = new JLabel("	");
-        
-        this.add(label);
         this.add(slid);
         this.add(buttnz);
         ac = new AdvancedControls(this);
@@ -147,7 +144,7 @@ public class MIDIPlayer extends JPanelBackground {
 		if (botonAvanzado == null) {
 			botonAvanzado = new JButton();
 			try {
-				botonAvanzado.setIcon(new ImageIcon(misImagenes.getImagenURL(Constantes.BOTON_PAUSE)));
+				botonAvanzado.setIcon(new ImageIcon(misImagenes.getImagenURL(Constantes.BOTON_AVANZADO)));
 			} catch (MalformedURLException e) {
 				System.err.println(e.getMessage());
 			}
