@@ -39,7 +39,7 @@ public class Archivos {
 		
 		try {
 			if (!fil.accept(fichero, fichero.getName())) {
-				throw new ArchivosException("El formato del fichero "+ fichero.getName()+ " es incorrecto"+Archivos.class);
+				throw new ArchivosException("El formato del fichero "+ fichero.getName()+ " es incorrecto.");
 				
 			}
 			
@@ -60,9 +60,9 @@ public class Archivos {
 			return cancionAnalizada;//todo ok loco
 
 		} catch (FileNotFoundException e) {
-			throw new ArchivosException("El Archivo '"+nombreArchivo+"' No existe."+Archivos.class);
+			throw new ArchivosException("El Archivo '"+nombreArchivo+"' No existe.");
 		} catch (IOException e1) {
-			throw new ArchivosException("Error en la lectura de archivo :"+nombreArchivo + ". "+Archivos.class);
+			throw new ArchivosException("Error en la lectura de archivo :"+nombreArchivo + ".");
 		}
 	}
 	
@@ -97,14 +97,14 @@ public class Archivos {
 			}else {
 				
 				if (linea.startsWith(Constantes.NUEVO_ESTILO)){
-					throw new ArchivosException("No contemplamos definiciones de nuevos estilos. "+Archivos.class);
+					throw new ArchivosException("No contemplamos definiciones de nuevos estilos.");
 				}
 				if(Utiles.cadenaContienePatron(linea, Constantes.COMIENZO_DE_VARIABLE)){
 					//ej :
 					//Set Pass 1
 					//Groove $Pass BossaNova BossaNovaSus BossaNova1Sus
 
-					throw new ArchivosException("No contemplamos variables en definicion de estilos."+Archivos.class);
+					throw new ArchivosException("No contemplamos variables en definicion de estilos.");
 				}
 				
 				//me fijo si esta la palabra repeat en una cadena, ya que nos intersa, y la agrego en el arraylist

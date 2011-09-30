@@ -90,6 +90,7 @@ public interface Constantes {
 	public static final String BOTON_PLAY = "img/play.png";
 	public static final String BOTON_PAUSE = "img/pause.png";
 	public static final String BOTON_STOP = "img/stop.png";
+	public static final String BOTON_AVANZADO = "img/avanzado2.png";
 	
 	
 	public static final String FONDO_1 = "img/fondo1.jpg";

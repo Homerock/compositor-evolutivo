@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.logging.Logger;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
@@ -72,6 +73,7 @@ public class Pantalla extends JFrame {
     private BorderLayout layoutMain = new BorderLayout();
     private JMenuBar menuBar = new JMenuBar();
     private JMenu menuFile = new JMenu();
+    private JMenuItem menuFileLogs = new JMenuItem();
     private JMenuItem menuFileExit = new JMenuItem();
     private JMenu menuHelp = new JMenu();
     private JMenuItem menuHelpAyuda = new JMenuItem();
@@ -173,15 +175,16 @@ public class Pantalla extends JFrame {
     public Pantalla(Controlador miControlador) {
     	
     	controlador = miControlador;
-    	misImagenes = new Imagenes();
-    	
+    	misImagenes = new Imagenes();  
+	    
         try {
             jbInit();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+    
+    
     /**
      * 
      * @throws Exception
@@ -193,6 +196,14 @@ public class Pantalla extends JFrame {
         this.setSize(new Dimension(1000, 500));
         this.setTitle("Homerock");
         menuFile.setText("Archivo");
+        
+        menuFileLogs.setText("Ver logs");
+        menuFileLogs.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                fileLogs_ActionPerformed(ae);
+            }
+        });
+        
         menuFileExit.setText("Salir");
         menuFileExit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -242,6 +253,7 @@ public class Pantalla extends JFrame {
                 }
             });
 
+        menuFile.add(menuFileLogs);
         menuFile.add(menuFileExit);
         menuFileExit.setName("menuFileExit");
         menuBar.add(menuFile);
@@ -955,6 +967,16 @@ public class Pantalla extends JFrame {
 		return botonAprenderCancion;
 	}
 
+	
+	/**
+	 * 
+	 * @param e
+	 */
+	void fileLogs_ActionPerformed(ActionEvent e) {
+		getControlador().mostrarVentana();
+		
+    }
+
 	/**
 	 * 
 	 * @param e
@@ -1248,6 +1270,15 @@ public class Pantalla extends JFrame {
     	}
     	return jTextNombreCanciones;
     }
+
+    public Controlador getControlador() {
+		return controlador;
+	}
+
+
+	public void setControlador(Controlador controlador) {
+		this.controlador = controlador;
+	}
 
     
     public class ManejadorEventos implements ActionListener{
