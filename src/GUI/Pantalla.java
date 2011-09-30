@@ -14,6 +14,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -1307,9 +1308,9 @@ public class Pantalla extends JFrame {
 					controlador.memoriaABaseDeDatos();
 					JOptionPane.showConfirmDialog(Pantalla.this, "Se actualiz\u00F3 la base de datos","Cerebro", Constantes.OK_ACEPTAR);
 				} catch (ORMException e1) {
-					System.err.println(e1.getMessage());
+					getControlador().logWarning(e1.getMessage());
 				} catch (PersistenciaException e1) {
-					System.err.println(e1.getMessage());
+					getControlador().logWarning(e1.getMessage());
 				}
 			}
 
@@ -1379,11 +1380,18 @@ public class Pantalla extends JFrame {
 				}
 				actualizarPanelEditar(cancionNueva);
 				//Archivos.generarArchivo(cancionNueva); //esto ya lo hace el metodo componer
-				File f = new File(cancionNueva.getNombreArchivo()+".mid");
+				
+				try {
+				
+					File f = new File(cancionNueva.getNombreArchivo()+".mid");
+					if (panelMidi.getDevice().getSequencer() != null) {
+			        	panelMidi.addSong(f);
+			        }
+				}catch(Exception fe) {
+					getControlador().logWarning(fe.getMessage());
+				}
+					
 		        
-		        if (panelMidi.getDevice().getSequencer() != null) {
-		        	panelMidi.addSong(f);
-		        }
 /*				try {
 					if (reproductor != null) {
 						reproductor.detener();
