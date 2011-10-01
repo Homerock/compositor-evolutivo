@@ -161,6 +161,7 @@ public class Pantalla extends JFrame {
 	private Imagenes misImagenes;
 	private Controlador controlador;
 	Cancion cancionNueva;
+	Cancion cancionModificada;
 	
 	//estrofas---->
 	ArrayList<TablaAcordes> estrofas = new ArrayList<TablaAcordes>();
@@ -356,6 +357,7 @@ public class Pantalla extends JFrame {
 		        DefaultMutableTreeNode node = (DefaultMutableTreeNode) e
 		            .getPath().getLastPathComponent();
 		        String tokens = archivos.Utiles.obtenerCadena(node.toString(), " ");
+		        // busca la cancion, crea el archivo y la aprende
 		        cancionNueva = controlador.buscarCancionSeleccionada(tokens);
 		        if (cancionNueva == null) {
 		        	return;
@@ -369,11 +371,13 @@ public class Pantalla extends JFrame {
 		        botonDetenerCancion.setEnabled(true);
 		        jCheckGuardarCanciones.setEnabled(true);
 		        actualizarPanelEditar(cancionNueva);
-		        File f = new File(cancionNueva.getNombreArchivo()+".mid");
 		        
-		        if (panelMidi.getDevice().getSequencer() != null) {
-		        	panelMidi.addSong(f);
-		        }
+				File f = new File(cancionNueva.getNombreArchivo()+".mid");
+				if (f.exists()) {
+					if (panelMidi.getDevice().getSequencer() != null) {
+						panelMidi.addSong(f);
+					}
+				}
 				
 		       /*
 		        try {
@@ -1379,34 +1383,16 @@ public class Pantalla extends JFrame {
 					return;
 				}
 				actualizarPanelEditar(cancionNueva);
-				//Archivos.generarArchivo(cancionNueva); //esto ya lo hace el metodo componer
-				
-				try {
-				
+				if (Archivos.generarArchivo(cancionNueva)) {
+					
 					File f = new File(cancionNueva.getNombreArchivo()+".mid");
-					if (panelMidi.getDevice().getSequencer() != null) {
-			        	panelMidi.addSong(f);
-			        }
-				}catch(Exception fe) {
-					getControlador().logWarning(fe.getMessage());
+					if (f.exists()) {
+						if (panelMidi.getDevice().getSequencer() != null) {
+				        	panelMidi.addSong(f);
+				        }
+					}
 				}
 					
-		        
-/*				try {
-					if (reproductor != null) {
-						reproductor.detener();
-					}
-					reproductor = new Reproductor(cancionNueva.getNombreArchivo()+".mid");
-				} catch (InvalidMidiDataException e1) {
-					System.err.println(e1.getMessage());
-					reproductor = null;
-				} catch (IOException e1) {
-					System.err.println(e1.getMessage());
-					reproductor = null;
-				} catch (MidiUnavailableException e1) {
-					System.err.println(e1.getMessage());
-					reproductor = null;
-				}*/
 				botonModificarCancion.setEnabled(true);
 				//botonGuardar.setEnabled(true);
 				botonReproducirCancion.setEnabled(true);
@@ -1417,7 +1403,7 @@ public class Pantalla extends JFrame {
 				CardLayout c2 = (CardLayout) panelDetalle.getLayout();
 		        c2.show(panelDetalle, "panelDetalleComponer");
 			}
-
+//----------------------------------------------------------------------------------
 			if (e.getActionCommand() == Constantes.MODIFICAR_CANCION ) {
 				
 				if (cancionNueva!=null){
@@ -1456,30 +1442,15 @@ public class Pantalla extends JFrame {
 				if (cancionNueva == null){
 					return;
 				}
-				Archivos.generarArchivo(cancionNueva);
 				actualizarPanelEditar(cancionNueva);
-				
-				File f = new File(cancionNueva.getNombreArchivo()+".mid");
-		        
-		        if (panelMidi.getDevice().getSequencer() != null) {
-		        	panelMidi.addSong(f);
-		        }
-				
-/*				try {
-					if (reproductor != null) {
-						reproductor.detener();
+				if (Archivos.generarArchivo(cancionNueva)) {
+					File f = new File(cancionNueva.getNombreArchivo()+".mid");
+					if (f.exists()) {
+						if (panelMidi.getDevice().getSequencer() != null) {
+							panelMidi.addSong(f);
+						}
 					}
-					reproductor = new Reproductor(cancionNueva.getNombreArchivo()+".mid");
-				} catch (InvalidMidiDataException e1) {
-					System.err.println(e1.getMessage());
-					reproductor = null;
-				} catch (IOException e1) {
-					System.err.println(e1.getMessage());
-					reproductor = null;
-				} catch (MidiUnavailableException e1) {
-					System.err.println(e1.getMessage());
-					reproductor = null;
-				}*/
+				}
 
 			}//fin MODIFICAR_CANCION
 			
@@ -1500,25 +1471,6 @@ public class Pantalla extends JFrame {
 					JOptionPane.showConfirmDialog(Pantalla.this, "Canci\u00F3n guardada en la base de datos","Canciones", Constantes.OK_ACEPTAR);
 				}
 			}
-/*			
-			if (e.getActionCommand() == Constantes.REPRODUCIR_CANCION){
-				if (reproductor != null) {
-					reproductor.reproducir();
-				}
-			}//FIN REPRODUCIR_CANCION
-
-			if (e.getActionCommand() == Constantes.PAUSAR_CANCION){
-				if (reproductor != null) {
-					reproductor.pausar();
-				}
-			}//FIN PAUSAR_CANCION
-			
-			if (e.getActionCommand() == Constantes.DETENER_CANCION){
-				if (reproductor != null) {
-					reproductor.detener();
-				}
-			}//FIN DETENER_CANCION
-						*/
 		}
 	}
     

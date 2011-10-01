@@ -27,6 +27,8 @@ import excepciones.CancionException;
 
 public class Composicion {
 	
+	boolean DEBUG = false;
+	
 	//################################################################################
 	/**
 	  * Constructor
@@ -58,7 +60,7 @@ public class Composicion {
 			int duracion, 
 			String tempo) throws CancionException, AcordesException{
 		
-		boolean DEBUG = true;
+		
 		
 		if(!miMatrizAcordes.ExisteAcordePpal(tonica)){
 			throw new CancionException("No se encuentra el acorde '"+tonica+"' en la base de conocimientos.");
@@ -523,7 +525,6 @@ public class Composicion {
 			
 			// si encontramos el End terminamos de armar la estructura
 			if ((estilo.indexOf(Constantes.END_ESTILO) != -1) || (estilo.indexOf(Constantes.INTRO_ESTILO) != -1)) {
-				System.out.println("CORTE POR ENCONTRAR: " + estilo);
 				break;
 			}
 		} while (n < nuevaCancion.getDuracion());
@@ -816,7 +817,7 @@ public class Composicion {
 		for (int i=mitad; i < tam; i++) {
 			Compas compas = listaCompases.get(i);
 			if(modificoCompas()){
-				System.out.println("modifico :"+compas.toString());
+				//System.out.println("modifico :"+compas.toString());
 				modificarAcordesDeCompas(miMatrizAcordes, acordeAnterior,compas);	
 			}
 			acordeAnterior = compas.getUltimoAcorde();
