@@ -133,13 +133,14 @@ public class Archivos {
 	 * @param miCancion
 	 */
 	//################################################################################
-	public static void generarArchivo(Cancion miCancion) {
+	public static boolean generarArchivo(Cancion miCancion) {
 		
 		String compas = " ";
 		ArrayList<Estrofa> todasLasEstrofas = miCancion.getEstrofas();
 		int linea = 1;
 		
 		String nombre = Utiles.reemplazarEspaciosDeString(miCancion.getNombreArchivo());
+		
 		String sFichero = nombre+Constantes.EXTENSION_ARCHIVO;
 		File fichero = new File(sFichero);
 		
@@ -149,6 +150,7 @@ public class Archivos {
 			fichero = new File(sFichero);
 			
 		}
+		
 		miCancion.setNombreArchivo(nombre);
 		
 		/*
@@ -178,9 +180,9 @@ public class Archivos {
 				linea++;
 			}	
 		}
-		System.out.println("Nuevo archivo generado: " + miCancion.getNombreArchivo()+Constantes.EXTENSION_ARCHIVO);
+		//System.out.println("Nuevo archivo generado: " + miCancion.getNombreArchivo()+Constantes.EXTENSION_ARCHIVO);
 
-		crearMIDI(miCancion.getNombreArchivo(), false);
+		return crearMIDI(miCancion.getNombreArchivo(), false);
 	}
 
 	//#########################################################################################
@@ -259,10 +261,9 @@ public class Archivos {
 			
 			brStdOut.close(); 
 			brStdErr.close(); 
-			} catch (IOException eproc) { 
-					//System.out.println ("Error to execute the command : "+eproc); 
-					return false; 
-		} 
+			}catch (Exception e) { 
+				return false;  
+			} 
 		return true; 
 	}
 

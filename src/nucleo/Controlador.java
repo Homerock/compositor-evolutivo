@@ -419,6 +419,13 @@ public class Controlador {
 		Cancion cancion = listaCanciones.get(nombre);
 		
 		try {
+			// busco si el fichero ya existe, lo aprendo y retorno la cancion
+			File fichero = new File(cancion.getNombreArchivo()+Constantes.EXTENSION_ARCHIVO);
+			if (fichero.exists()) {
+				aprenderArchivo(cancion.getNombreArchivo()+Constantes.EXTENSION_ARCHIVO);
+				return cancion;
+			}
+			
 			Archivos.generarArchivo(cancion);
 			aprenderArchivo(cancion.getNombreArchivo()+Constantes.EXTENSION_ARCHIVO);
 		} catch (NullPointerException e) {
@@ -613,16 +620,6 @@ public class Controlador {
 		
 		try {
 			nuevaCancion = miCompositor.componerCancion(miMatrizAcordes, this.getMiMatrizEstilos(), tonica, estilo, Integer.parseInt(duracion), tempo);
-			// genero el archivo .mma que contiene a la nueva cancion 
-			Archivos.generarArchivo(nuevaCancion);
-			
-			
-			// cargo en la matriz la nueva cancion que compuse
-			//Aprendizaje.aprenderCancion(nuevaCancion.getNombre()+ Constantes.EXTENSION_ARCHIVO);
-			// vuelvo a calcular los acumulados para seguir componiendo
-			//this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
-			//this.getMiMatrizEstilos().calcularAcumulados();
-			
 			
 		}  catch (AcordesException e) {
 			error = true;
@@ -722,14 +719,6 @@ public class Controlador {
 				}				
 			}
 			
-			
-			Archivos.generarArchivo(nuevaCancion);
-			// cargo en la matriz la nueva cancion que compuse
-			//Aprendizaje.aprenderCancion(nuevaCancion.getNombre()+ Constantes.EXTENSION_ARCHIVO);
-			// vuelvo a calcular los acumulados para seguir componiendo
-			//this.getMatrizEvolutiva().get(estilo).calcularAcumulados();
-			//this.getMiMatrizEstilos().calcularAcumulados();
-			
 		}catch (AcordesException e) {		
 			error = true;
 			logWarning(e.getMessage());
@@ -759,6 +748,7 @@ public class Controlador {
 	 */
 	public void modificarCancion(Cancion cancion) {
 		
+		
 		Acorde AcordeUltimo = cancion.getTonica();
 		
 		for (Estrofa e1 : cancion.getEstrofas()){
@@ -781,6 +771,7 @@ public class Controlador {
 				AcordeUltimo = c1.getUltimoAcorde();
 			}
 		}
+		
 		return ;
 	}
 	

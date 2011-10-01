@@ -296,7 +296,7 @@ public class Persistencia implements Runnable {
 				mapEstiloPpal= (EstilosFila) e.getValue();
 
 				if (mapEstiloPpal.isModificado()){
-					System.out.println(mapEstiloPpal.toString());
+					//System.out.println(mapEstiloPpal.toString());
 					if (EstilosDTO.existe(this.getManager(), mapEstiloPpal.getNombreEstilo())){
 						EstilosDTO.actualizar(this.getManager(), 
 								mapEstiloPpal.getNombreEstilo(),
@@ -510,7 +510,7 @@ public class Persistencia implements Runnable {
 				miAcordeFila = (AcordesFila) e.getValue();
 				
 				if (miAcordeFila.isModificado()){
-					System.out.println(miAcordeFila.toString());
+					//System.out.println(miAcordeFila.toString());
 					if (AcordesDTO.existe(this.getManager(), miAcordeFila.getNombreAcorde())){
 						AcordesDTO.actualizar(this.getManager(), miAcordeFila.getNombreAcorde(), miAcordeFila.getValorAcumuladoFila());
 
