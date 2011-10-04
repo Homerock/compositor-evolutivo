@@ -159,7 +159,7 @@ public class MIDIPlayer extends JPanelBackground {
   
                 SequenceItem si = new SequenceItem(f);
                 sequenceItemActual = si;
-                System.out.println(si.toString());
+                
                 Sequence seq;
 				try {
 					seq = PlayingDevice.loadSequence(f);
