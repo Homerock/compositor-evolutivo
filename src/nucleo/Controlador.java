@@ -115,7 +115,7 @@ public class Controlador {
 		CancionAprendida cancionAprendida = null;
 		
 		try {		
-			
+			logInfo("Archivo a cargar: "+ruta);
 			cancionAprendida = Aprendizaje.aprenderCancion(ruta);
 			guardarCancionEnMemoria(cancionAprendida);
 
@@ -751,16 +751,20 @@ public class Controlador {
 	 * 
 	 * @param cancion
 	 */
-	public void modificarCancion(Cancion cancion) {
+	public Cancion modificarCancion(Cancion cancion) {
 		
+		Cancion cancionModificada = (Cancion) cancion.clone();
 		
-		Acorde AcordeUltimo = cancion.getTonica();
+		//String nombre = cancionModificada.getNombreFantasia();
+		//String nombreArchivo = cancionModificada.getNombreArchivo();
 		
-		for (Estrofa e1 : cancion.getEstrofas()){
+		Acorde AcordeUltimo = cancionModificada.getTonica();
+		
+		for (Estrofa e1 : cancionModificada.getEstrofas()){
 			for(Compas c1 :e1.getListaDeCompases()){
 				if(c1.isModificarCompas()){
 					try {
-						Composicion.modificarAcordesDeCompas(this.getMatrizEvolutiva().get(cancion.getEstiloPrincipal()), AcordeUltimo, c1);
+						Composicion.modificarAcordesDeCompas(this.getMatrizEvolutiva().get(cancionModificada.getEstiloPrincipal()), AcordeUltimo, c1);
 						
 						c1.setModificarCompas(false);
 						if (DEBUG)
@@ -777,7 +781,7 @@ public class Controlador {
 			}
 		}
 		
-		return ;
+		return cancionModificada;
 	}
 	
 	/**
@@ -790,6 +794,7 @@ public class Controlador {
 			
 		cancionNueva.setComentario(comentario);
 		cancionNueva.setNombreFantasia(nombreFantasia);
+		cancionNueva.setNombreArchivo(nombreFantasia);
 		
 		int cant = getListaCanciones().size()+2;
 		// guardo la cancion en la lista en memoria
@@ -844,6 +849,7 @@ public class Controlador {
 		
 		cancionNueva.setComentario(comentario);
 		cancionNueva.setNombreFantasia(nombreFantasia);
+		cancionNueva.setNombreArchivo(nombreFantasia);
 		
 		int cant = getListaCanciones().size()+2;
 		// guardo la cancion en la lista en memoria

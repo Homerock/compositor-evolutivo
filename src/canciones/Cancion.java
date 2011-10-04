@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * @author SEBASTIAN PAZOS - YAMIL GOMEZ
  *
  */
-public class Cancion {
+public class Cancion implements Cloneable {
 	
 
 	/*################################################################################################################
@@ -107,6 +107,24 @@ public class Cancion {
 	 ###################						METODOS PUBLICOS				###################################### 
 	 ################################################################################################################# */
 
+	public Object clone(){
+        Cancion obj=null;
+        try{
+            obj=(Cancion)super.clone();
+        }catch(CloneNotSupportedException ex){
+            System.out.println(" no se puede duplicar");
+        }
+        
+        ArrayList<Estrofa> nuevaLista = new ArrayList<Estrofa>(obj.getEstrofas().size());
+        for (Estrofa nuevaEstrofa : obj.getEstrofas()) {
+        	nuevaLista.add((Estrofa) nuevaEstrofa.clone());
+        }
+      
+        obj.estrofas = nuevaLista;
+
+        return obj;
+    }
+	
 	public void agregarEstrofa(Estrofa miEstrofa) {
 		this.getEstrofas().add(miEstrofa);
 	}

@@ -1438,7 +1438,7 @@ public class Pantalla extends JFrame {
 					}
 
 				}// fin si la cancionNueva no es nula
-				controlador.modificarCancion(cancionNueva);
+				cancionNueva = controlador.modificarCancion(cancionNueva);
 				if (cancionNueva == null){
 					return;
 				}
@@ -1455,11 +1455,11 @@ public class Pantalla extends JFrame {
 			}//fin MODIFICAR_CANCION
 			
 			if (e.getActionCommand() == Constantes.GUARDAR_CANCION){
-				
+				JOptionPane.showConfirmDialog(Pantalla.this, "Guardando","Guardar Cancion", Constantes.OK_ACEPTAR);
 				boolean resultado = controlador.guardarCancionCompuesta(cancionNueva,Pantalla.this.getJTextNombre().getText(),Pantalla.this.getJTextComentarios().getText());
 				agregarCancionAlArbol(cancionNueva.getNombreFantasia());
 				if (resultado) {
-					JOptionPane.showConfirmDialog(Pantalla.this, "Canci\u00F3n guardada en la base de datos","Canciones", Constantes.OK_ACEPTAR);
+					JOptionPane.showConfirmDialog(Pantalla.this, "Canci\u00F3n guardada en la base de datos","Componer", Constantes.OK_ACEPTAR);
 				}
 			}
 			
