@@ -58,7 +58,7 @@ public class CancionDTO {
 			manager.create(Cancion.class, parametros);
 			
 		}catch(PSQLException e){
-			throw new ORMException("No se pudo insertar la cancion "+nombre);
+			throw new ORMException("No se pudo grabar la cancion "+nombre + " en la base de datos");
 		}
 		return;
 	}
@@ -76,7 +76,7 @@ public class CancionDTO {
 			return c[0];
 			
 		}catch(ArrayIndexOutOfBoundsException e){
-			throw new ORMException("No existe Ninguna Cancion .");
+			throw new ORMException("No existe Ninguna Cancion en la base de datos.");
 		}
 	}
 	

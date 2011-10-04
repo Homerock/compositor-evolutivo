@@ -8,8 +8,7 @@ delete from duracion;
 delete from ocurrenciasacordes ;
 delete from estilos;
 delete from acordes;
---delete from cancionAcordes;
---delete from cancion;
+
 
 
 -- elimino las secuencias
@@ -20,7 +19,5 @@ SELECT setval(' duracion_id_seq' ,1,false);
 SELECT setval(' ocurrenciasestilos_id_seq' ,1,false);
 SELECT setval(' tempos_id_seq' ,1,false);
 SELECT setval(' tonicas_id_seq' ,1,false);
---SELECT setval(' cancion_id_seq' ,1,false);
---SELECT setval(' cancionacordes_id_seq' ,1,false);
 
 commit;
