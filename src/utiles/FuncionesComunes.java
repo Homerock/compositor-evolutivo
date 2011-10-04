@@ -11,14 +11,11 @@ public class FuncionesComunes {
 	      String osName = System.getProperty ( "os.name" ); 
 	              
 	      // Cargamos la cadena del interprete de comandos según el sistema operativo y el comando a ejecutar 
-	      if ( osName.equals ("Windows XP") ) 
-	          ruta = "C:\\"; 
-	      else 
-	          if ( osName.equals ("Windows 95") || osName.equals ("Windows 98") ) 
-	                ruta = "C:\\";  
-	          else { 
+	      if ( osName.startsWith("Windows") ) {
+	    	  ruta = "C:\\";
+	      }else{ 
 	                ruta = "/home";
-	        } 
+	      } 
 	      
 	      return ruta;
 		
