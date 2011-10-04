@@ -189,9 +189,10 @@ public class Controlador {
 	 * 
 	 */
 	//#########################################################################################
-	public void aprender() {
+	public int aprender() {
 		
 		CancionAprendida cancionAprendida = null;
+		int cant = 0;
 		
 		try {
 			JFileChooser chooser= new JFileChooser();
@@ -200,35 +201,34 @@ public class Controlador {
 
 			String tipo=chooser.getTypeDescription(chooser.getSelectedFile());
 			if (resultado == JFileChooser.CANCEL_OPTION)
-				return;
+				return 0;
 			
-				System.out.println("Tipo nada:"+tipo);
 			//si se carga un directorio
 			if (tipo.compareTo(Constantes.DIRECTORIO_LINUX)==0 || tipo.compareTo(Constantes.DIRECTORIO_WINDOWS)==0){	
 				String path = chooser.getSelectedFile()+"/";
 				String files;
 				File folder = new File(path);
 				File[] listOfFiles = folder.listFiles();
-				System.out.println("Directorio a cargar :" + path + " Cant: " + listOfFiles.length);
+				logInfo("Directorio a cargar :" + path + " Cant: " + listOfFiles.length);
 				for (int i = 0; i < listOfFiles.length; i++) {
 					if (listOfFiles[i].isFile()) {
 						files = listOfFiles[i].getName();
-						System.out.println(i + " - Antes de cargar: " + path+files);
+						logInfo(i + " - Archivo a cargar: " + path+files);
 						try{
 							
 							cancionAprendida = Aprendizaje.aprenderCancion(path+files);
 							guardarCancionEnMemoria(cancionAprendida);
-							
+							cant++;
 						}catch(EstilosException ee){
-							System.err.println("El formato del archivo es incorrecto" + ee.getMessage());
+							logWarning("El formato del archivo es incorrecto" + ee.getMessage());
 						}catch(ValoresException ve){
-							System.err.println("El formato del archivo es incorrecto" + ve.getMessage());
+							logWarning("El formato del archivo es incorrecto" + ve.getMessage());
 						} catch (ArchivosException e) {
-							System.err.println("El formato del archivo es incorrecto" + e.getMessage());
+							logWarning("El formato del archivo es incorrecto" + e.getMessage());
 						} catch (CancionException e) {
-							System.err.println("El formato del archivo es incorrecto" + e.getMessage());
+							logWarning("El formato del archivo es incorrecto" + e.getMessage());
 						} catch(IndexOutOfBoundsException ee){
-							System.err.println("El formato del archivo es incorrecto" + ee.getMessage());
+							logWarning("El formato del archivo es incorrecto" + ee.getMessage());
 						}
 					}
 				}
@@ -236,18 +236,19 @@ public class Controlador {
 			//si es un archivo
 			if(tipo.compareTo(Constantes.ARCHIVO_LINUX)==0 || tipo.compareTo(Constantes.ARCHIVO_WINDOWS)==0){
 					try {		
-						
-						cancionAprendida = Aprendizaje.aprenderCancion(chooser.getSelectedFile().toString());
+						String nombre = chooser.getSelectedFile().toString();
+						logInfo("Archivo a cargar: " + nombre);
+						cancionAprendida = Aprendizaje.aprenderCancion(nombre);
 						guardarCancionEnMemoria(cancionAprendida);
-
+						cant = 1;
 					}catch(EstilosException ee){
-						System.err.println(ee.getMessage());
+						logWarning(ee.getMessage());
 					}catch(ValoresException ve){
-						System.err.println(ve.getMessage());
+						logWarning(ve.getMessage());
 					} catch (ArchivosException e) {
-						System.err.println(e.getMessage());
+						logWarning(e.getMessage());
 					} catch (CancionException e) {
-						System.err.println(e.getMessage());
+						logWarning(e.getMessage());
 					}
 			}
 			// calcular acumulados
@@ -257,8 +258,10 @@ public class Controlador {
 				this.mostrarDatos();
 			 	
 		}catch(NullPointerException e1){
-			e1.printStackTrace();
-		}	
+			logWarning(e1.getMessage());
+		}
+		
+		return cant;
 	}
 	
 	/**
