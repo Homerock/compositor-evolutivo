@@ -76,9 +76,14 @@ public class Controlador {
 			datosAMemoria();
 			
 		} catch (PersistenciaException e) {
-			System.err.println("No se pudo conectar con la base de datos " + e.getMessage());
+			if (e.getMessage().contains("java.net.ConnectException")){
+				logWarning("No se pudo conectar con la base de datos - NO EXISTE LA BASE DE DATOS");
+			}else{
+				logWarning("No se pudo conectar con la base de datos " + e.getMessage());
+			
+			}
 		} catch (ORMException e) {
-			System.err.println("No se pudo conectar con la base de datos " + e.getMessage());
+			logWarning("No se pudo conectar con la base de datos " + e.getMessage());
 		}
 		
 	}
