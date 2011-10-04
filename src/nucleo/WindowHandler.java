@@ -64,6 +64,9 @@ class WindowHandler extends Handler {
 	   */
 	  private void configure() {
 
+		  
+		  String level = null;
+		  
 		try {
 			CodeSource codeSource = Logs.class.getProtectionDomain().getCodeSource();
 			File jarFile = new File(codeSource.getLocation().toURI().getPath());
@@ -75,28 +78,24 @@ class WindowHandler extends Handler {
 			LogManager.getLogManager().readConfiguration(fis);
 			LogManager manager = LogManager.getLogManager();
 		    String className = this.getClass().getName();
-		    String level = manager.getProperty(className+".level");
-		    //String filter = manager.getProperty("filter");
-		    //String formatter = manager.getProperty(className+".formatter");
+		    level = manager.getProperty(className+".level");
+		    String filter = manager.getProperty("filter");
+		    String formatter = manager.getProperty(className+".formatter");
 
 		    //accessing super class methods to set the parameters
-		    setLevel(level != null ? Level.parse(level) : Level.INFO);
-		   // setFilter(makeFilter(filter));
-		    //setFormatter(makeFormatter(formatter));
-		    setFormatter(new FormatoLogs());
+		    
 		    
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+		} catch (FileNotFoundException e) {
+			
+		} catch (IOException e) {
+			
+		} finally {
+				setLevel(level != null ? Level.parse(level) : Level.INFO);
+			    setFormatter(new FormatoLogs());
 		}
 		
 

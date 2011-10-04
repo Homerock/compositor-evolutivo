@@ -213,7 +213,7 @@ public class Controlador {
 				for (int i = 0; i < listOfFiles.length; i++) {
 					if (listOfFiles[i].isFile()) {
 						files = listOfFiles[i].getName();
-						logInfo(i + " - Archivo a cargar: " + path+files);
+						logInfo("Archivo a cargar: " + path+files);
 						try{
 							
 							cancionAprendida = Aprendizaje.aprenderCancion(path+files);
