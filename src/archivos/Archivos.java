@@ -58,7 +58,9 @@ public class Archivos {
 			reader.close();
 			
 			return cancionAnalizada;//todo ok loco
-
+		}catch (ArchivosException ae){
+			
+			throw new ArchivosException("No contemplamos definiciones de nuevos estilos, en :"+nombreArchivo);
 		} catch (FileNotFoundException e) {
 			throw new ArchivosException("El Archivo '"+nombreArchivo+"' No existe.");
 		} catch (IOException e1) {
@@ -152,14 +154,7 @@ public class Archivos {
 		}
 		
 		miCancion.setNombreArchivo(nombre);
-		
-		/*
-		if (fichero.exists()) {
-			// el archivo ya existe, le cambio el nombre
-			miCancion.setNombre(nombre+System.currentTimeMillis());
-		} else {
-			miCancion.setNombre(nombre);
-		}*/
+
 		
 		escribirArchivo(miCancion.getNombreArchivo()+Constantes.EXTENSION_ARCHIVO, "Tempo " + miCancion.getTempo(), false);
 		escribirArchivo(miCancion.getNombreArchivo()+Constantes.EXTENSION_ARCHIVO, "", true);
