@@ -13,14 +13,14 @@ delete from acordes;
 
 
 -- elimino las secuencias
-SELECT setval(' acordes_id_seq' ,1);
-SELECT setval(' estilos_id_seq' ,1);
-SELECT setval(' ocurrenciasacordes_id_seq' ,1);
-SELECT setval(' duracion_id_seq' ,1);
-SELECT setval(' ocurrenciasestilos_id_seq' ,1);
-SELECT setval(' tempos_id_seq' ,1);
-SELECT setval(' tonicas_id_seq' ,1);
---SELECT setval(' cancion_id_seq' ,1);
---SELECT setval(' cancionacordes_id_seq' ,1);
+SELECT setval(' acordes_id_seq' ,1,false);
+SELECT setval(' estilos_id_seq' ,1,false);
+SELECT setval(' ocurrenciasacordes_id_seq' ,1,false);
+SELECT setval(' duracion_id_seq' ,1,false);
+SELECT setval(' ocurrenciasestilos_id_seq' ,1,false);
+SELECT setval(' tempos_id_seq' ,1,false);
+SELECT setval(' tonicas_id_seq' ,1,false);
+--SELECT setval(' cancion_id_seq' ,1,false);
+--SELECT setval(' cancionacordes_id_seq' ,1,false);
 
 commit;
