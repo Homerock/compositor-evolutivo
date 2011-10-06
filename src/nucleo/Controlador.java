@@ -799,7 +799,7 @@ public class Controlador {
 		cancionNueva.setNombreFantasia(nombreFantasia);
 		cancionNueva.setNombreArchivo(nombreFantasia);
 		
-		int cant = getListaCanciones().size()+2;
+		int cant = getListaCanciones().size()+1;
 		// guardo la cancion en la lista en memoria
 		getListaCanciones().put(String.valueOf(cant), cancionNueva);
 		
@@ -854,7 +854,7 @@ public class Controlador {
 		cancionNueva.setNombreFantasia(nombreFantasia);
 		cancionNueva.setNombreArchivo(nombreFantasia);
 		
-		int cant = getListaCanciones().size()+2;
+		int cant = getListaCanciones().size()+1;
 		// guardo la cancion en la lista en memoria
 		getListaCanciones().put(String.valueOf(cant), cancionNueva);
 		

@@ -20,7 +20,9 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -468,7 +470,14 @@ public class Pantalla extends JFrame {
     	modelo.reload();
     	
     	Map<String, Cancion> canciones = controlador.getListaCanciones();
-    	Iterator it = canciones.entrySet().iterator();
+    	
+    	//ordenar map
+    	Map mapOrdenado = new TreeMap(canciones);
+    	//Set ref = mapOrdenado.keySet();
+    	//Iterator itera = ref.iterator();
+    	
+    	
+    	Iterator it = mapOrdenado.entrySet().iterator();
 		//tengo que iterar para listar todas la matrices del map
 		while (it.hasNext()) {
 			Map.Entry e = (Map.Entry)it.next();
@@ -482,7 +491,7 @@ public class Pantalla extends JFrame {
     
     private void agregarCancionAlArbol(String nombre) {
     	
-    	int cant = controlador.getListaCanciones().size()+1;
+    	int cant = controlador.getListaCanciones().size();
     	
     	DefaultMutableTreeNode nodoCancion=new DefaultMutableTreeNode(String.valueOf(cant)+" - "+nombre);
     	modelo.insertNodeInto(nodoCancion, nodoPadre, 0);
@@ -1086,6 +1095,7 @@ public class Pantalla extends JFrame {
     private void botonCanciones_actionPerformed(ActionEvent e) {
     	vaciarPanelDetalle();
     	vaciarPanelEditar();
+    	cargarArbolCanciones();
     	vaciarPanelOpcionesCanciones();
     	botonAprender.setBackground(null);
     	botonComponer.setBackground(null);
