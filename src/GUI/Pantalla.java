@@ -1405,6 +1405,7 @@ public class Pantalla extends JFrame {
 				cancionNueva = controlador.getCancionNueva();
 				
 				if (cancionNueva == null){
+					JOptionPane.showConfirmDialog(Pantalla.this, "Error, no se pudo componer correctamente","Componer", Constantes.OK_ACEPTAR);
 					return;
 				}
 				actualizarPanelEditar(cancionNueva);

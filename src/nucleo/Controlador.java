@@ -20,6 +20,7 @@ import canciones.Estrofa;
 
 import net.java.ao.EntityManager;
 import estructura.AcordesFila;
+import estructura.EstilosFila;
 import estructura.ListaValores;
 import estructura.MatrizAcordes;
 import estructura.MatrizEstilos;
@@ -683,6 +684,11 @@ public class Controlador {
 				logWarning(e.getMessage());
 				return;
 			}
+		}
+		EstilosFila estiloFila = miMatrizEstilos.getMisEstilos().get(estilo);
+		if (estiloFila.getMapEstilos().size() < 3) {
+			this.setCancionNueva(null);
+			return;
 		}
 		
 		try {
