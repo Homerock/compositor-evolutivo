@@ -133,9 +133,10 @@ public class Archivos {
 	 * genera un archivo de texto con el formato de mma, de acuerdo a los datos de un objeto cancion
 	 * pasado por parametro.
 	 * @param miCancion
+	 * @throws ArchivosException 
 	 */
 	//################################################################################
-	public static boolean generarArchivo(Cancion miCancion) {
+	public static boolean generarArchivo(Cancion miCancion) throws ArchivosException {
 		
 		String compas = " ";
 		ArrayList<Estrofa> todasLasEstrofas = miCancion.getEstrofas();
@@ -222,7 +223,7 @@ public class Archivos {
 	 * @param flagbackground: valor boolean para determinar si el comando se ejecuta en background (solo en linux)
 	 **/
 	//################################################################################
-	private static boolean crearMIDI(String nombreArchivo, boolean flagbackground) {
+	private static boolean crearMIDI(String nombreArchivo, boolean flagbackground) throws ArchivosException{
 		
 		
 		// Definimos la cadena del interprete de comandos del sistema 
@@ -252,10 +253,15 @@ public class Archivos {
 			
 			while ((str = brStdOut.readLine())!=null) { 
 				System.out.println (str); 
+				if (str.contains(Constantes.MMA_ERROR)) {
+					throw new ArchivosException("mma no pudo generar el archivo MIDI -"+str);
+				}
 			} 
 			
 			brStdOut.close(); 
 			brStdErr.close(); 
+			} catch (ArchivosException ae) {
+				throw new ArchivosException(ae.getMessage());
 			}catch (Exception e) { 
 				return false;  
 			} 

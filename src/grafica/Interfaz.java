@@ -43,6 +43,7 @@ import canciones.Cancion;
 import canciones.Compas;
 import canciones.Estrofa;
 
+import excepciones.ArchivosException;
 import excepciones.ORMException;
 import excepciones.PersistenciaException;
 
@@ -620,7 +621,12 @@ public class Interfaz implements ItemListener{
 				controlador.modificarCancion(cancionNueva);
 				
 				actualizarPanelEditar(cancionNueva);
-				Archivos.generarArchivo(cancionNueva);
+				try {
+					Archivos.generarArchivo(cancionNueva);
+				} catch (ArchivosException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 //				reproductor=null;
 
 			}//fin MODIFICAR_CANCION
