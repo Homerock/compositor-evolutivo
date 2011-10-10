@@ -202,7 +202,7 @@ public class Controlador {
 
 			String tipo=chooser.getTypeDescription(chooser.getSelectedFile());
 			if (resultado == JFileChooser.CANCEL_OPTION)
-				return 0;
+				return -1;
 			
 			//si se carga un directorio
 			if (tipo.compareTo(Constantes.DIRECTORIO_LINUX)==0 || tipo.compareTo(Constantes.DIRECTORIO_WINDOWS)==0){	
@@ -623,7 +623,24 @@ public class Controlador {
 				return;
 			}
 		}
+		if (Integer.valueOf(tempo) < Constantes.VALOR_MIN_TEMPO || Integer.valueOf(tempo) > Constantes.VALOR_MAX_TEMPO) {
+			try {
+				tempo = this.getMiListaDeTempos().obtenerMayorValorPorEstilo(estilo);
+			} catch (ValoresException e) {
+				logWarning(e.getMessage());
+				return;
+			}
+		}
+		
 		if (duracion.trim().equals("")) {
+			try {
+				duracion = this.getMiListaDeDuraciones().obtenerMayorValorPorEstilo(estilo);
+			} catch (ValoresException e) {
+				logWarning(e.getMessage());
+				return;
+			}
+		}
+		if (Integer.valueOf(duracion) < Constantes.VALOR_MIN_DURACION || Integer.valueOf(duracion) > Constantes.VALOR_MAX_DURACION) {
 			try {
 				duracion = this.getMiListaDeDuraciones().obtenerMayorValorPorEstilo(estilo);
 			} catch (ValoresException e) {
@@ -678,7 +695,7 @@ public class Controlador {
 		
 		int duracion;
 		int cantCompasesIntro; 
-		int cantCompasesEstrofaA; 
+		int cantCompasesEstrofaA;  
 		int cantCompasesEstrofaB; 
 		int cantCompasesEnd;
 		
@@ -690,6 +707,16 @@ public class Controlador {
 				return;
 			}
 		}
+		
+		if (Integer.valueOf(tempo) < Constantes.VALOR_MIN_TEMPO || Integer.valueOf(tempo) > Constantes.VALOR_MAX_TEMPO) {
+			try {
+				tempo = this.getMiListaDeTempos().obtenerMayorValorPorEstilo(estilo);
+			} catch (ValoresException e) {
+				logWarning(e.getMessage());
+				return;
+			}
+		}
+		
 		EstilosFila estiloFila = miMatrizEstilos.getMisEstilos().get(estilo);
 		if (estiloFila.getMapEstilos().size() < 3) {
 			this.setCancionNueva(null);
