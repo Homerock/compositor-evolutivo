@@ -69,6 +69,7 @@ import canciones.Cancion;
 import canciones.Compas;
 import canciones.Estrofa;
 import estructura.MatrizAcordes;
+import excepciones.ArchivosException;
 import excepciones.ORMException;
 import excepciones.PersistenciaException;
 
@@ -1409,14 +1410,18 @@ public class Pantalla extends JFrame {
 					return;
 				}
 				actualizarPanelEditar(cancionNueva);
-				if (Archivos.generarArchivo(cancionNueva)) {
-					
-					File f = new File(cancionNueva.getNombreArchivo()+".mid");
-					if (f.exists()) {
-						if (panelMidi.getDevice().getSequencer() != null) {
-				        	panelMidi.addSong(f);
-				        }
+				try {
+					if (Archivos.generarArchivo(cancionNueva)) {
+						
+						File f = new File(cancionNueva.getNombreArchivo()+".mid");
+						if (f.exists()) {
+							if (panelMidi.getDevice().getSequencer() != null) {
+					        	panelMidi.addSong(f);
+					        }
+						}
 					}
+				} catch (ArchivosException e1) {
+					controlador.logWarning(e1.getMessage());
 				}
 					
 				botonModificarCancion.setEnabled(true);
@@ -1469,13 +1474,17 @@ public class Pantalla extends JFrame {
 					return;
 				}
 				actualizarPanelEditar(cancionNueva);
-				if (Archivos.generarArchivo(cancionNueva)) {
-					File f = new File(cancionNueva.getNombreArchivo()+".mid");
-					if (f.exists()) {
-						if (panelMidi.getDevice().getSequencer() != null) {
-							panelMidi.addSong(f);
+				try {
+					if (Archivos.generarArchivo(cancionNueva)) {
+						File f = new File(cancionNueva.getNombreArchivo()+".mid");
+						if (f.exists()) {
+							if (panelMidi.getDevice().getSequencer() != null) {
+								panelMidi.addSong(f);
+							}
 						}
 					}
+				} catch (ArchivosException e1) {
+					controlador.logWarning(e1.getMessage());
 				}
 
 			}//fin MODIFICAR_CANCION

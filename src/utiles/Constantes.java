@@ -8,6 +8,8 @@ public interface Constantes {
 	public final static String DIRECTORIO_WINDOWS = "Carpeta de archivos";
 	public final static String EXTENSION_ARCHIVO = ".mma";
 	
+	public final static String MMA_ERROR = "ERROR";
+	
 	public static final String COMENTARIO = "//";
 	public static final String CADENAVACIA="";
 	//ESTILOS

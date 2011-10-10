@@ -250,7 +250,10 @@ public class Controlador {
 						logWarning(e.getMessage());
 					} catch (CancionException e) {
 						logWarning(e.getMessage());
+					} catch (IndexOutOfBoundsException ie) {
+						logWarning("El archivo esta mal formado");
 					}
+					
 			}
 			// calcular acumulados
 			this.calcularAcumuladoDeMap(this.getMatrizEvolutiva());
@@ -437,9 +440,11 @@ public class Controlador {
 			
 			Archivos.generarArchivo(cancion);
 			aprenderArchivo(cancion.getNombreArchivo()+Constantes.EXTENSION_ARCHIVO);
+		} catch (ArchivosException e1) {
+			logWarning(e1.getMessage());
 		} catch (NullPointerException e) {
 			return null;
-		}
+		} 
 		
 		return cancion;
 		
