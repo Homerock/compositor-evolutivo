@@ -67,6 +67,11 @@ public interface Constantes {
 	public static final String OPCIONES_AVANZADAS ="opciones_avanzadas";
 	public static final String CAMBIA_ESTILO ="cambia_estilo";
 
+	public static final int VALOR_MIN_TEMPO = 10;
+	public static final int VALOR_MAX_TEMPO = 240;
+	public static final int VALOR_MIN_DURACION = 1;
+	public static final int VALOR_MAX_DURACION = 200;
+	
 	public static final int OK_ACEPTAR = -1;
 	public static final int SI_NO_OPCION = 0;
 	public static final int OPCION_SI = 0;

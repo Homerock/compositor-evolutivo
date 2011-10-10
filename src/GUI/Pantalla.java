@@ -1338,7 +1338,9 @@ public class Pantalla extends JFrame {
 						JOptionPane.showConfirmDialog(Pantalla.this, "Canci\u00F3n aprendida!!","Aprender", Constantes.OK_ACEPTAR);
 					else
 						JOptionPane.showConfirmDialog(Pantalla.this, cant + " Canciones aprendidas!!","Aprender", Constantes.OK_ACEPTAR);
-				} else {
+				} 
+				
+				if (cant == 0) {
 					JOptionPane.showConfirmDialog(Pantalla.this, "El formato de los archivos es incorrecto","Aprender", Constantes.OK_ACEPTAR);
 				}
 				
@@ -1490,16 +1492,24 @@ public class Pantalla extends JFrame {
 			}//fin MODIFICAR_CANCION
 			//guardar una cancion compuesta
 			if (e.getActionCommand() == Constantes.GUARDAR_CANCION){
-				controlador.guardarCancionCompuesta(cancionNueva,Pantalla.this.getJTextNombre().getText(),Pantalla.this.getJTextComentarios().getText());
-				agregarCancionAlArbol(cancionNueva.getNombreFantasia());
-				JOptionPane.showConfirmDialog(Pantalla.this, "La canci\u00F3n se guard\u00F3 correctamente","Componer", Constantes.OK_ACEPTAR);
+				if (Pantalla.this.getJTextNombre().getText().trim().equals("")) {
+					JOptionPane.showConfirmDialog(Pantalla.this, "el nombre de la canci\u00F3n es incorrecto","Componer", Constantes.OK_ACEPTAR);
+				} else {
+					controlador.guardarCancionCompuesta(cancionNueva,Pantalla.this.getJTextNombre().getText(),Pantalla.this.getJTextComentarios().getText());
+					agregarCancionAlArbol(cancionNueva.getNombreFantasia());
+					JOptionPane.showConfirmDialog(Pantalla.this, "La canci\u00F3n se guard\u00F3 correctamente","Componer", Constantes.OK_ACEPTAR);
+				}
+				
 			}
 			//guardar una modificacion de una cancion levantada de la base
 			if (e.getActionCommand() == Constantes.GUARDAR_CANCION_MODIFICADA){
-				controlador.guardarCanciones(cancionNueva,Pantalla.this.getJTextNombreCanciones().getText(),Pantalla.this.getJTextComentariosCanciones().getText()); 
-				agregarCancionAlArbol(cancionNueva.getNombreFantasia());
-				JOptionPane.showConfirmDialog(Pantalla.this, "La canci\u00F3n se guard\u00F3 correctamente","Canciones", Constantes.OK_ACEPTAR);
-				
+				if (Pantalla.this.getJTextNombreCanciones().getText().trim().equals("")) {
+					JOptionPane.showConfirmDialog(Pantalla.this, "el nombre de la canci\u00F3n es incorrecto","Componer", Constantes.OK_ACEPTAR);
+				} else {
+					controlador.guardarCanciones(cancionNueva,Pantalla.this.getJTextNombreCanciones().getText(),Pantalla.this.getJTextComentariosCanciones().getText()); 
+					agregarCancionAlArbol(cancionNueva.getNombreFantasia());
+					JOptionPane.showConfirmDialog(Pantalla.this, "La canci\u00F3n se guard\u00F3 correctamente","Canciones", Constantes.OK_ACEPTAR);
+				}
 			}
 		}
 	}
