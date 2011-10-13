@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import javax.sound.midi.Sequence;
+import javax.sound.midi.Track;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -159,10 +160,11 @@ public class MIDIPlayer extends JPanelBackground {
   
                 SequenceItem si = new SequenceItem(f);
                 sequenceItemActual = si;
-                
+                 
                 Sequence seq;
 				try {
 					seq = PlayingDevice.loadSequence(f);
+										
 					checker.setSong(seq.getTickLength());
 					device.setSequence(seq);
 	                for(Iterator<MIDIPlayerListener> i = events.iterator(); i.hasNext();)

@@ -717,12 +717,6 @@ public class Controlador {
 			}
 		}
 		
-		EstilosFila estiloFila = miMatrizEstilos.getMisEstilos().get(estilo);
-		if (estiloFila.getMapEstilos().size() < 3) {
-			this.setCancionNueva(null);
-			return;
-		}
-		
 		try {
 			nuevaCancion = new Cancion(estilo+"_"+tonica,tempo,acorde,estilo);
 				
