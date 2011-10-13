@@ -192,7 +192,7 @@ public class Composicion {
 				throw new CancionException("Error en la generacion de estilos ."+Composicion.class);
 			}
 		} while(Utiles.cadenaContienePatron(estiloB, Constantes.END_ESTILO) || Utiles.cadenaContienePatron(estiloB, Constantes.FILL_ESTILO)
-				|| estiloB.equalsIgnoreCase(estiloInicial));
+				|| Utiles.cadenaContienePatron(estiloB, Constantes.INTRO_ESTILO) || estiloB.equalsIgnoreCase(estiloInicial));
 		
 		// CARGO ESTROFA B
 		numEstrofa++;
@@ -291,7 +291,7 @@ public class Composicion {
 				throw new CancionException("Error en la generacion de estilos ."+Composicion.class);
 			}
 		} while(Utiles.cadenaContienePatron(estiloB, Constantes.END_ESTILO) || Utiles.cadenaContienePatron(estiloB, Constantes.FILL_ESTILO) 
-				|| estiloB.equalsIgnoreCase(estiloInicial));
+				|| Utiles.cadenaContienePatron(estiloB, Constantes.INTRO_ESTILO) || estiloB.equalsIgnoreCase(estiloInicial));
 		
 		// CARGO ESTROFA B
 		numEstrofa++;
@@ -407,7 +407,7 @@ public class Composicion {
 				throw new CancionException("Error en la generacion de estilos ."+Composicion.class);
 			}
 		} while(Utiles.cadenaContienePatron(estiloB, Constantes.END_ESTILO) || Utiles.cadenaContienePatron(estiloB, Constantes.FILL_ESTILO) 
-				|| estiloB.equalsIgnoreCase(estiloInicial));
+				|| Utiles.cadenaContienePatron(estiloB, Constantes.INTRO_ESTILO) || estiloB.equalsIgnoreCase(estiloInicial));
 		
 		// CARGO ESTROFA B
 		numEstrofa++;
@@ -455,10 +455,6 @@ public class Composicion {
 			nuevaCancion.agregarEstrofa(miEstrofa);
 		}
 	}
-	
-	
-	
-
 
 	//################################################################################
 	/**
@@ -667,6 +663,10 @@ public class Composicion {
 			//}			
 			listaAcordes.add(miAcorde);
 			
+			// si el compas tiene dos acordes divido el compas en dos a la mitad: ejemplo: A / G / (cuatro acordes)
+			//if (cantidad == 2)
+			//	listaAcordes.add(miAcorde);
+				
 			acordeAnterior = miAcorde;
 		}
 		return listaAcordes;
