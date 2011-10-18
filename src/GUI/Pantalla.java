@@ -1197,9 +1197,14 @@ public class Pantalla extends JFrame {
      */
     private void vaciarPanelOpciones() {
     	
-    	//tonicaText.setText("");
     	cantCompasesText.setText("");
+    	jCheckCantCompases.setSelected(false);
+    	cantCompasesText.setEnabled(false);
     	tempoText.setText("");
+    	jCheckTempo.setSelected(false);
+    	tempoText.setEnabled(false);
+    	jCheckEstructura.setSelected(false);
+    	jComboEstructuraAvanzado.setEnabled(false);
     	jTextComentarios.setText("Comentarios");
     	jTextComentarios.setEnabled(false);
     	jTextNombre.setText("Nombre");
