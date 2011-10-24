@@ -70,8 +70,12 @@ public class PlayingDevice
     }
     public void play()
     {
-        if(seq.getSequence() != null)
+        if(seq.getSequence() != null) {
+        	if (seq.getMicrosecondPosition() == seq.getMicrosecondLength()) {
+    			stop();
+    		}
             seq.start();
+        }
     }
     public void pause()
     {
@@ -80,7 +84,7 @@ public class PlayingDevice
     public void stop()
     {
         seq.stop();
-        seq.setTickPosition(0);
+        seq.setMicrosecondPosition(0);
     }
     //**************************************************
     public static void main(String[] args)
