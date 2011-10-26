@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.swing.JFileChooser;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import archivos.Archivos;
 import archivos.Estilos;
@@ -43,7 +44,7 @@ public class Controlador {
 	private ListaValores miListaDeEstilosPrincipales;
 	private MatrizEstilos miMatrizEstilos;
 	private Map<String, MatrizAcordes> MatrizEvolutiva;
-	private Map<String, Cancion> listaCanciones;
+	private Map<Integer, Cancion> listaCanciones;
 	
 	private static final boolean DEBUG = false;
 	private Persistencia manejadorPersistencia = null;
@@ -66,7 +67,7 @@ public class Controlador {
 		this.setMiListaDeTempos(new ListaValores());
 		this.setMiListaDeDuraciones(new ListaValores());
 		this.setMiListaDeEstilosPrincipales(new ListaValores());
-		this.setListaCanciones(new HashMap<String, Cancion>());
+		this.setListaCanciones(new HashMap<Integer, Cancion>());
 		
 		handler = WindowHandler.getInstance();
     	logger = Logger.getLogger("Homerock");
@@ -426,9 +427,9 @@ public class Controlador {
 	 * @param nombre
 	 * @return
 	 */
-	public Cancion buscarCancionSeleccionada(String nombre) {
+	public Cancion buscarCancionSeleccionada(Integer id) {
 		
-		Cancion cancion = listaCanciones.get(nombre);
+		Cancion cancion = listaCanciones.get(id);
 		
 		try {
 			// busco si el fichero ya existe, lo aprendo y retorno la cancion
@@ -833,7 +834,7 @@ public class Controlador {
 		
 		int cant = getListaCanciones().size()+1;
 		// guardo la cancion en la lista en memoria
-		getListaCanciones().put(String.valueOf(cant), cancionNueva);
+		getListaCanciones().put(cant, cancionNueva);
 		
 		try {
 			manejadorPersistencia.cancionNuevaABaseDeDatos(cancionNueva);
@@ -888,7 +889,7 @@ public class Controlador {
 		
 		int cant = getListaCanciones().size()+1;
 		// guardo la cancion en la lista en memoria
-		getListaCanciones().put(String.valueOf(cant), cancionNueva);
+		getListaCanciones().put(cant, cancionNueva);
 		
 		//guardo la cancion directamente a la base de datos
 		try {
@@ -1002,11 +1003,11 @@ public class Controlador {
 		this.cancionNueva = cancionNueva;
 	}
 
-	public Map<String, Cancion> getListaCanciones() {
+	public Map<Integer, Cancion> getListaCanciones() {
 		return listaCanciones;
 	}
 
-	public void setListaCanciones(Map<String, Cancion> listaCanciones) {
+	public void setListaCanciones(Map<Integer, Cancion> listaCanciones) {
 		this.listaCanciones = listaCanciones;
 	}
 	

@@ -600,7 +600,7 @@ public class Persistencia implements Runnable {
 	    
 	
 	
-	public void cancionesAMemoria(Map<String, Cancion> listaCanciones) throws PersistenciaException{
+	public void cancionesAMemoria(Map<Integer, Cancion> listaCanciones) throws PersistenciaException{
 		
 		try {
 			orm.Cancion[] canciones =  CancionDTO.seleccionarTodos(manager);
@@ -622,26 +622,22 @@ public class Persistencia implements Runnable {
 							cancionDB.getFechaCreacion()
 						);
 				//guardo cancion sin estrofas
-				listaCanciones.put(String.valueOf(cancionDB.getID()),cancionMemoria);
+				listaCanciones.put(cancionDB.getID(),cancionMemoria);
 			}
 			
 			Iterator it = listaCanciones.keySet().iterator();
 			
 			while(it.hasNext()) {
-			    String clave = (String) it.next(); 
+			    Integer clave = (Integer) it.next(); 
 			    canciones.Cancion  cancionActual = listaCanciones.get(clave);
-			    cancionAcordesAMemoria(cancionActual, Integer.parseInt(clave));
+			    cancionAcordesAMemoria(cancionActual, clave);
 			    cancionActual.actualizarContadores();// actualizo todos los contadores de la cancion
-			    
 			}			
-			
-			
 		} catch (SQLException e) {
 			throw new PersistenciaException("Error al acceder a 'estilos' en la base de datos - "+e.getMessage());
-			
 		}
-		
 	}
+	
 	// es llamado x cancionesAMemoria
 	/**
 	 * guarda los acordes de una cancion en el objeto, 
