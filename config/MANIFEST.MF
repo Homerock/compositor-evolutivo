@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Class-Path: . lib/appFramework-1.0.jar lib/postgresq
+ l-8.3-606.jdbc2.jar lib/mysql-connector-java-5.1.12-bin.jar 
+ lib/activeobjects-0.8.2.jar
+SplashScreen-Image: img/splash.gif
+Main-Class: GUI.Inicio
+
