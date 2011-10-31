@@ -360,9 +360,11 @@ public class Pantalla extends JFrame {
 		      public void valueChanged(TreeSelectionEvent e) {
 		        DefaultMutableTreeNode node = (DefaultMutableTreeNode) e
 		            .getPath().getLastPathComponent();
+		        
 		        String tokens = archivos.Utiles.obtenerCadena(node.toString(), " ");
+		        
 		        // busca la cancion, crea el archivo y la aprende
-		        cancionNueva = controlador.buscarCancionSeleccionada(tokens);
+		        cancionNueva = controlador.buscarCancionSeleccionada(Integer.parseInt(tokens));
 		        if (cancionNueva == null) {
 		        	return;
 		        }
@@ -471,7 +473,7 @@ public class Pantalla extends JFrame {
     	nodoPadre.removeAllChildren();
     	modelo.reload();
     	
-    	Map<String, Cancion> canciones = controlador.getListaCanciones();
+    	Map<Integer, Cancion> canciones = controlador.getListaCanciones();
     	
     	//ordenar map
     	Map mapOrdenado = new TreeMap(canciones);
