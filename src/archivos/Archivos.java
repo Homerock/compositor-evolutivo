@@ -101,12 +101,18 @@ public class Archivos {
 				if (linea.startsWith(Constantes.NUEVO_ESTILO)){
 					throw new ArchivosException("No contemplamos definiciones de nuevos estilos.");
 				}
+				
 				if(Utiles.cadenaContienePatron(linea, Constantes.COMIENZO_DE_VARIABLE)){
-					//ej :
-					//Set Pass 1
-					//Groove $Pass BossaNova BossaNovaSus BossaNova1Sus
+					
+					if(Utiles.cadenaContienePatron(linea, Constantes.VAR_ULTIMO_ESTILO)){
+						cancion.add(linea);// carga si es $_LastGroove
+					}else{
+						//ej :
+						//Set Pass 1
+						//Groove $Pass BossaNova BossaNovaSus BossaNova1Sus
 
-					throw new ArchivosException("No contemplamos variables en definicion de estilos.");
+						throw new ArchivosException("No contemplamos variables en definicion de estilos.");
+					}
 				}
 				
 				//me fijo si esta la palabra repeat en una cadena, ya que nos intersa, y la agrego en el arraylist
